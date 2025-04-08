@@ -30,7 +30,7 @@ export function CityCoverGame({ cities }: { cities: City[] }) {
           <Polygon
             key={band.join(",")}
             fillColor="hsl(144.07 100% 39%)"
-            fillOpacity={0.7}
+            fillOpacity={0.5}
             strokeWeight={0}
             paths={[
               [

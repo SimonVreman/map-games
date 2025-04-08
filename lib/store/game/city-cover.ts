@@ -20,7 +20,7 @@ export const createCityCoverSlice: ImmerStateCreator<CityCoverSlice> = (
   cityCover: {
     // State
     cities: [],
-    options: { bandSize: 3 },
+    options: { bandSize: 1.5 },
 
     // Actions
     addCity: (city) =>
@@ -30,6 +30,10 @@ export const createCityCoverSlice: ImmerStateCreator<CityCoverSlice> = (
     setOptions: (options) =>
       set(({ cityCover }) => {
         cityCover.options = options;
+      }),
+    reset: () =>
+      set(({ cityCover }) => {
+        cityCover.cities = [];
       }),
   },
 });
