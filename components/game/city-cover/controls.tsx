@@ -4,6 +4,8 @@ import { useAppStore } from "@/lib/store/provider";
 import { normalize } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { XIcon } from "lucide-react";
 
 export function CityCoverControls({
   cities,
@@ -13,12 +15,16 @@ export function CityCoverControls({
   completion: number;
 }) {
   const [inputValue, setInputValue] = useState("");
-  const add = useAppStore((s) => s.cityCover.addCity);
-  const bandSize = useAppStore((s) => s.cityCover.options.bandSize);
-  const added = useAppStore((s) => s.cityCover.cities);
+
+  const [addCity, reset, options, added] = useAppStore((s) => [
+    s.cityCover.addCity,
+    s.cityCover.reset,
+    s.cityCover.options,
+    s.cityCover.cities,
+  ]);
 
   const coveredCities = cities.filter((c) =>
-    added.some((a) => Math.abs(a.lat - c.lat) < bandSize)
+    added.some((a) => Math.abs(a.lat - c.lat) < (options?.bandSize ?? 0))
   ).length;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +40,7 @@ export function CityCoverControls({
       setInputValue("");
     }
 
-    for (const city of matches) add(city);
+    for (const city of matches) addCity(city);
     toast.success("City discovered!");
   };
 
@@ -44,27 +50,35 @@ export function CityCoverControls({
         <Input
           value={inputValue}
           placeholder="Enter city name"
-          className="bg-neutral-50 shadow-xl h-14 grow md:text-md"
+          className="bg-background dark:bg-background shadow-md h-14 grow md:text-md"
           onChange={handleInputChange}
         />
 
-        <div className="rounded-md shadow-xl bg-neutral-50 px-3 py-2 h-14 flex items-center whitespace-nowrap max-sm:w-full">
-          <div className="leading-tight border-r pr-3">
-            <p className="text-sm font-medium">Cities found</p>
-            <p className="font-medium">
-              {coveredCities}
-              <span className="text-sm text-muted-foreground">
-                /{cities.length}
-              </span>
-            </p>
+        <div className="flex items-center max-sm:justify-between max-sm:gap-2 gap-4 max-sm:w-full">
+          <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap">
+            <div className="leading-tight border-r pr-3">
+              <p className="text-sm font-medium">Cities found</p>
+              <p className="font-medium">
+                {coveredCities}
+                <span className="text-sm text-muted-foreground">
+                  /{cities.length}
+                </span>
+              </p>
+            </div>
+
+            <div className="leading-tight pl-3">
+              <p className="text-sm font-medium">Area covered</p>
+              <p className="font-medium">
+                {(completion * 100).toFixed(2)}
+                <span className="text-sm text-muted-foreground">%</span>
+              </p>
+            </div>
           </div>
 
-          <div className="leading-tight pl-3">
-            <p className="text-sm font-medium">Area covered</p>
-            <p className="font-medium">
-              {(completion * 100).toFixed(2)}
-              <span className="text-sm text-muted-foreground">%</span>
-            </p>
+          <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center">
+            <Button variant="ghost" size="icon" onClick={() => reset()}>
+              <XIcon className="size-6 stroke-[1.5]" />
+            </Button>
           </div>
         </div>
       </div>

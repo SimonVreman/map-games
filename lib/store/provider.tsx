@@ -3,6 +3,7 @@
 import { type ReactNode, createContext, useRef, useContext } from "react";
 import { useStore } from "zustand";
 import { AppStore, createAppStore } from ".";
+import { useShallow } from "zustand/shallow";
 
 export type AppStoreApi = ReturnType<typeof createAppStore>;
 
@@ -34,5 +35,5 @@ export const useAppStore = <T,>(selector: (store: AppStore) => T): T => {
     throw new Error(`useAppStore must be used within AppStoreProvider`);
   }
 
-  return useStore(appStoreContext, selector);
+  return useStore(appStoreContext, useShallow(selector));
 };

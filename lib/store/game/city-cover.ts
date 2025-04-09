@@ -8,9 +8,10 @@ type Options = {
 export type CityCoverSlice = {
   cityCover: {
     cities: City[];
-    options: Options;
+    options: Options | null;
     addCity: (city: City) => void;
     setOptions: (options: Options) => void;
+    reset: () => void;
   };
 };
 
@@ -20,7 +21,7 @@ export const createCityCoverSlice: ImmerStateCreator<CityCoverSlice> = (
   cityCover: {
     // State
     cities: [],
-    options: { bandSize: 1.5 },
+    options: null,
 
     // Actions
     addCity: (city) =>
@@ -34,36 +35,7 @@ export const createCityCoverSlice: ImmerStateCreator<CityCoverSlice> = (
     reset: () =>
       set(({ cityCover }) => {
         cityCover.cities = [];
+        cityCover.options = null;
       }),
   },
 });
-
-const mergeOverlappingBands = (
-  bands: [number, number][]
-): [number, number][] => {
-  if (bands.length === 0) return [];
-
-  // Sort bands by start point
-  bands.sort((a, b) => a[0] - b[0]);
-
-  const mergedBands: [number, number][] = [];
-  let currentBand = bands[0];
-
-  for (let i = 1; i < bands.length; i++) {
-    const nextBand = bands[i];
-
-    if (currentBand[1] >= nextBand[0]) {
-      // Bands overlap, merge them
-      currentBand[1] = Math.max(currentBand[1], nextBand[1]);
-    } else {
-      // No overlap, push the current band and move to the next
-      mergedBands.push(currentBand);
-      currentBand = nextBand;
-    }
-  }
-
-  // Push the last band
-  mergedBands.push(currentBand);
-
-  return mergedBands;
-};

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Baloo_Tamma_2 } from "next/font/google";
+import { Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { AppStoreProvider } from "@/lib/store/provider";
 import { Toaster } from "sonner";
 
-const balooTamma = Baloo_Tamma_2({
-  variable: "--font-baloo-tamma",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
@@ -28,11 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${balooTamma.variable} ${geistMono.variable} antialiased min-w-dvw min-h-dvh`}
+        className={`${figtree.variable} ${geistMono.variable} antialiased min-w-dvw min-h-dvh font-sans`}
       >
         <AppStoreProvider>
           <main className="h-dvh w-dvw">{children}</main>
-          <Toaster richColors position="bottom-center" />
+          <Toaster richColors position="bottom-center" theme="system" />
         </AppStoreProvider>
       </body>
     </html>

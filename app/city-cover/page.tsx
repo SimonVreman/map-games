@@ -1,8 +1,12 @@
-import { CityCoverGame } from "@/components/game/city-cover/game";
-import { getCities } from "@/lib/geonames/citites";
+import { ProseMdx } from "@/components/mdx/ProseMdx";
+import DescriptionMdx from "@/components/game/city-cover/description.mdx";
 
-export default async function CityCoverPage() {
-  const cities = await getCities({ minimumPopulation: 1e5 });
-
-  return <CityCoverGame cities={cities} />;
+export default function CityCoverPage() {
+  return (
+    <div className="p-6">
+      <ProseMdx>
+        <DescriptionMdx />
+      </ProseMdx>
+    </div>
+  );
 }

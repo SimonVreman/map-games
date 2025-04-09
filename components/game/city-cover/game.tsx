@@ -10,11 +10,22 @@ import {
   reachedHeight,
   unreachableBandsForCities,
 } from "./bands";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function CityCoverGame({ cities }: { cities: City[] }) {
-  const added = useAppStore((s) => s.cityCover.cities);
-  const bandSize = useAppStore((s) => s.cityCover.options.bandSize);
+  const router = useRouter();
 
+  const [added, options] = useAppStore((s) => [
+    s.cityCover.cities,
+    s.cityCover.options,
+  ]);
+
+  useEffect(() => {
+    if (options == null) router.replace("/city-cover");
+  }, [options, router]);
+
+  const bandSize = options?.bandSize ?? 0;
   const bands = bandsForCities({ cities: added, bandSize });
   const unreachableBands = unreachableBandsForCities({ cities, bandSize });
   const reachableHeight = 180 - reachedHeight({ bands: unreachableBands });
@@ -25,7 +36,7 @@ export function CityCoverGame({ cities }: { cities: City[] }) {
     <div className="size-full relative">
       <CityCoverControls cities={cities} completion={reachedHeightFraction} />
 
-      <Map>
+      <Map mapId="9d629ce29fb7cb6a">
         {bands.map((band) => (
           <Polygon
             key={band.join(",")}
