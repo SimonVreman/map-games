@@ -1,10 +1,10 @@
 import DescriptionMdx from "@/components/game/city-blocks/description.mdx";
-import { MdxPage } from "@/components/mdx/mdx-page";
+import { ProseMdx } from "@/components/mdx/prose-mdx";
 
 export default function CityBlocksPage() {
   return (
-    <MdxPage>
+    <ProseMdx>
       <DescriptionMdx />
-    </MdxPage>
+    </ProseMdx>
   );
 }

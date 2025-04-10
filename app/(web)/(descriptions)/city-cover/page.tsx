@@ -1,10 +1,10 @@
 import DescriptionMdx from "@/components/game/city-cover/description.mdx";
-import { MdxPage } from "@/components/mdx/mdx-page";
+import { ProseMdx } from "@/components/mdx/prose-mdx";
 
 export default function CityCoverPage() {
   return (
-    <MdxPage>
+    <ProseMdx>
       <DescriptionMdx />
-    </MdxPage>
+    </ProseMdx>
   );
 }
