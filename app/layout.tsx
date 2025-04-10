@@ -3,6 +3,7 @@ import { Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { AppStoreProvider } from "@/lib/store/provider";
 import { Toaster } from "sonner";
+import Script from "next/script";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -15,8 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Map Games",
-  description: "Map Quizzes by Simon Vreman",
+  title: {
+    default: "Map Games",
+    template: "%s | Map Games",
+  },
+  description: "Map Games by Simon Vreman",
   robots: { index: false, follow: false },
 };
 
@@ -27,6 +31,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://cdn.seline.com/seline.js"
+          data-token="f55036587aca014"
+          strategy="afterInteractive"
+        />
+      </head>
       <body
         className={`${figtree.variable} ${geistMono.variable} antialiased min-w-dvw min-h-dvh font-sans`}
       >
