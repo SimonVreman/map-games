@@ -23,7 +23,6 @@ export function CityCoverGame({ cities }: { cities: City[] }) {
   const [added, options] = useAppStore((s) => [
     s.cityCover.cities,
     s.cityCover.options,
-    s.cityCover,
   ]);
 
   const bandSize = options?.bandSize ?? 0;

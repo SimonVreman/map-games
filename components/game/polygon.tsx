@@ -6,7 +6,7 @@ import {
   useRef,
 } from "react";
 
-import { GoogleMapsContext, useMapsLibrary } from "@vis.gl/react-google-maps";
+import { GoogleMapsContext } from "@vis.gl/react-google-maps";
 
 import type { Ref } from "react";
 
@@ -51,8 +51,6 @@ function usePolygon(props: PolygonProps) {
     onMouseOut,
   });
 
-  const geometryLibrary = useMapsLibrary("geometry");
-
   const polygon = useRef(new google.maps.Polygon()).current;
   // update PolygonOptions (note the dependencies aren't properly checked
   // here, we just assume that setOptions is smart enough to not waste a
@@ -63,16 +61,9 @@ function usePolygon(props: PolygonProps) {
 
   const map = useContext(GoogleMapsContext)?.map;
 
-  // update the path with the encodedPath
   useMemo(() => {
-    if (!geometryLibrary) return;
-    // const paths =
-    //   props.paths ??
-    //   props.encodedPaths!.map((path) =>
-    //     geometryLibrary.encoding.decodePath(path)
-    //   );
     polygon.setPaths(paths);
-  }, [polygon, paths, geometryLibrary]);
+  }, [polygon, paths]);
 
   // create polygon instance and add to the map once the map is available
   useEffect(() => {

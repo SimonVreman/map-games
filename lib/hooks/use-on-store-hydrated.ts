@@ -10,8 +10,6 @@ export function useOnStoreHydrated(fn: (state: AppStore) => void) {
     if (didRun) return;
     setDidRun(true);
 
-    console.log("on store hydrate");
-
     const hasHydrated = store.persist.hasHydrated();
 
     // Add listener if not hydrated yet, otherwise run the function immediately
