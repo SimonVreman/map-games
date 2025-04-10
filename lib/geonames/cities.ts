@@ -1,5 +1,6 @@
 import { unstable_cacheLife } from "next/cache";
 import { normalize } from "../utils";
+import { GeonamesLanguage } from "./language";
 
 const apiUrl = "http://api.geonames.org";
 
@@ -13,8 +14,10 @@ export type City = {
 
 export async function getCities({
   minimumPopulation,
+  language,
 }: {
   minimumPopulation: number;
+  language?: GeonamesLanguage;
 }) {
   "use cache";
   unstable_cacheLife("geonames");
@@ -24,7 +27,7 @@ export async function getCities({
   let startRow = 0;
 
   while (true) {
-    const data = await fetchCities({ startRow, maxRows });
+    const data = await fetchCities({ startRow, maxRows, language });
 
     if (data.length === 0) break;
 
@@ -41,9 +44,11 @@ export async function getCities({
 async function fetchCities({
   startRow,
   maxRows,
+  language = "en",
 }: {
   startRow: number;
   maxRows: number;
+  language?: GeonamesLanguage;
 }): Promise<City[]> {
   const url = new URL(`${apiUrl}/searchJSON`);
 
@@ -53,6 +58,7 @@ async function fetchCities({
     orderby: "population",
     maxRows: maxRows.toString(),
     startRow: startRow.toString(),
+    lang: language,
   }).toString();
 
   const response = await fetch(url.toString());

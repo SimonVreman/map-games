@@ -1,4 +1,4 @@
-import { City } from "@/lib/geonames/citites";
+import { City } from "@/lib/geonames/cities";
 
 export function blockForCity({
   city,

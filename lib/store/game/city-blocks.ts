@@ -1,4 +1,4 @@
-import { City } from "@/lib/geonames/citites";
+import { City } from "@/lib/geonames/cities";
 import { ImmerStateCreator } from "../types";
 
 type Options = {

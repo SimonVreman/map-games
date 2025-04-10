@@ -4,7 +4,7 @@ import { useAppStore } from "@/lib/store/provider";
 import { Map } from "../map";
 import { Polygon } from "../polygon";
 import { CityCoverControls } from "./controls";
-import { City } from "@/lib/geonames/citites";
+import { City } from "@/lib/geonames/cities";
 import {
   bandsForCities,
   reachedHeight,

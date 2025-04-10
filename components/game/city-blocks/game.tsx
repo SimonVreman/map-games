@@ -4,7 +4,7 @@ import { useAppStore } from "@/lib/store/provider";
 import { Map } from "../map";
 import { Polygon } from "../polygon";
 import { CityBlocksControls } from "./controls";
-import { City } from "@/lib/geonames/citites";
+import { City } from "@/lib/geonames/cities";
 import { useRouter } from "next/navigation";
 import { useOnStoreHydrated } from "@/lib/hooks/use-on-store-hydrated";
 import { blocksForCities } from "./blocks";

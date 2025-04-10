@@ -14,10 +14,8 @@ export const GameSettingsBase = withForm({
     return (
       <form.AppField name="difficulty">
         {(field) => (
-          <field.Item className="space-y-3">
-            <field.Label className="sr-only">
-              Choose your difficulty
-            </field.Label>
+          <field.Item className="space-y-1">
+            <field.Label className="sr-only">Difficulty</field.Label>
             <field.Control>
               <RadioGroup
                 value={field.state.value}
