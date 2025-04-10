@@ -1,5 +1,4 @@
 import {
-  forwardRef,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -80,16 +79,13 @@ function usePolygon(props: PolygonProps) {
     if (!map) {
       if (map === undefined)
         console.error("<Polygon> has to be inside a Map component.");
-
       return;
     }
 
     polygon.setMap(map);
 
-    return () => {
-      polygon.setMap(null);
-    };
-  }, [map]);
+    return () => polygon.setMap(null);
+  }, [map, polygon]);
 
   // attach and re-attach event-handlers when any of the properties change
   useEffect(() => {
@@ -111,9 +107,7 @@ function usePolygon(props: PolygonProps) {
       });
     });
 
-    return () => {
-      gme.clearInstanceListeners(polygon);
-    };
+    return () => gme.clearInstanceListeners(polygon);
   }, [polygon]);
 
   return polygon;
@@ -122,10 +116,13 @@ function usePolygon(props: PolygonProps) {
 /**
  * Component to render a polygon on a map
  */
-export const Polygon = forwardRef((props: PolygonProps, ref: PolygonRef) => {
+export function Polygon({
+  ref,
+  ...props
+}: PolygonProps & { ref?: PolygonRef }) {
   const polygon = usePolygon(props);
 
-  useImperativeHandle(ref, () => polygon, []);
+  useImperativeHandle(ref, () => polygon, [polygon]);
 
   return null;
-});
+}

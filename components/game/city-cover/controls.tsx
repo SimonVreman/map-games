@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function CityCoverControls({
   cities,
@@ -15,10 +16,10 @@ export function CityCoverControls({
   completion: number;
 }) {
   const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
 
-  const [addCity, reset, options, added] = useAppStore((s) => [
+  const [addCity, options, added] = useAppStore((s) => [
     s.cityCover.addCity,
-    s.cityCover.reset,
     s.cityCover.options,
     s.cityCover.cities,
   ]);
@@ -76,7 +77,11 @@ export function CityCoverControls({
           </div>
 
           <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center">
-            <Button variant="ghost" size="icon" onClick={() => reset()}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.push("/city-cover")}
+            >
               <XIcon className="size-6 stroke-[1.5]" />
             </Button>
           </div>

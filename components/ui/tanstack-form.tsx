@@ -7,6 +7,7 @@ import {
   createFormHookContexts,
   useStore,
 } from "@tanstack/react-form";
+import { Button } from "./button";
 
 const {
   fieldContext,
@@ -19,13 +20,16 @@ const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
   fieldComponents: {
-    FormLabel,
-    FormControl,
-    FormDescription,
-    FormMessage,
-    FormItem,
+    Label: FormLabel,
+    Control: FormControl,
+    Description: FormDescription,
+    Message: FormMessage,
+    Item: FormItem,
   },
-  formComponents: {},
+  formComponents: {
+    Form,
+    Submit,
+  },
 });
 
 type FormItemContextValue = {
@@ -55,9 +59,8 @@ const useFieldContext = () => {
   const { name, store, ...fieldContext } = _useFieldContext();
   const errors = useStore(store, (state) => state.meta.errors);
 
-  if (!fieldContext) {
+  if (!fieldContext)
     throw new Error("useFieldContext should be used within <FormItem>");
-  }
 
   return {
     id,
@@ -137,6 +140,40 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     >
       {body}
     </p>
+  );
+}
+
+function Form({
+  form,
+  ...props
+}: React.ComponentProps<"form"> & {
+  form: Pick<
+    ReturnType<ReturnType<typeof createFormHook>["useAppForm"]>,
+    "handleSubmit" | "AppForm"
+  >;
+}) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    form.handleSubmit();
+  };
+
+  return (
+    <form.AppForm>
+      <form onSubmit={handleSubmit} {...props}></form>
+    </form.AppForm>
+  );
+}
+
+function Submit(props: React.ComponentProps<typeof Button>) {
+  const form = useFormContext();
+
+  return (
+    <form.Subscribe selector={(s) => s.isSubmitting}>
+      {(isSubmitting) => (
+        <Button type="submit" loading={isSubmitting} {...props} />
+      )}
+    </form.Subscribe>
   );
 }
 

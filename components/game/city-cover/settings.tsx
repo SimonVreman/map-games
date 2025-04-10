@@ -21,7 +21,12 @@ const options = {
 
 export function CityCoverSettings({ className }: { className?: string }) {
   const router = useRouter();
-  const setOptions = useAppStore((state) => state.cityCover.setOptions);
+
+  const [setOptions, reset, canResume] = useAppStore((s) => [
+    s.cityCover.setOptions,
+    s.cityCover.reset,
+    s.cityCover.cities.length > 0,
+  ]);
 
   const form = useAppForm({
     validators: { onChange: FormSchema },
@@ -29,38 +34,36 @@ export function CityCoverSettings({ className }: { className?: string }) {
       difficulty: "easy",
     },
     onSubmit: ({ value }) => {
+      reset();
       setOptions(options[value.difficulty as keyof typeof options]);
-      router.push("/city-cover/play");
+      handleResume();
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    form.handleSubmit();
+  const handleResume = () => {
+    router.push("/city-cover/play");
   };
 
   return (
-    <form className={cn("space-y-6", className)} onSubmit={handleSubmit}>
-      <form.AppField
-        name="difficulty"
-        children={(field) => (
-          <field.FormItem className="space-y-3">
-            <field.FormLabel className="sr-only">
+    <form.Form form={form} className={cn("space-y-6", className)}>
+      <form.AppField name="difficulty">
+        {(field) => (
+          <field.Item className="space-y-3">
+            <field.Label className="sr-only">
               Choose your difficulty
-            </field.FormLabel>
-            <field.FormControl>
+            </field.Label>
+            <field.Control>
               <RadioGroup
                 value={field.state.value}
                 onValueChange={(value) => field.handleChange(value)}
                 onBlur={field.handleBlur}
                 className="grid gap-2 grid-cols-3 text-center"
               >
-                <field.FormItem>
-                  <field.FormControl className="hidden">
+                <field.Item>
+                  <field.Control className="hidden">
                     <RadioGroupItem value="easy" />
-                  </field.FormControl>
-                  <field.FormLabel
+                  </field.Control>
+                  <field.Label
                     className={cn(
                       "border border-input flex flex-col items-center justify-center gap-1 px-2 py-4 rounded-md hover:bg-green-50 dark:hover:bg-green-950 transition-colors",
                       {
@@ -74,13 +77,13 @@ export function CityCoverSettings({ className }: { className?: string }) {
                     <p className="text-muted-foreground">
                       Perfect for beginners
                     </p>
-                  </field.FormLabel>
-                </field.FormItem>
-                <field.FormItem>
-                  <field.FormControl className="hidden">
+                  </field.Label>
+                </field.Item>
+                <field.Item>
+                  <field.Control className="hidden">
                     <RadioGroupItem value="medium" />
-                  </field.FormControl>
-                  <field.FormLabel
+                  </field.Control>
+                  <field.Label
                     className={cn(
                       "border border-input flex flex-col items-center justify-center gap-1 px-2 py-4 rounded-md hover:bg-yellow-50 dark:hover:bg-yellow-950 transition-colors",
                       {
@@ -94,13 +97,13 @@ export function CityCoverSettings({ className }: { className?: string }) {
                       Medium
                     </p>
                     <p className="text-muted-foreground">Balanced challenge</p>
-                  </field.FormLabel>
-                </field.FormItem>
-                <field.FormItem>
-                  <field.FormControl className="hidden">
+                  </field.Label>
+                </field.Item>
+                <field.Item>
+                  <field.Control className="hidden">
                     <RadioGroupItem value="hard" />
-                  </field.FormControl>
-                  <field.FormLabel
+                  </field.Control>
+                  <field.Label
                     className={cn(
                       "border border-input flex flex-col items-center justify-center gap-1 px-2 py-4 rounded-md hover:bg-red-50 dark:hover:bg-red-950 transition-colors",
                       {
@@ -112,18 +115,28 @@ export function CityCoverSettings({ className }: { className?: string }) {
                     <FlameIcon className="size-8 stroke-1 text-red-700" />
                     <p className="text-lg font-medium text-foreground">Hard</p>
                     <p className="text-muted-foreground">Close to impossible</p>
-                  </field.FormLabel>
-                </field.FormItem>
+                  </field.Label>
+                </field.Item>
               </RadioGroup>
-            </field.FormControl>
-            <field.FormMessage />
-          </field.FormItem>
+            </field.Control>
+            <field.Message />
+          </field.Item>
         )}
-      />
+      </form.AppField>
 
-      <Button type="submit" size={"lg"}>
-        Start game
-      </Button>
-    </form>
+      <div className="flex gap-4 max-sm:flex-col max-sm:justify-stretch justify-end">
+        {canResume && (
+          <Button
+            type="button"
+            variant="secondary"
+            size="lg"
+            onClick={handleResume}
+          >
+            Resume
+          </Button>
+        )}
+        <form.Submit size="lg">Start game</form.Submit>
+      </div>
+    </form.Form>
   );
 }

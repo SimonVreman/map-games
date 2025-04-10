@@ -32,7 +32,9 @@ export function Map({
         colorScheme={colorScheme}
         defaultCenter={{ lat: 0, lng: 0 }}
         defaultZoom={3}
-        disableDefaultUI={true}
+        gestureHandling="greedy"
+        disableDefaultUI
+        reuseMaps
       >
         {children}
       </BaseMap>
