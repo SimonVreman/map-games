@@ -1,58 +1,49 @@
 import geopandas as gpd
 import math
 import shapely
+from brazil_ddd import ddds
+import unicodedata
 
 mercator_reach = 85.05112877980659
 x_domain = 1000
+rounding = 4
+simplify = 0.025
 
 def lat_lon_to_mercator(lat, lon):
-    """
-    Convert latitude and longitude to Mercator coordinates.
-    
-    Parameters:
-    lat (float): Latitude in degrees.
-    lon (float): Longitude in degrees.
-    
-    Returns:
-    tuple: (x, y) Mercator coordinates.
-    """
     # Convert latitude and longitude from degrees to radians
     lat_rad = math.radians(lat)
     lon_rad = math.radians(lon)
     
     # Mercator projection formulas
-    x = lon_rad  # x coordinate in radians
-    y = -math.log(math.tan(math.pi / 4 + lat_rad / 2))  # y coordinate in radians
+    x = math.pi + lon_rad  # x coordinate in radians
+    y = math.pi - math.log(math.tan(math.pi / 4 + lat_rad / 2))  # y coordinate in radians
 
     x *= x_domain / (2 * math.pi)  # Scale x to the domain
-    y *= x_domain * (mercator_reach / 90) / (2 * math.pi)  # Scale y to the domain
+    y *= x_domain / (2 * math.pi)  # Scale y to the domain
     
     return (x, y)
 
-def read_boundaries(file):
-    # Read the shapefile and explode the multipolygon into individual polygons
-    df = gpd.read_file(file).explode()
+def read_boundaries(df: gpd.GeoDataFrame, union=False):
+    # Explode the multipolygon into individual polygons
+    df = df.explode()
 
     # Filter out polygons with area less than a certain threshold
     # This is an arbitrary threshold to filter out small geometries
-    df = df[df.geometry.apply(lambda x: x.area > 1e-2)]
+    df = df[df.geometry.apply(lambda x: x.area > 1e-5)]
 
     # Convert the geometries to a list of simplified paths
-    # Each path is a list of coordinates
-    # paths = [shapely.get_coordinates(polygon.simplify(0.1).boundary) for polygon in df.geometry.to_list()]
     paths = []
-    for polygon in df.geometry.to_list():
+    geometries = [df.geometry.union_all()] if union else df.geometry.to_list()
+    for polygon in geometries:
         if isinstance(polygon, shapely.geometry.polygon.Polygon):
-            paths.append(list(polygon.simplify(0.05).exterior.coords))
+            paths.append(list(polygon.simplify(simplify).exterior.coords))
         elif isinstance(polygon, shapely.geometry.multipolygon.MultiPolygon):
             for poly in polygon.geoms:
-                paths.append(list(poly.simplify(0.05).exterior.coords))
+                paths.append(list(poly.simplify(simplify).exterior.coords))
 
     return paths
 
-def write_paths(file, paths):
-    output = open(file, 'w')
-
+def write_paths(output, paths):
     for path in paths:
         output.write('<path d="M')
         is_first = True
@@ -64,36 +55,59 @@ def write_paths(file, paths):
                 output.write('L')
 
             x, y = lat_lon_to_mercator(lat, lon)
-            output.write(f' {round(x, 4)} {round(y, 4)} ')
+            output.write(f' {round(x, rounding)} {round(y, rounding)} ')
 
         output.write('z" />\n')
 
+def normalize_string(s):
+    s = s.lower()
+    s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    s = s.replace('’', "'").replace('´', "'").replace('`', "'")
+    return s
+
+def write_brazil():
+    df = gpd.read_file("input/brazil/bra_admbnda_adm0_ibge_2020.shp")
+    output = open('output/brazil.path.txt', 'w')
+    write_paths(output, read_boundaries(df))
     output.close()
 
-# def create_svg():
-#     df = gpd.read_file("shp/bra_admbnda_adm0_ibge_2020.shp") 
+def write_brazil_first_administrative():
+    df = gpd.read_file("input/brazil/bra_admbnda_adm1_ibge_2020.shp")
+    output = open('output/brazil-first-administrative.path.txt', 'w')
+    write_paths(output, read_boundaries(df))
+    output.close()
 
-#     output = open('brazil.path.svg', 'w')
-#     geometry = df.geometry[0]
-#     coordinates = geometry.geoms[0].boundary.coords
-#     coordinate_count = len(coordinates)
+def write_brazil_phone():
+    df = gpd.read_file('input/brazil/bra_admbnda_adm2_ibge_2020.shp')
+    df['ADM2_PT_normalized'] = df['ADM2_PT'].apply(normalize_string)
 
-#     output.write('<path d="M')
+    output = open('output/brazil-dialing-codes.path.txt', 'w')
+    output.write('export const brazilPhoneCodes = [\n')
 
-#     for index, coordinate in coordinates:
-#         x, y = lat_lon_to_mercator(coordinate[1], coordinate[0])
-#         output.write(f' {x} {y} ')
-#         if index < coordinate_count - 1:
-#             output.write('L')
+    for ddd in ddds.keys():
+        normalized_ddd_cities = set(map(normalize_string, ddds[ddd]['adm2']))
+        normalized_ddd_2_cities = set(map(normalize_string, ddds[ddd]['adm2_2'])) if 'adm1_2' in ddds[ddd] else set()
 
-#     output.write('z" />')
-#     output.close()
+        df_ddd = df[
+            (df['ADM1_PT'] == ddds[ddd]['adm1']) & df['ADM2_PT_normalized'].isin(normalized_ddd_cities)
+        ] if 'adm1_2' not in ddds[ddd] else df[
+            ((df['ADM1_PT'] == ddds[ddd]['adm1']) & df['ADM2_PT_normalized'].isin(normalized_ddd_cities)) | 
+            ((df['ADM1_PT'] == ddds[ddd]['adm1_2']) & df['ADM2_PT_normalized'].isin(normalized_ddd_2_cities))
+        ]
 
-def caculate_svg_bounds():
-    origin = lat_lon_to_mercator(-85.0511, -180)
-    opposite = lat_lon_to_mercator(85.0511, 180)
-    width = opposite[0] - origin[0]
-    height = opposite[1] - origin[1]
-    return f"{round(origin[0], 0)} {round(origin[1], 1)} {round(width, 0)} {round(height,1)}"
+        if len(normalized_ddd_2_cities) > 0:
+            print(f"Warning: DDD {ddd} has two states: {ddds[ddd]['adm1']} and {ddds[ddd]['adm1_2']}")
+        
+        cities_not_in_df = (normalized_ddd_cities | normalized_ddd_2_cities) - set(df_ddd['ADM2_PT_normalized'])
+        if len(cities_not_in_df) > 0:
+            print(f"Warning: Not all cities found for DDD {ddd} in {ddds[ddd]['adm1']}, missing: {cities_not_in_df}")
 
-write_paths('brazil.path.svg', read_boundaries("input/brazil/bra_admbnda_adm0_ibge_2020.shp"))
+        paths = read_boundaries(df_ddd, union=True)
+        output.write(f'{{ code: {ddd}, paths: ({'<>' if len(paths) > 1 else ''}')
+        write_paths(output, paths)
+        output.write(f'{'</>' if len(paths) > 1 else ''})}},\n')
+    
+    output.write(']\n')
+    output.close()
+
+write_brazil_phone()
