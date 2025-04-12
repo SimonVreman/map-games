@@ -1,8 +1,9 @@
 "use client";
 
+import { brazilPhoneCodes } from "@/lib/mapping/paths/brazil";
 import { SvgMap } from "../svg-map";
-import { BrazilPath } from "./brazil";
 import { BrazilTelephoneCodesControls } from "./controls";
+import { Fragment } from "react";
 
 export function BrazilTelephoneCodesGame() {
   return (
@@ -19,7 +20,21 @@ export function BrazilTelephoneCodesGame() {
           padding: 2,
         }}
       >
-        <BrazilPath />
+        <image
+          opacity={0.2}
+          href="/img/brazil-phone-codes.png"
+          x={295}
+          y={485}
+          width={109}
+          height={114.5}
+          preserveAspectRatio="none"
+        />
+
+        <g stroke="red" fillOpacity={0.2} fill="red">
+          {brazilPhoneCodes.map(({ code, paths }) => (
+            <Fragment key={code}>{paths}</Fragment>
+          ))}
+        </g>
       </SvgMap>
     </div>
   );

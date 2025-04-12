@@ -20,14 +20,18 @@ function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
     lat: north + padding,
     lng: west - padding,
   });
+
   const southEast = projectMercator({
     lat: south - padding,
     lng: east + padding,
   });
-  console.log(northWest, southEast);
-  return `${northWest.x} ${northWest.y} ${Math.abs(
-    southEast.x - northWest.x
-  )} ${Math.abs(northWest.y - southEast.y)}`;
+
+  const x = Math.round(northWest.x * 100) / 100;
+  const y = Math.round(northWest.y * 100) / 100;
+  const width = Math.round(Math.abs(southEast.x - northWest.x) * 100) / 100;
+  const height = Math.round(Math.abs(northWest.y - southEast.y) * 100) / 100;
+
+  return `${x} ${y} ${width} ${height}`;
 }
 
 export function SvgMap({
@@ -48,8 +52,6 @@ export function SvgMap({
       strokeLinejoin="round"
       {...props}
     >
-      {/* <path strokeWidth="0.1" d="M -500 0 L 500 0 z" />
-      <path strokeWidth="0.1" d="M 0 -472.5L 0 472.5 z" /> */}
       {children}
     </svg>
   );

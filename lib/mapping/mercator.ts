@@ -8,13 +8,11 @@ export function projectMercator({ lat, lng }: { lat: number; lng: number }) {
   const latRadians = (lat * Math.PI) / 180;
   const lngRadians = (lng * Math.PI) / 180;
 
-  const x = lngRadians;
-  const y = -Math.log(Math.tan(Math.PI / 4 + latRadians / 2));
+  const x = Math.PI + lngRadians;
+  const y = Math.PI - Math.log(Math.tan(Math.PI / 4 + latRadians / 2));
 
-  const scaledX = x * (mercatorConstants.domain / (2 * Math.PI));
-  const scaledY =
-    (y * (mercatorConstants.domain * (mercatorConstants.reach / 90))) /
-    (2 * Math.PI);
+  const scaledX = (x * mercatorConstants.domain) / (2 * Math.PI);
+  const scaledY = (y * mercatorConstants.domain) / (2 * Math.PI);
 
   return { x: scaledX, y: scaledY };
 }
