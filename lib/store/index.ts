@@ -4,8 +4,14 @@ import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from "zustand/middleware";
 import merge from "deepmerge";
 import { CityBlocksSlice, createCityBlocksSlice } from "./game/city-blocks";
+import {
+  BrazilTelephoneCodesSlice,
+  createBrazilTelephoneCodesSlice,
+} from "./game/brazil-telephone-codes";
 
-export type AppStore = CityCoverSlice & CityBlocksSlice;
+export type AppStore = CityCoverSlice &
+  CityBlocksSlice &
+  BrazilTelephoneCodesSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -13,6 +19,7 @@ export const createAppStore = () =>
       immer((...a) => ({
         ...createCityCoverSlice(...a),
         ...createCityBlocksSlice(...a),
+        ...createBrazilTelephoneCodesSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),

@@ -3,7 +3,7 @@ import { useAppStore } from "@/lib/store/provider";
 import { normalize } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ControlsBase } from "../controls-base";
+import { InputControlsBase } from "../input-controls-base";
 
 export function CityCoverControls({
   cities,
@@ -41,7 +41,10 @@ export function CityCoverControls({
   };
 
   return (
-    <ControlsBase inputValue={inputValue} handleInputChange={handleInputChange}>
+    <InputControlsBase
+      inputValue={inputValue}
+      handleInputChange={handleInputChange}
+    >
       <div className="leading-tight border-r pr-3">
         <p className="text-sm font-medium">Cities found</p>
         <p className="font-medium">
@@ -59,6 +62,6 @@ export function CityCoverControls({
           <span className="text-sm text-muted-foreground">%</span>
         </p>
       </div>
-    </ControlsBase>
+    </InputControlsBase>
   );
 }

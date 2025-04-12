@@ -4,7 +4,7 @@ import { normalize } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
 import { blockForCity } from "./blocks";
-import { ControlsBase } from "../controls-base";
+import { InputControlsBase } from "../input-controls-base";
 
 export function CityBlocksControls({
   cities,
@@ -46,7 +46,10 @@ export function CityBlocksControls({
   };
 
   return (
-    <ControlsBase inputValue={inputValue} handleInputChange={handleInputChange}>
+    <InputControlsBase
+      inputValue={inputValue}
+      handleInputChange={handleInputChange}
+    >
       <div className="leading-tight border-r pr-3">
         <p className="text-sm font-medium">Cities covered</p>
         <p className="font-medium">
@@ -64,6 +67,6 @@ export function CityBlocksControls({
           <span className="text-sm text-muted-foreground">%</span>
         </p>
       </div>
-    </ControlsBase>
+    </InputControlsBase>
   );
 }

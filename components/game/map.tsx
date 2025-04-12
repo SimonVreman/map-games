@@ -1,15 +1,23 @@
 "use client";
 
 import { APIProvider, Map as BaseMap } from "@vis.gl/react-google-maps";
-import { useLayoutEffect, useState } from "react";
+import { ComponentProps, useLayoutEffect, useState } from "react";
+
+const middlePosition = { lat: 0, lng: 0 };
 
 export function Map({
   mapId,
+  defaultCenter = middlePosition,
+  defaultZoom = 3,
+  defaultBounds,
   children,
 }: {
   mapId: string;
   children?: React.ReactNode;
-}) {
+} & Pick<
+  ComponentProps<typeof BaseMap>,
+  "defaultCenter" | "defaultZoom" | "defaultBounds"
+>) {
   const [colorScheme, setColorScheme] = useState<"LIGHT" | "DARK">("LIGHT");
 
   useLayoutEffect(() => {
@@ -30,8 +38,9 @@ export function Map({
       <BaseMap
         mapId={mapId}
         colorScheme={colorScheme}
-        defaultCenter={{ lat: 0, lng: 0 }}
-        defaultZoom={3}
+        defaultCenter={defaultCenter}
+        defaultZoom={defaultZoom}
+        defaultBounds={defaultBounds}
         gestureHandling="greedy"
         disableDefaultUI
         reuseMaps
