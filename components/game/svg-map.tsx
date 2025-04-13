@@ -1,4 +1,5 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
+import { cn } from "@/lib/utils";
 
 type Bounds = {
   north: number;
@@ -37,12 +38,14 @@ function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
 export function SvgMap({
   bounds = defaultBounds,
   children,
+  className,
   ...props
 }: {
   bounds?: Bounds;
 } & React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+      className={cn("bg-secondary", className)}
       viewBox={calculateViewBox(bounds)}
       width="100%"
       height="100%"
