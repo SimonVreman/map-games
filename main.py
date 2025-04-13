@@ -30,10 +30,11 @@ def read_boundaries(df: gpd.GeoDataFrame, union=False):
     # Filter out polygons with area less than a certain threshold
     # This is an arbitrary threshold to filter out small geometries
     df = df[df.geometry.apply(lambda x: x.area > 1e-5)]
+    union = df.geometry.union_all()
 
     # Convert the geometries to a list of simplified paths
     paths = []
-    geometries = [df.geometry.union_all()] if union else df.geometry.to_list()
+    geometries = [union] if union else df.geometry.to_list()
     for polygon in geometries:
         if isinstance(polygon, shapely.geometry.polygon.Polygon):
             paths.append(list(polygon.simplify(simplify).exterior.coords))
@@ -41,7 +42,9 @@ def read_boundaries(df: gpd.GeoDataFrame, union=False):
             for poly in polygon.geoms:
                 paths.append(list(poly.simplify(simplify).exterior.coords))
 
-    return paths
+    representative = union.representative_point()
+    
+    return paths, lat_lon_to_mercator(representative.y, representative.x)
 
 def write_paths(output, paths):
     for path in paths:
@@ -68,13 +71,15 @@ def normalize_string(s):
 def write_brazil():
     df = gpd.read_file("input/brazil/bra_admbnda_adm0_ibge_2020.shp")
     output = open('output/brazil.path.txt', 'w')
-    write_paths(output, read_boundaries(df))
+    paths,_ = read_boundaries(df)
+    write_paths(output, paths)
     output.close()
 
 def write_brazil_first_administrative():
     df = gpd.read_file("input/brazil/bra_admbnda_adm1_ibge_2020.shp")
     output = open('output/brazil-first-administrative.path.txt', 'w')
-    write_paths(output, read_boundaries(df))
+    paths,_ = read_boundaries(df)
+    write_paths(output, paths)
     output.close()
 
 def write_brazil_phone():
@@ -94,20 +99,19 @@ def write_brazil_phone():
             ((df['ADM1_PT'] == ddds[ddd]['adm1']) & df['ADM2_PT_normalized'].isin(normalized_ddd_cities)) | 
             ((df['ADM1_PT'] == ddds[ddd]['adm1_2']) & df['ADM2_PT_normalized'].isin(normalized_ddd_2_cities))
         ]
-
-        if len(normalized_ddd_2_cities) > 0:
-            print(f"Warning: DDD {ddd} has two states: {ddds[ddd]['adm1']} and {ddds[ddd]['adm1_2']}")
         
         cities_not_in_df = (normalized_ddd_cities | normalized_ddd_2_cities) - set(df_ddd['ADM2_PT_normalized'])
         if len(cities_not_in_df) > 0:
             print(f"Warning: Not all cities found for DDD {ddd} in {ddds[ddd]['adm1']}, missing: {cities_not_in_df}")
 
-        paths = read_boundaries(df_ddd, union=True)
-        output.write(f'{{ code: {ddd}, paths: ({'<>' if len(paths) > 1 else ''}')
+        paths, center = read_boundaries(df_ddd, union=True)
+        output.write(f'{{ code: {ddd}, center: [{round(center[0], rounding)},{round(center[1], rounding)}], paths: ({'<>' if len(paths) > 1 else ''}')
         write_paths(output, paths)
         output.write(f'{'</>' if len(paths) > 1 else ''})}},\n')
     
     output.write(']\n')
     output.close()
 
-write_brazil_phone()
+# write_brazil_phone()
+# write_brazil()
+write_brazil_first_administrative()
