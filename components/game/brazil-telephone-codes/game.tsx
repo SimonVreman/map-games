@@ -4,7 +4,10 @@ import { brazilPhoneCodes } from "@/lib/mapping/brazil/paths/phone-codes";
 import { SvgMap } from "../svg-map";
 import { BrazilTelephoneCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { brazilFirstAdministrativePaths } from "@/lib/mapping/brazil/paths";
+import {
+  brazilFirstAdministrativePaths,
+  brazilPaths,
+} from "@/lib/mapping/brazil/paths";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -76,6 +79,9 @@ export function BrazilTelephoneCodesGame() {
         </g>
         <g className="stroke-secondary-foreground/30 pointer-events-none">
           {brazilFirstAdministrativePaths}
+        </g>
+        <g className="stroke-secondary-foreground pointer-events-none">
+          {brazilPaths}
         </g>
       </SvgMap>
     </div>
