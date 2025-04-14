@@ -84,11 +84,11 @@ export function BrazilTelephoneCodesGame() {
               x={center[0]}
               y={center[1]}
               z={100}
-              fill="black"
               fillOpacity={1}
+              strokeWidth={0}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="pointer-events-none"
+              className="pointer-events-none fill-foreground"
               opacity={positive === code || negative === code || hints ? 1 : 0}
             >
               {code}
