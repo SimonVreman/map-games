@@ -22,11 +22,13 @@ const randomPattern = () =>
   chevronPatterns[Math.floor(Math.random() * chevronPatterns.length)];
 
 const newPattern = (oldPattern?: string) => {
+  console.log("selecting new pattern, old pattern:", oldPattern);
   let pattern = randomPattern();
 
   // Ensure the new pattern is different from the old one
-  while (newPattern.name === oldPattern) pattern = randomPattern();
+  while (pattern.name === oldPattern) pattern = randomPattern();
 
+  console.log("selected new pattern:", pattern.name);
   return {
     pattern,
     maximum: countries.filter((v) => v.colors.includes(pattern.name as never))
