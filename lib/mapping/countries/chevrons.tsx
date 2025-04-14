@@ -17,10 +17,12 @@ import { hungaryPaths } from "./hungary";
 import { icelandPaths } from "./iceland";
 import { irelandPaths } from "./ireland";
 import { italyPaths } from "./italy";
+import { kosovoPaths } from "./kosovo";
 import { latviaPaths } from "./latvia";
 import { lithuaniaPaths } from "./lithuania";
 import { luxembourgPaths } from "./luxembourg";
 import { maltaPaths } from "./malta";
+import { moldovaPaths } from "./moldova";
 import { montenegroPaths } from "./montenegro";
 import { netherlandsPaths } from "./netherlands";
 import { northMacedoniaPaths } from "./north-macedonia";
@@ -78,6 +80,7 @@ export const europeanChevrons = [
   { name: "Iceland", paths: icelandPaths, colors: ["yellowOnBlack"] },
   { name: "Ireland", paths: irelandPaths, colors: ["yellowOnBlack"] },
   { name: "Italy", paths: italyPaths, colors: ["whiteOnBlack"] },
+  { name: "Kosovo", paths: kosovoPaths, colors: ["blackOnWhite"] },
   { name: "Latvia", paths: latviaPaths, colors: ["redOnWhite"] },
   { name: "Lithuania", paths: lithuaniaPaths, colors: ["redOnWhite"] },
   { name: "Luxembourg", paths: luxembourgPaths, colors: ["yellowOnBlack"] },
@@ -94,6 +97,7 @@ export const europeanChevrons = [
     colors: ["redOnWhite"],
   },
   { name: "Norway", paths: norwayPaths, colors: ["yellowOnBlack"] },
+  { name: "Moldova", paths: moldovaPaths, colors: ["redOnWhite"] },
   { name: "Poland", paths: polandPaths, colors: ["redOnWhite"] },
   { name: "Portugal", paths: portugalPaths, colors: ["yellowOnBlack"] },
   { name: "Serbia", paths: republicOfSerbiaPaths, colors: ["blackOnWhite"] },

@@ -1,6 +1,6 @@
 import { useAppStore } from "@/lib/store/provider";
 import { PinControlsBase } from "../pin-controls-base";
-import { ChevronPatterns } from "./chevron-patterns";
+import { svgChevronPatterns } from "./chevron-patterns";
 
 export function EuropeanChevronsControls() {
   const [streak, pattern, guessed, maximum] = useAppStore((s) => [
@@ -35,20 +35,18 @@ export function EuropeanChevronsControls() {
       <p>Where is this chevron seen?</p>
 
       <svg
-        viewBox="0 0 7 7"
+        viewBox="0 0 10 10"
         className="absolute top-0 right-0 h-full"
         preserveAspectRatio="xMinYMin"
       >
-        <defs>
-          <ChevronPatterns />
-        </defs>
+        <defs>{svgChevronPatterns}</defs>
         <rect
           x={0}
           y={0}
           width="100%"
           height="100%"
           strokeWidth={0}
-          fill={`url(#${pattern?.name})`}
+          fill={`url(#${pattern?.name}-base)`}
         />
       </svg>
     </PinControlsBase>

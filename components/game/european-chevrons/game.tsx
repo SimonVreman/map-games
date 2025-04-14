@@ -5,7 +5,7 @@ import { SvgMap } from "../svg-map";
 import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
-import { ChevronPatterns } from "./chevron-patterns";
+import { svgChevronPatterns } from "./chevron-patterns";
 
 export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum] = useAppStore((s) => [
@@ -43,7 +43,9 @@ export function EuropeanChevronsGame() {
         }}
         attribution={
           <>
-            <a href="https://www.reddit.com/user/isaacSW/">u/isaacSW</a>
+            <a href="https://www.reddit.com/user/isaacSW/">
+              Mapped by u/isaacSW
+            </a>
             <span className="mx-1">-</span>
             <a href="https://www.naturalearthdata.com/" target="_blank">
               Made with Natural Earth.
@@ -51,9 +53,7 @@ export function EuropeanChevronsGame() {
           </>
         }
       >
-        <defs>
-          <ChevronPatterns />
-        </defs>
+        <defs>{svgChevronPatterns}</defs>
         <g className="stroke-secondary-foreground">
           {europeanChevrons.map(({ name, paths }) => (
             <g
@@ -68,9 +68,9 @@ export function EuropeanChevronsGame() {
             <g
               key={name}
               className="transition-all pointer-events-none"
-              fill={`url(#${colors[0]})`}
+              fill={`url(#${colors.join(",")})`}
               fillOpacity={highlighted.includes(name) ? 1 : 0}
-              strokeWidth={0}
+              stroke="transpararent"
             >
               {paths}
             </g>

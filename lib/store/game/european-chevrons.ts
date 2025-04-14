@@ -41,7 +41,7 @@ export const createEuropeanChevronsSlice: ImmerStateCreator<
         set(({ europeanChevrons }) => {
           europeanChevrons.highlighted = [];
         }),
-      2000
+      3000
     );
 
   return {
