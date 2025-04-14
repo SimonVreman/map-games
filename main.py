@@ -30,11 +30,11 @@ def read_boundaries(df: gpd.GeoDataFrame, union=False):
     # Filter out polygons with area less than a certain threshold
     # This is an arbitrary threshold to filter out small geometries
     df = df[df.geometry.apply(lambda x: x.area > 1e-5)]
-    union = df.geometry.union_all()
+    union_geometry = df.geometry.union_all()
 
     # Convert the geometries to a list of simplified paths
     paths = []
-    geometries = [union] if union else df.geometry.to_list()
+    geometries = [union_geometry] if union else df.geometry.to_list()
     for polygon in geometries:
         if isinstance(polygon, shapely.geometry.polygon.Polygon):
             paths.append(list(polygon.simplify(simplify).exterior.coords))
@@ -42,7 +42,7 @@ def read_boundaries(df: gpd.GeoDataFrame, union=False):
             for poly in polygon.geoms:
                 paths.append(list(poly.simplify(simplify).exterior.coords))
 
-    representative = union.representative_point()
+    representative = union_geometry.representative_point()
     
     return paths, lat_lon_to_mercator(representative.y, representative.x)
 
@@ -112,6 +112,29 @@ def write_brazil_phone():
     output.write(']\n')
     output.close()
 
+def write_european_countries():
+    df = gpd.read_file("input/natural_earth_countries/ne_10m_admin_0_countries.shp")
+
+    for country in ['France', 'Belgium', 'Germany', 'Italy', 'Spain', 'Portugal', 'Netherlands', 'Luxembourg', 'Ireland', 'United Kingdom', 'Switzerland', 'Austria', 'Denmark', 'Finland', 'Norway', 'Sweden', 'Iceland', 'Czechia', 'Slovakia', 'Hungary', 'Poland', 'Romania', 'Bulgaria', 'Croatia', 'Republic of Serbia', 'Bosnia and Herzegovina', 'Montenegro', 'North Macedonia', 'Albania', 'Greece', 'Turkey', 'Cyprus', 'Malta', 'Slovenia', 'Estonia', 'Latvia', 'Lithuania', 'Belarus', 'Ukraine', 'Russia', 'Kosovo', 'Moldova']:
+        country_name_parts = normalize_string(country).split(' ')
+        filename = '-'.join(country_name_parts)
+        constant_name = country_name_parts[0] + ''.join(x.capitalize() for x in country_name_parts[1:])
+        
+        df_country = df[df['ADMIN'] == country]
+        if df_country.empty:
+            print(f"Warning: No data found for {country}")
+            continue
+        paths, _ = read_boundaries(df_country, union=True)
+        
+        output = open(f'output/{filename}.tsx', 'w')
+        output.write(f'export const {constant_name}Paths = {'<>' if len(paths) > 1 else '('}\n')
+
+        write_paths(output, paths)
+
+        output.write(f'{'</>' if len(paths) > 1 else ')'}\n')
+        output.close()
+
 # write_brazil_phone()
 # write_brazil()
-write_brazil_first_administrative()
+# write_brazil_first_administrative()
+write_european_countries()
