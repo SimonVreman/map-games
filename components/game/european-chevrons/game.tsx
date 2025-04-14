@@ -8,16 +8,19 @@ import { toast } from "sonner";
 import { svgChevronPatterns } from "./chevron-patterns";
 
 export function EuropeanChevronsGame() {
-  const [guess, pattern, highlighted, guessed, maximum] = useAppStore((s) => [
-    s.europeanChevrons.guess,
-    s.europeanChevrons.pattern,
-    s.europeanChevrons.highlighted,
-    s.europeanChevrons.guessed,
-    s.europeanChevrons.maximum,
-  ]);
+  const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
+    (s) => [
+      s.europeanChevrons.guess,
+      s.europeanChevrons.pattern,
+      s.europeanChevrons.highlighted,
+      s.europeanChevrons.guessed,
+      s.europeanChevrons.maximum,
+      s.europeanChevrons.hints,
+    ]
+  );
 
   const handleGuess = (country: string) => {
-    if (guessed.includes(country)) return;
+    if (guessed.includes(country) || hints) return;
     const isCorrect = europeanChevrons
       .find((v) => v.name === country)
       ?.colors.includes((pattern?.name || "") as never);
@@ -69,7 +72,7 @@ export function EuropeanChevronsGame() {
               key={name}
               className="transition-all pointer-events-none"
               fill={`url(#${colors.join(",")})`}
-              fillOpacity={highlighted.includes(name) ? 1 : 0}
+              fillOpacity={highlighted.includes(name) || hints ? 1 : 0}
               stroke="transpararent"
             >
               {paths}

@@ -12,13 +12,15 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export function BrazilTelephoneCodesGame() {
-  const [guess, correct, { positive, negative }] = useAppStore((s) => [
+  const [guess, correct, { positive, negative }, hints] = useAppStore((s) => [
     s.brazilTelephoneCodes.guess,
     s.brazilTelephoneCodes.code,
     s.brazilTelephoneCodes.highlighted,
+    s.brazilTelephoneCodes.hints,
   ]);
 
   const handleGuess = (code: number) => {
+    if (hints) return;
     const isCorrect = code === correct;
 
     if (isCorrect) toast.success("Correct!");
@@ -58,7 +60,18 @@ export function BrazilTelephoneCodesGame() {
                   "fill-green-500/20 stroke-green-500/30": positive === code,
                   "fill-red-500/20 stroke-red-500/30": negative === code,
                   "hover:fill-secondary-foreground":
-                    positive !== code && negative !== code,
+                    positive !== code && negative !== code && !hints,
+                  "fill-chart-1/50":
+                    hints && (code < 20 || (code >= 80 && code < 90)),
+                  "fill-chart-2/50":
+                    hints &&
+                    ((code >= 20 && code < 30) || (code >= 60 && code < 70)),
+                  "fill-chart-3/50": hints && code >= 30 && code < 40,
+                  "fill-chart-4/50":
+                    hints && ((code >= 40 && code < 50) || code >= 90),
+                  "fill-chart-5/50":
+                    hints &&
+                    ((code >= 50 && code < 60) || (code >= 70 && code < 80)),
                 }
               )}
             >
@@ -76,7 +89,7 @@ export function BrazilTelephoneCodesGame() {
               textAnchor="middle"
               dominantBaseline="middle"
               className="pointer-events-none"
-              opacity={positive === code || negative === code ? 1 : 0}
+              opacity={positive === code || negative === code || hints ? 1 : 0}
             >
               {code}
             </text>

@@ -3,15 +3,22 @@ import { PinControlsBase } from "../pin-controls-base";
 import { svgChevronPatterns } from "./chevron-patterns";
 
 export function EuropeanChevronsControls() {
-  const [streak, pattern, guessed, maximum] = useAppStore((s) => [
-    s.europeanChevrons.streak,
-    s.europeanChevrons.pattern,
-    s.europeanChevrons.guessed.length,
-    s.europeanChevrons.maximum,
-  ]);
+  const [streak, pattern, guessed, maximum, reset, hints, toggleHints] =
+    useAppStore((s) => [
+      s.europeanChevrons.streak,
+      s.europeanChevrons.pattern,
+      s.europeanChevrons.guessed.length,
+      s.europeanChevrons.maximum,
+      s.europeanChevrons.reset,
+      s.europeanChevrons.hints,
+      s.europeanChevrons.toggleHints,
+    ]);
 
   return (
     <PinControlsBase
+      hints={hints}
+      onToggleHints={toggleHints}
+      onReset={reset}
       stats={
         <>
           <div className="leading-tight border-r pr-3">

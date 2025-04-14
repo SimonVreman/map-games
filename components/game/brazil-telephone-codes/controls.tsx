@@ -2,9 +2,12 @@ import { useAppStore } from "@/lib/store/provider";
 import { PinControlsBase } from "../pin-controls-base";
 
 export function BrazilTelephoneCodesControls() {
-  const [guesses, code] = useAppStore((s) => [
+  const [guesses, code, reset, hints, toggleHints] = useAppStore((s) => [
     s.brazilTelephoneCodes.guesses,
     s.brazilTelephoneCodes.code,
+    s.brazilTelephoneCodes.reset,
+    s.brazilTelephoneCodes.hints,
+    s.brazilTelephoneCodes.toggleHints,
   ]);
 
   const lastFailedIndex = guesses.lastIndexOf(false);
@@ -14,6 +17,9 @@ export function BrazilTelephoneCodesControls() {
 
   return (
     <PinControlsBase
+      hints={hints}
+      onToggleHints={toggleHints}
+      onReset={reset}
       stats={
         <>
           <div className="leading-tight border-r pr-3">

@@ -7,8 +7,10 @@ export type BrazilTelephoneCodesSlice = {
     code: number | null;
     highlighted: { positive: number | null; negative: number | null };
     highlightTimeout: NodeJS.Timeout | null;
+    hints: boolean;
 
     guess: (code: number) => void;
+    toggleHints: () => void;
     reset: () => void;
   };
 };
@@ -25,6 +27,7 @@ export const createBrazilTelephoneCodesSlice: ImmerStateCreator<
     code: null,
     highlighted: { positive: null, negative: null },
     highlightTimeout: null,
+    hints: false,
 
     // Actions
     guess: (code) => {
@@ -60,6 +63,10 @@ export const createBrazilTelephoneCodesSlice: ImmerStateCreator<
         brazilTelephoneCodes.code = randomCode();
       });
     },
+    toggleHints: () =>
+      set(({ brazilTelephoneCodes }) => {
+        brazilTelephoneCodes.hints = !brazilTelephoneCodes.hints;
+      }),
     reset: () =>
       set(({ brazilTelephoneCodes }) => {
         brazilTelephoneCodes.guesses = [];

@@ -10,8 +10,10 @@ export type EuropeanChevronsSlice = {
     pattern: (typeof chevronPatterns)[number] | null;
     highlighted: string[];
     highlightTimeout: NodeJS.Timeout | null;
+    hints: boolean;
 
     guess: (country: string) => void;
+    toggleHints: () => void;
     reset: () => void;
   };
 };
@@ -53,6 +55,7 @@ export const createEuropeanChevronsSlice: ImmerStateCreator<
       pattern: null,
       highlighted: [],
       highlightTimeout: null,
+      hints: false,
 
       // Actions
       guess: (guess) =>
@@ -89,10 +92,15 @@ export const createEuropeanChevronsSlice: ImmerStateCreator<
           state.maximum = maximum;
           state.streak = isCorrect ? state.streak + 1 : 0;
         }),
+      toggleHints: () =>
+        set(({ europeanChevrons: state }) => {
+          state.hints = !state.hints;
+        }),
       reset: () =>
         set(({ europeanChevrons: state }) => {
           state.guessed = [];
           state.highlighted = [];
+          state.hints = false;
 
           const { pattern, maximum } = newPattern(state.pattern?.name);
           state.pattern = pattern;
