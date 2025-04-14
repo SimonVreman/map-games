@@ -2,15 +2,15 @@
 
 import { AreaCodesSettings } from "../area-codes/settings";
 
-export function BrazilTelephoneCodesSettings({
+export function SpainTelephoneCodesSettings({
   className,
 }: {
   className?: string;
 }) {
   return (
     <AreaCodesSettings
-      href="/brazil-telephone-codes/play"
-      store="brazilTelephoneCodes"
+      href="/spain-telephone-codes/play"
+      store="spainTelephoneCodes"
       className={className}
     />
   );
