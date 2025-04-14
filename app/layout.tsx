@@ -21,7 +21,6 @@ export const metadata: Metadata = {
     template: "%s | Map Games",
   },
   description: "Map Games by Simon Vreman",
-  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

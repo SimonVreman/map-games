@@ -13,22 +13,22 @@ export const svgChevronPatterns = (
       <pattern
         key={name + "-base"}
         id={name + "-base"}
-        width="10"
-        height="10"
-        viewBox="0 0 10 10"
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid slice"
         patternUnits="userSpaceOnUse"
       >
         <rect
           x="0"
           y="0"
-          width="10"
-          height="10"
+          width="100"
+          height="100"
           fill={background}
           strokeWidth="0"
         />
         <path
-          d="M 2.5 2 L 4.5 5 L 2.5 8 L 5.5 8 L 7.5 5 L 5.5 2 z"
+          d="M 25 20 L 45 50 L 25 80 L 55 80 L 75 50 L 55 20 z"
           fill={foreground}
           strokeWidth={0}
         />
@@ -40,7 +40,7 @@ export const svgChevronPatterns = (
         id={name}
         width="1"
         height=".3"
-        viewBox="0 0 1000 10"
+        viewBox="0 0 10000 100"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMin slice"
@@ -48,8 +48,8 @@ export const svgChevronPatterns = (
         <rect
           x="0"
           y="0"
-          width="1000"
-          height="10"
+          width="10000"
+          height="100"
           fill={`url(#${name + "-base"})`}
         />
       </pattern>
@@ -60,7 +60,7 @@ export const svgChevronPatterns = (
         id={colors.join(",")}
         width="1"
         height=".6"
-        viewBox="0 0 1000 20"
+        viewBox="0 0 10000 200"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMin slice"
@@ -68,15 +68,15 @@ export const svgChevronPatterns = (
         <rect
           x="0"
           y="0"
-          width="1000"
-          height="10"
+          width="10000"
+          height="100"
           fill={`url(#${colors[0] + "-base"})`}
         />
         <rect
           x="0"
-          y="10"
-          width="1000"
-          height="10"
+          y="100"
+          width="10000"
+          height="100"
           fill={`url(#${colors[1] + "-base"})`}
         />
       </pattern>

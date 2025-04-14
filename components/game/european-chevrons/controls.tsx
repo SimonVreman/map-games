@@ -42,7 +42,7 @@ export function EuropeanChevronsControls() {
       <p>Where is this chevron seen?</p>
 
       <svg
-        viewBox="0 0 10 10"
+        viewBox="0 0 100 100"
         className="absolute top-0 right-0 h-full"
         preserveAspectRatio="xMinYMin"
       >

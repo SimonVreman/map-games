@@ -46,9 +46,14 @@ export function SvgMap({
   attribution?: React.ReactNode;
 } & React.SVGProps<SVGSVGElement>) {
   return (
-    <div className="size-full relative">
+    <div
+      className={cn(
+        "size-full relative overflow-hidden bg-secondary",
+        className
+      )}
+    >
       <svg
-        className={cn("bg-secondary", className)}
+        className="bg-secondary"
         viewBox={calculateViewBox(bounds)}
         width="100%"
         height="100%"
