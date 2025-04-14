@@ -40,7 +40,7 @@ export const svgChevronPatterns = (
         id={name}
         width="1"
         height=".3"
-        viewBox="0 0 10000 100"
+        viewBox="0 0 1500 100"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMin slice"
@@ -48,7 +48,7 @@ export const svgChevronPatterns = (
         <rect
           x="0"
           y="0"
-          width="10000"
+          width="1500"
           height="100"
           fill={`url(#${name + "-base"})`}
         />
@@ -60,7 +60,7 @@ export const svgChevronPatterns = (
         id={colors.join(",")}
         width="1"
         height=".6"
-        viewBox="0 0 10000 200"
+        viewBox="0 0 1500 200"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMin slice"
@@ -68,7 +68,7 @@ export const svgChevronPatterns = (
         <rect
           x="0"
           y="0"
-          width="10000"
+          width="1500"
           height="100"
           fill={`url(#${colors[0] + "-base"})`}
         />
