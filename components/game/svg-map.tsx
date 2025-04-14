@@ -157,6 +157,7 @@ export function SvgMap({
     >
       <div className="size-full relative">
         <div className="absolute size-[400%] -inset-[150%]">
+          {/* @ts-expect-error - doesnt expect children for some reason */}
           <a.svg
             ref={ref}
             className="bg-secondary touch-none size-full translate-z-0"
