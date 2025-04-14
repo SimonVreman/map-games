@@ -21,7 +21,6 @@ import { kosovoPaths } from "./kosovo";
 import { latviaPaths } from "./latvia";
 import { lithuaniaPaths } from "./lithuania";
 import { luxembourgPaths } from "./luxembourg";
-import { maltaPaths } from "./malta";
 import { moldovaPaths } from "./moldova";
 import { montenegroPaths } from "./montenegro";
 import { netherlandsPaths } from "./netherlands";
@@ -84,7 +83,7 @@ export const europeanChevrons = [
   { name: "Latvia", paths: latviaPaths, colors: ["redOnWhite"] },
   { name: "Lithuania", paths: lithuaniaPaths, colors: ["redOnWhite"] },
   { name: "Luxembourg", paths: luxembourgPaths, colors: ["yellowOnBlack"] },
-  { name: "Malta", paths: maltaPaths, colors: ["whiteOnBlack"] },
+  // { name: "Malta", paths: maltaPaths, colors: ["whiteOnBlack"] }, Too small to click
   {
     name: "Montenegro",
     paths: montenegroPaths,
