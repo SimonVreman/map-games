@@ -41,6 +41,11 @@ export function BrazilTelephoneCodesGame() {
           west: -74,
           padding: 2,
         }}
+        attribution={
+          <a href="https://data.humdata.org/dataset/cod-ab-bra" target="_blank">
+            © OCHA
+          </a>
+        }
       >
         <g>
           {brazilPhoneCodes.map(({ code, paths }) => (

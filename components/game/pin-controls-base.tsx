@@ -21,7 +21,7 @@ export function PinControlsBase({
 
   return (
     <ControlsBase>
-      <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center w-full text-lg">
+      <div className="relative overflow-hidden rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center w-full text-lg">
         {children}
       </div>
 

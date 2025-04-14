@@ -8,10 +8,15 @@ import {
   BrazilTelephoneCodesSlice,
   createBrazilTelephoneCodesSlice,
 } from "./game/brazil-telephone-codes";
+import {
+  createEuropeanChevronsSlice,
+  EuropeanChevronsSlice,
+} from "./game/european-chevrons";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
-  BrazilTelephoneCodesSlice;
+  BrazilTelephoneCodesSlice &
+  EuropeanChevronsSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -20,6 +25,7 @@ export const createAppStore = () =>
         ...createCityCoverSlice(...a),
         ...createCityBlocksSlice(...a),
         ...createBrazilTelephoneCodesSlice(...a),
+        ...createEuropeanChevronsSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),

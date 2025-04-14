@@ -37,25 +37,34 @@ function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
 
 export function SvgMap({
   bounds = defaultBounds,
+  attribution,
   children,
   className,
   ...props
 }: {
   bounds?: Bounds;
+  attribution?: React.ReactNode;
 } & React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      className={cn("bg-secondary", className)}
-      viewBox={calculateViewBox(bounds)}
-      width="100%"
-      height="100%"
-      fill="none"
-      stroke="#000"
-      strokeWidth="0.1"
-      strokeLinejoin="round"
-      {...props}
-    >
-      {children}
-    </svg>
+    <div className="size-full relative">
+      <svg
+        className={cn("bg-secondary", className)}
+        viewBox={calculateViewBox(bounds)}
+        width="100%"
+        height="100%"
+        fill="none"
+        stroke="#000"
+        strokeWidth="0.1"
+        strokeLinejoin="round"
+        {...props}
+      >
+        {children}
+      </svg>
+      {attribution && (
+        <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none">
+          {attribution}
+        </div>
+      )}
+    </div>
   );
 }
