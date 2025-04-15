@@ -7,10 +7,10 @@ export function EuropeanChevronsControls() {
 
   return (
     <GroupPinControls store="europeanChevrons">
-      <p>Where is this chevron seen?</p>
+      <p>Where is it seen?</p>
 
       <svg
-        viewBox="0 0 100 100"
+        viewBox="0 0 200 100"
         className="absolute top-0 right-0 h-full"
         preserveAspectRatio="xMinYMin"
       >

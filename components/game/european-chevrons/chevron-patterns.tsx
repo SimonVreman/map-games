@@ -4,8 +4,14 @@ import {
 } from "@/lib/mapping/countries/chevrons";
 
 const doublePatterns = europeanChevrons
-  .filter((v) => v.subjects.length > 1)
-  .map((v) => v.subjects);
+  .filter((v) => v.subjects.length === 2)
+  .map((v) => v.subjects.join(","))
+  .filter((v, i, a) => a.indexOf(v) === i);
+
+const triplePatterns = europeanChevrons
+  .filter((v) => v.subjects.length === 3)
+  .map((v) => v.subjects.join(","))
+  .filter((v, i, a) => a.indexOf(v) === i);
 
 export const svgChevronPatterns = (
   <>
@@ -56,8 +62,8 @@ export const svgChevronPatterns = (
     ))}
     {doublePatterns.map((colors) => (
       <pattern
-        key={colors.join(",")}
-        id={colors.join(",")}
+        key={colors}
+        id={colors}
         width="1"
         height=".6"
         viewBox="0 0 1500 200"
@@ -70,14 +76,48 @@ export const svgChevronPatterns = (
           y="0"
           width="1500"
           height="100"
-          fill={`url(#${colors[0] + "-base"})`}
+          fill={`url(#${colors.split(",")[0] + "-base"})`}
         />
         <rect
           x="0"
           y="100"
           width="10000"
           height="100"
-          fill={`url(#${colors[1] + "-base"})`}
+          fill={`url(#${colors.split(",")[1] + "-base"})`}
+        />
+      </pattern>
+    ))}
+    {triplePatterns.map((colors) => (
+      <pattern
+        key={colors}
+        id={colors}
+        width="1"
+        height=".9"
+        viewBox="0 0 1500 300"
+        patternUnits="objectBoundingBox"
+        patternContentUnits="userSpaceOnUse"
+        preserveAspectRatio="xMinYMin slice"
+      >
+        <rect
+          x="0"
+          y="0"
+          width="1500"
+          height="100"
+          fill={`url(#${colors.split(",")[0] + "-base"})`}
+        />
+        <rect
+          x="0"
+          y="100"
+          width="10000"
+          height="100"
+          fill={`url(#${colors.split(",")[1] + "-base"})`}
+        />
+        <rect
+          x="0"
+          y="200"
+          width="10000"
+          height="100"
+          fill={`url(#${colors.split(",")[2] + "-base"})`}
         />
       </pattern>
     ))}

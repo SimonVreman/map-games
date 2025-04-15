@@ -46,9 +46,7 @@ export function EuropeanChevronsGame() {
         }}
         attribution={
           <>
-            <a href="https://www.reddit.com/user/isaacSW/">
-              Mapped by u/isaacSW
-            </a>
+            <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
             <span className="mx-1">-</span>
             <a href="https://www.naturalearthdata.com/" target="_blank">
               Made with Natural Earth.

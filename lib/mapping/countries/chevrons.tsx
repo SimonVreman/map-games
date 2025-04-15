@@ -49,10 +49,15 @@ export const chevronPatterns = [
   { name: "whiteOnBlue", background: "blue", foreground: "white" },
   { name: "yellowOnBlack", background: "black", foreground: "yellow" },
   { name: "yellowOnBlue", background: "blue", foreground: "yellow" },
+  { name: "yellowOnRed", background: "red", foreground: "yellow" },
 ] as const;
 
 export const europeanChevrons = [
-  { name: "Albania", paths: albaniaPaths, subjects: ["whiteOnBlack"] },
+  {
+    name: "Albania",
+    paths: albaniaPaths,
+    subjects: ["redOnWhite", "whiteOnBlack", "whiteOnRed"],
+  },
   {
     name: "Austria",
     paths: austriaPaths,
@@ -66,23 +71,43 @@ export const europeanChevrons = [
     subjects: ["redOnWhite"],
   },
   { name: "Bulgaria", paths: bulgariaPaths, subjects: ["redOnWhite"] },
-  { name: "Croatia", paths: croatiaPaths, subjects: ["redOnWhite"] },
+  {
+    name: "Croatia",
+    paths: croatiaPaths,
+    subjects: ["redOnWhite", "redOnYellow"],
+  },
   { name: "Cyprus", paths: cyprusPaths, subjects: ["redOnWhite"] },
   { name: "Czechia", paths: czechiaPaths, subjects: ["redOnWhite"] },
   { name: "Denmark", paths: denmarkPaths, subjects: ["redOnWhite"] },
   { name: "Estonia", paths: estoniaPaths, subjects: ["whiteOnRed"] },
   { name: "Finland", paths: finlandPaths, subjects: ["yellowOnBlack"] },
-  { name: "France", paths: francePaths, subjects: ["whiteOnBlue"] },
+  {
+    name: "France",
+    paths: francePaths,
+    subjects: ["redOnWhite", "whiteOnBlue"],
+  },
   { name: "Germany", paths: germanyPaths, subjects: ["redOnWhite"] },
   { name: "Greece", paths: greecePaths, subjects: ["whiteOnBlack"] },
-  { name: "Hungary", paths: hungaryPaths, subjects: ["whiteOnRed"] },
+  {
+    name: "Hungary",
+    paths: hungaryPaths,
+    subjects: ["redOnWhite", "whiteOnRed"],
+  },
   { name: "Iceland", paths: icelandPaths, subjects: ["yellowOnBlack"] },
   { name: "Ireland", paths: irelandPaths, subjects: ["yellowOnBlack"] },
-  { name: "Italy", paths: italyPaths, subjects: ["whiteOnBlack"] },
+  {
+    name: "Italy",
+    paths: italyPaths,
+    subjects: ["whiteOnBlack", "whiteOnRed"],
+  },
   { name: "Kosovo", paths: kosovoPaths, subjects: ["blackOnWhite"] },
   { name: "Latvia", paths: latviaPaths, subjects: ["redOnWhite"] },
   { name: "Lithuania", paths: lithuaniaPaths, subjects: ["redOnWhite"] },
-  { name: "Luxembourg", paths: luxembourgPaths, subjects: ["yellowOnBlack"] },
+  {
+    name: "Luxembourg",
+    paths: luxembourgPaths,
+    subjects: ["redOnWhite", "yellowOnBlack", "yellowOnBlue"],
+  },
   // { name: "Malta", paths: maltaPaths, subjects: ["whiteOnBlack"] }, Too small to click
   {
     name: "Montenegro",
@@ -111,11 +136,19 @@ export const europeanChevrons = [
   {
     name: "Spain",
     paths: spainPaths,
-    subjects: ["whiteOnBlack", "whiteOnBlue"],
+    subjects: ["redOnWhite", "whiteOnBlack", "whiteOnBlue"],
   },
-  { name: "Sweden", paths: swedenPaths, subjects: ["yellowOnBlue"] },
+  {
+    name: "Sweden",
+    paths: swedenPaths,
+    subjects: ["yellowOnBlue", "yellowOnRed"],
+  },
   { name: "Switzerland", paths: switzerlandPaths, subjects: ["whiteOnBlack"] },
-  { name: "Turkey", paths: turkeyPaths, subjects: ["redOnWhite"] },
+  {
+    name: "Turkey",
+    paths: turkeyPaths,
+    subjects: ["redOnWhite", "yellowOnBlack"],
+  },
   { name: "Ukraine", paths: ukrainePaths, subjects: ["whiteOnRed"] },
   {
     name: "United Kingdom",
