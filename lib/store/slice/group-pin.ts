@@ -8,7 +8,6 @@ export type GroupPinSlice<TSubject = { name: string }> = {
   streak: number;
   subject: TSubject | null;
   highlighted: string[];
-  highlightTimeout: NodeJS.Timeout | null;
   hints: boolean;
 
   guess: (country: string) => void;
@@ -55,17 +54,8 @@ export const createGroupPinSlice = <
         state: WritableDraft<AppStore & { [Key in T]: GroupPinSlice }>
       ) => void
     ) => void
-  ) => {
-    const createClearHighlightTimeout = () =>
-      setTimeout(
-        () =>
-          set((s) => {
-            s[name].highlighted = [];
-          }),
-        3000
-      );
-
-    return {
+  ) =>
+    ({
       [name]: {
         // State
         guessed: [],
@@ -73,7 +63,6 @@ export const createGroupPinSlice = <
         streak: 0,
         subject: null,
         highlighted: [],
-        highlightTimeout: null,
         hints: false,
 
         // Actions
@@ -87,8 +76,6 @@ export const createGroupPinSlice = <
 
             // Add guess
             s[name].guessed.push(guess);
-            if (s[name].highlightTimeout)
-              clearTimeout(s[name].highlightTimeout);
             s[name].highlighted = [...s[name].guessed];
 
             // Check if the round is over
@@ -101,9 +88,6 @@ export const createGroupPinSlice = <
                 .map((v) => v.name),
               guess,
             ];
-
-            // Set timeout to remove highlight
-            s[name].highlightTimeout = createClearHighlightTimeout();
 
             // Prepare for next round
             s[name].guessed = [];
@@ -128,6 +112,5 @@ export const createGroupPinSlice = <
             s[name].streak = 0;
           }),
       } as GroupPinSlice<TSubject>,
-    } as TSlice;
-  };
+    } as TSlice);
 };
