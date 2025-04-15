@@ -34,7 +34,7 @@ export function SpainTelephoneCodesGame() {
         fontSize={2}
         bounds={{
           north: 44,
-          west: -10,
+          west: -11,
           south: 35,
           east: 4,
           padding: 2,

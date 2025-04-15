@@ -4,8 +4,8 @@ import {
 } from "@/lib/mapping/countries/chevrons";
 
 const doublePatterns = europeanChevrons
-  .filter((v) => v.colors.length > 1)
-  .map((v) => v.colors);
+  .filter((v) => v.subjects.length > 1)
+  .map((v) => v.subjects);
 
 export const svgChevronPatterns = (
   <>

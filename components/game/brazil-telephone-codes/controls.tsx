@@ -1,5 +1,5 @@
-import { AreaCodesControls } from "../area-codes/controls";
+import { SinglePinControls } from "../single-pin/controls";
 
 export function BrazilTelephoneCodesControls() {
-  return <AreaCodesControls store="brazilTelephoneCodes" />;
+  return <SinglePinControls store="brazilTelephoneCodes" />;
 }

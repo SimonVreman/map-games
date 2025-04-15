@@ -1,13 +1,13 @@
 import { spainPhoneCodes } from "@/lib/mapping/spain/registry/phone-codes";
 import { ImmerStateCreator } from "../types";
-import { AreaCodesSliceState, createAreaCodesSlice } from "./area-codes";
+import { createSinglePinSlice, SinglePinSlice } from "../slice/single-pin";
 
 export type SpainTelephoneCodesSlice = {
-  spainTelephoneCodes: AreaCodesSliceState;
+  spainTelephoneCodes: SinglePinSlice;
 };
 
 export const createSpainTelephoneCodesSlice: ImmerStateCreator<SpainTelephoneCodesSlice> =
-  createAreaCodesSlice({
+  createSinglePinSlice({
     name: "spainTelephoneCodes",
     codes: spainPhoneCodes,
   });

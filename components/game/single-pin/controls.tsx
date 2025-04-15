@@ -1,9 +1,11 @@
+"use client";
+
 import { useAppStore } from "@/lib/store/provider";
 import { PinControlsBase } from "../pin-controls-base";
-import { AreaCodesSliceName } from "@/lib/store/game/area-codes";
+import { SinglePinSliceName } from "@/lib/store/slice/single-pin";
 import { AppStore } from "@/lib/store";
 
-export function AreaCodesControls<TName extends AreaCodesSliceName<AppStore>>({
+export function SinglePinControls<TName extends SinglePinSliceName<AppStore>>({
   store,
 }: {
   store: TName;

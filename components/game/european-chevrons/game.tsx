@@ -11,7 +11,7 @@ export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
     (s) => [
       s.europeanChevrons.guess,
-      s.europeanChevrons.pattern,
+      s.europeanChevrons.subject,
       s.europeanChevrons.highlighted,
       s.europeanChevrons.guessed,
       s.europeanChevrons.maximum,
@@ -23,7 +23,7 @@ export function EuropeanChevronsGame() {
     if (guessed.includes(country) || hints) return;
     const isCorrect = europeanChevrons
       .find((v) => v.name === country)
-      ?.colors.includes((pattern?.name || "") as never);
+      ?.subjects.includes((pattern?.name || "") as never);
 
     if (isCorrect && guessed.length >= maximum - 1) toast.success("Correct!");
     else if (!isCorrect) toast.error("Incorrect!");
@@ -67,11 +67,11 @@ export function EuropeanChevronsGame() {
               {paths}
             </g>
           ))}
-          {europeanChevrons.map(({ name, paths, colors }) => (
+          {europeanChevrons.map(({ name, paths, subjects }) => (
             <g
               key={name}
               className="transition-all pointer-events-none"
-              fill={`url(#${colors.join(",")})`}
+              fill={`url(#${subjects.join(",")})`}
               fillOpacity={highlighted.includes(name) || hints ? 1 : 0}
               stroke="transpararent"
             >

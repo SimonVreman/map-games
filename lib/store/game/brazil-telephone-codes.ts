@@ -1,13 +1,13 @@
 import { brazilPhoneCodes } from "@/lib/mapping/brazil/registry/phone-codes";
 import { ImmerStateCreator } from "../types";
-import { AreaCodesSliceState, createAreaCodesSlice } from "./area-codes";
+import { createSinglePinSlice, SinglePinSlice } from "../slice/single-pin";
 
 export type BrazilTelephoneCodesSlice = {
-  brazilTelephoneCodes: AreaCodesSliceState;
+  brazilTelephoneCodes: SinglePinSlice;
 };
 
 export const createBrazilTelephoneCodesSlice: ImmerStateCreator<BrazilTelephoneCodesSlice> =
-  createAreaCodesSlice({
+  createSinglePinSlice({
     name: "brazilTelephoneCodes",
     codes: brazilPhoneCodes,
   });

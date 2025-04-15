@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import { AppStore } from "..";
 import { ImmerStateCreator } from "../types";
+import { WritableDraft } from "immer";
 
-export type AreaCodesSliceState = {
+export type SinglePinSlice = {
   guesses: boolean[];
   code: number | null;
   highlighted: { positive: number | null; negative: number | null };
@@ -14,31 +14,34 @@ export type AreaCodesSliceState = {
   reset: () => void;
 };
 
-export type AreaCodesSliceName<T extends object> = keyof {
-  [Key in keyof T as T[Key] extends AreaCodesSliceState ? Key : never]: T[Key];
+export type SinglePinSliceName<T extends object> = keyof {
+  [Key in keyof T as T[Key] extends SinglePinSlice ? Key : never]: T[Key];
 };
 
-export const createAreaCodesSlice = <
+export const createSinglePinSlice = <
   T extends string,
-  TSlice extends { [key in T]: AreaCodesSliceState }
+  TSlice = { [Key in T]: SinglePinSlice }
 >({
   name,
   codes,
 }: {
   name: T;
   codes: number[];
-}) => {
+}): ImmerStateCreator<TSlice> => {
   const randomCode = () => codes[Math.floor(Math.random() * codes.length)];
 
-  return ((set: (state: any) => void) => {
+  return (
+    set: (
+      update: (
+        state: WritableDraft<AppStore & { [Key in T]: SinglePinSlice }>
+      ) => void
+    ) => void
+  ) => {
     const createClearHighlightTimeout = () =>
       setTimeout(
         () =>
-          set((s: any) => {
-            s[name].highlighted = {
-              positive: null,
-              negative: null,
-            };
+          set((s) => {
+            s[name].highlighted = { positive: null, negative: null };
           }),
         2000
       );
@@ -54,7 +57,7 @@ export const createAreaCodesSlice = <
 
         // Actions
         guess: (code) => {
-          set((s: any) => {
+          set((s) => {
             const isCorrect = code === s[name].code;
 
             // Make guess
@@ -76,15 +79,15 @@ export const createAreaCodesSlice = <
           });
         },
         toggleHints: () =>
-          set((s: any) => {
+          set((s) => {
             s[name].hints = !s[name].hints;
           }),
         reset: () =>
-          set((s: any) => {
+          set((s) => {
             s[name].guesses = [];
             s[name].code = randomCode();
           }),
-      } satisfies AreaCodesSliceState,
-    };
-  }) as unknown as ImmerStateCreator<TSlice>;
+      } as SinglePinSlice,
+    } as TSlice;
+  };
 };

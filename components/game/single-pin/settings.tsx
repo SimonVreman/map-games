@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { useAppForm } from "@/components/ui/tanstack-form";
 import { AppStore } from "@/lib/store";
-import { AreaCodesSliceName } from "@/lib/store/game/area-codes";
+import { SinglePinSliceName } from "@/lib/store/slice/single-pin";
 import { useAppStore } from "@/lib/store/provider";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-export function AreaCodesSettings<TName extends AreaCodesSliceName<AppStore>>({
+export function SinglePinSettings<TName extends SinglePinSliceName<AppStore>>({
   href,
   store,
   className,

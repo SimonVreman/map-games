@@ -1,6 +1,4 @@
-"use client";
-
-import { AreaCodesSettings } from "../area-codes/settings";
+import { SinglePinSettings } from "../single-pin/settings";
 
 export function SpainTelephoneCodesSettings({
   className,
@@ -8,7 +6,7 @@ export function SpainTelephoneCodesSettings({
   className?: string;
 }) {
   return (
-    <AreaCodesSettings
+    <SinglePinSettings
       href="/spain-telephone-codes/play"
       store="spainTelephoneCodes"
       className={className}

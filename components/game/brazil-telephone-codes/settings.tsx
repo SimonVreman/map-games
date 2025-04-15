@@ -1,6 +1,4 @@
-"use client";
-
-import { AreaCodesSettings } from "../area-codes/settings";
+import { SinglePinSettings } from "../single-pin/settings";
 
 export function BrazilTelephoneCodesSettings({
   className,
@@ -8,7 +6,7 @@ export function BrazilTelephoneCodesSettings({
   className?: string;
 }) {
   return (
-    <AreaCodesSettings
+    <SinglePinSettings
       href="/brazil-telephone-codes/play"
       store="brazilTelephoneCodes"
       className={className}
