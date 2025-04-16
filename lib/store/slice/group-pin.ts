@@ -21,7 +21,7 @@ export type GroupPinSliceName<T extends object> = keyof {
 
 export const createGroupPinSlice = <
   T extends string,
-  TSubject extends { name: string },
+  TSubject extends { name: string; selectable?: boolean },
   TTarget extends { name: string; subjects: readonly string[] },
   TSlice = { [Key in T]: GroupPinSlice<TSubject> }
 >({
@@ -33,8 +33,10 @@ export const createGroupPinSlice = <
   subjects: readonly TSubject[];
   targets: readonly TTarget[];
 }): ImmerStateCreator<TSlice> => {
+  const selectableSubjects = subjects.filter((s) => s.selectable !== false);
+
   const randomSubject = () =>
-    subjects[Math.floor(Math.random() * subjects.length)];
+    selectableSubjects[Math.floor(Math.random() * selectableSubjects.length)];
 
   const newSubject = (oldSubjectName?: string) => {
     let subject = randomSubject();
@@ -44,7 +46,7 @@ export const createGroupPinSlice = <
 
     return {
       subject,
-      maximum: targets.filter((v) => v.subjects.includes(subject.name)).length,
+      maximum: targets.filter((t) => t.subjects.includes(subject.name)).length,
     };
   };
 

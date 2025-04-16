@@ -40,13 +40,13 @@ import { turkeyPaths } from "./turkey";
 import { ukrainePaths } from "./ukraine";
 import { unitedKingdomPaths } from "./united-kingdom";
 
-export const guardRailTypes = [
-  { name: "A-profile" },
+export const guardrailTypes = [
+  { name: "A-profile", selectable: false },
   { name: "B-profile" },
   { name: "B-profile-thin" },
 ] as const;
 
-export const europeanChevrons = [
+export const europeanGuardrails = [
   { name: "Albania", paths: albaniaPaths, subjects: ["A-profile"] },
   { name: "Austria", paths: austriaPaths, subjects: ["A-profile"] },
   { name: "Belarus", paths: belarusPaths, subjects: [] },
