@@ -6,6 +6,7 @@ import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgGuardrailPatterns } from "./guardrail-patterns";
+import { cn } from "@/lib/utils";
 
 export function EuropeanGuardrailsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -54,28 +55,61 @@ export function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <defs>{svgGuardrailPatterns}</defs>
-        <g className="stroke-secondary-foreground">
+        <defs>
+          {svgGuardrailPatterns}
           {europeanGuardrails.map(({ name, paths }) => (
+            <g id={name} key={name}>
+              {paths}
+            </g>
+          ))}
+        </defs>
+        <g className="stroke-secondary-foreground">
+          {europeanGuardrails.map(({ name, subjects }) => (
+            <use
+              key={name}
+              href={`#${name}`}
+              className={cn({
+                "transition-colors fill-background hover:fill-primary": !(
+                  highlighted.includes(name) || hints
+                ),
+              })}
+              fill={
+                highlighted.includes(name) || hints
+                  ? `url(#${subjects.join(",")})`
+                  : undefined
+              }
+              onClick={() => handleGuess(name)}
+            />
+          ))}
+          {/* {europeanGuardrails.map(({ name, subjects, paths }) => (
             <g
               key={name}
-              className="transition-all fill-background hover:fill-foreground"
+              className={cn({
+                "fill-background hover:fill-primary": !(
+                  highlighted.includes(name) || hints
+                ),
+              })}
+              fill={
+                highlighted.includes(name) || hints
+                  ? `url(#${subjects.join(",")})`
+                  : undefined
+              }
               onClick={() => handleGuess(name)}
             >
               {paths}
             </g>
-          ))}
-          {europeanGuardrails.map(({ name, paths, subjects }) => (
+          ))} */}
+          {/* {europeanGuardrails.map(({ name, paths, subjects }) => (
             <g
               key={name}
-              className="transition-all pointer-events-none"
+              className="pointer-events-none"
               fill={`url(#${subjects.join(",")})`}
               fillOpacity={highlighted.includes(name) || hints ? 1 : 0}
               stroke="transpararent"
             >
               {paths}
             </g>
-          ))}
+          ))} */}
         </g>
       </SvgMap>
     </div>

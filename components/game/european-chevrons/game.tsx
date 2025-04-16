@@ -6,6 +6,8 @@ import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgChevronPatterns } from "./chevron-patterns";
+import { cn } from "@/lib/utils";
+import { Fragment } from "react";
 
 export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -56,22 +58,20 @@ export function EuropeanChevronsGame() {
       >
         <defs>{svgChevronPatterns}</defs>
         <g className="stroke-secondary-foreground">
-          {europeanChevrons.map(({ name, paths }) => (
-            <g
-              key={name}
-              className="transition-all fill-background hover:fill-foreground"
-              onClick={() => handleGuess(name)}
-            >
-              {paths}
-            </g>
-          ))}
           {europeanChevrons.map(({ name, paths, subjects }) => (
             <g
               key={name}
-              className="transition-all pointer-events-none"
-              fill={`url(#${subjects.join(",")})`}
-              fillOpacity={highlighted.includes(name) || hints ? 1 : 0}
-              stroke="transpararent"
+              href={`#${name}`}
+              className={cn({
+                "fill-background hover:fill-foreground":
+                  !highlighted.includes(name) && !hints,
+              })}
+              fill={
+                highlighted.includes(name) || hints
+                  ? `url(#${subjects.join(",")})`
+                  : "none"
+              }
+              onClick={() => handleGuess(name)}
             >
               {paths}
             </g>

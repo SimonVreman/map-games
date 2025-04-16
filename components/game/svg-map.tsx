@@ -117,13 +117,13 @@ export function SvgMap({
           memo = [style.x.get(), style.y.get(), tx, ty];
         }
 
-        // Hack to rerender svg, fixed issues with pixelation
+        // Hack to rerender svg, fixes issues with pixelation
         if (last) {
           const opacity = ref.current?.style.getPropertyValue("opacity");
-          ref.current?.style.setProperty("opacity", "1");
+          ref.current?.style.setProperty("opacity", "0.9999");
           setTimeout(() => {
             ref.current?.style.setProperty("opacity", opacity ?? "1");
-          }, 100);
+          }, 50);
         }
 
         const { x, y } = clampMap({
@@ -160,7 +160,7 @@ export function SvgMap({
           {/* @ts-expect-error - doesnt expect children for some reason */}
           <a.svg
             ref={ref}
-            className="bg-secondary touch-none size-full translate-z-0"
+            className="bg-secondary touch-none size-full translate-z-0 will-change-transform"
             viewBox={calculateViewBox(bounds)}
             fill="none"
             stroke="#000"

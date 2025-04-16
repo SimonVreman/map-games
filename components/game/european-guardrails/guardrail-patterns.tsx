@@ -165,6 +165,7 @@ export const svgGuardrailPatterns = (
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
       >
+        <rect width="215" height="411" className="fill-background" />
         <rect
           x="0"
           y="137"
@@ -183,8 +184,9 @@ export const svgGuardrailPatterns = (
         viewBox="0 0 215 548"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio="xMidYMid slice"
       >
+        <rect width="215" height="548" className="fill-background" />
         <rect
           x="0"
           y="137"

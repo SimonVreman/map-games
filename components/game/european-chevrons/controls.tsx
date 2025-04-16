@@ -10,7 +10,7 @@ export function EuropeanChevronsControls() {
       <p>Where is it seen?</p>
 
       <svg
-        viewBox="0 0 200 100"
+        viewBox="0 0 20 10"
         className="absolute top-0 right-0 h-full"
         preserveAspectRatio="xMinYMin"
       >
