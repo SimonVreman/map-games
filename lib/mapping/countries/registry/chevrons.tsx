@@ -1,50 +1,50 @@
-import { albaniaPaths, albaniaBounds } from "./albania";
-import { austriaPaths, austriaBounds } from "./austria";
-import { belarusPaths, belarusBounds } from "./belarus";
-import { belgiumPaths, belgiumBounds } from "./belgium";
+import { albaniaPaths, albaniaBounds } from "../paths/albania";
+import { austriaPaths, austriaBounds } from "../paths/austria";
+import { belarusPaths, belarusBounds } from "../paths/belarus";
+import { belgiumPaths, belgiumBounds } from "../paths/belgium";
 import {
   bosniaAndHerzegovinaPaths,
   bosniaAndHerzegovinaBounds,
-} from "./bosnia-and-herzegovina";
-import { bulgariaPaths, bulgariaBounds } from "./bulgaria";
-import { croatiaPaths, croatiaBounds } from "./croatia";
-import { cyprusPaths, cyprusBounds } from "./cyprus";
-import { czechiaPaths, czechiaBounds } from "./czechia";
-import { denmarkPaths, denmarkBounds } from "./denmark";
-import { estoniaPaths, estoniaBounds } from "./estonia";
-import { finlandPaths, finlandBounds } from "./finland";
-import { francePaths, franceBounds } from "./france";
-import { germanyPaths, germanyBounds } from "./germany";
-import { greecePaths, greeceBounds } from "./greece";
-import { hungaryPaths, hungaryBounds } from "./hungary";
-import { icelandPaths, icelandBounds } from "./iceland";
-import { irelandPaths, irelandBounds } from "./ireland";
-import { italyPaths, italyBounds } from "./italy";
-import { kosovoPaths, kosovoBounds } from "./kosovo";
-import { latviaPaths, latviaBounds } from "./latvia";
-import { lithuaniaPaths, lithuaniaBounds } from "./lithuania";
-import { luxembourgPaths, luxembourgBounds } from "./luxembourg";
-import { moldovaPaths, moldovaBounds } from "./moldova";
-import { montenegroPaths, montenegroBounds } from "./montenegro";
-import { netherlandsPaths, netherlandsBounds } from "./netherlands";
-import { northMacedoniaPaths, northMacedoniaBounds } from "./north-macedonia";
-import { norwayPaths, norwayBounds } from "./norway";
-import { polandPaths, polandBounds } from "./poland";
-import { portugalPaths, portugalBounds } from "./portugal";
+} from "../paths/bosnia-and-herzegovina";
+import { bulgariaPaths, bulgariaBounds } from "../paths/bulgaria";
+import { croatiaPaths, croatiaBounds } from "../paths/croatia";
+import { cyprusPaths, cyprusBounds } from "../paths/cyprus";
+import { czechiaPaths, czechiaBounds } from "../paths/czechia";
+import { denmarkPaths, denmarkBounds } from "../paths/denmark";
+import { estoniaPaths, estoniaBounds } from "../paths/estonia";
+import { finlandPaths, finlandBounds } from "../paths/finland";
+import { francePaths, franceBounds } from "../paths/france";
+import { germanyPaths, germanyBounds } from "../paths/germany";
+import { greecePaths, greeceBounds } from "../paths/greece";
+import { hungaryPaths, hungaryBounds } from "../paths/hungary";
+import { icelandPaths, icelandBounds } from "../paths/iceland";
+import { irelandPaths, irelandBounds } from "../paths/ireland";
+import { italyPaths, italyBounds } from "../paths/italy";
+import { kosovoPaths, kosovoBounds } from "../paths/kosovo";
+import { latviaPaths, latviaBounds } from "../paths/latvia";
+import { lithuaniaPaths, lithuaniaBounds } from "../paths/lithuania";
+import { luxembourgPaths, luxembourgBounds } from "../paths/luxembourg";
+import { moldovaPaths, moldovaBounds } from "../paths/moldova";
+import { montenegroPaths, montenegroBounds } from "../paths/montenegro";
+import { netherlandsPaths, netherlandsBounds } from "../paths/netherlands";
+import { northMacedoniaPaths, northMacedoniaBounds } from "../paths/north-macedonia";
+import { norwayPaths, norwayBounds } from "../paths/norway";
+import { polandPaths, polandBounds } from "../paths/poland";
+import { portugalPaths, portugalBounds } from "../paths/portugal";
 import {
   republicOfSerbiaPaths,
   republicOfSerbiaBounds,
-} from "./republic-of-serbia";
-import { romaniaPaths, romaniaBounds } from "./romania";
-import { russiaPaths, russiaBounds } from "./russia";
-import { slovakiaPaths, slovakiaBounds } from "./slovakia";
-import { sloveniaPaths, sloveniaBounds } from "./slovenia";
-import { spainPaths, spainBounds } from "./spain";
-import { swedenPaths, swedenBounds } from "./sweden";
-import { switzerlandPaths, switzerlandBounds } from "./switzerland";
-import { turkeyPaths, turkeyBounds } from "./turkey";
-import { ukrainePaths, ukraineBounds } from "./ukraine";
-import { unitedKingdomPaths, unitedKingdomBounds } from "./united-kingdom";
+} from "../paths/republic-of-serbia";
+import { romaniaPaths, romaniaBounds } from "../paths/romania";
+import { russiaPaths, russiaBounds } from "../paths/russia";
+import { slovakiaPaths, slovakiaBounds } from "../paths/slovakia";
+import { sloveniaPaths, sloveniaBounds } from "../paths/slovenia";
+import { spainPaths, spainBounds } from "../paths/spain";
+import { swedenPaths, swedenBounds } from "../paths/sweden";
+import { switzerlandPaths, switzerlandBounds } from "../paths/switzerland";
+import { turkeyPaths, turkeyBounds } from "../paths/turkey";
+import { ukrainePaths, ukraineBounds } from "../paths/ukraine";
+import { unitedKingdomPaths, unitedKingdomBounds } from "../paths/united-kingdom";
 
 export const chevronPatterns = [
   { name: "blackOnWhite", background: "white", foreground: "black" },

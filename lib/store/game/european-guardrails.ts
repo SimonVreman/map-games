@@ -1,13 +1,15 @@
-import { chevronPatterns } from "@/lib/mapping/countries/chevrons";
-import { europeanGuardrails } from "@/lib/mapping/countries/guardrails";
+import {
+  europeanGuardrails,
+  guardrailTypes,
+} from "@/lib/mapping/countries/registry/guardrails";
 import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
 
 export type EuropeanGuardrailsSlice = {
-  europeanGuardrails: GroupPinSlice<(typeof chevronPatterns)[number]>;
+  europeanGuardrails: GroupPinSlice<(typeof guardrailTypes)[number]>;
 };
 
 export const createEuropeanGuardrailsSlice = createGroupPinSlice({
   name: "europeanGuardrails",
-  subjects: chevronPatterns,
+  subjects: guardrailTypes,
   targets: europeanGuardrails,
 });

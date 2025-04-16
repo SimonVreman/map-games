@@ -1,6 +1,6 @@
 "use client";
 
-import { europeanChevrons } from "@/lib/mapping/countries/chevrons";
+import { europeanChevrons } from "@/lib/mapping/countries/registry/chevrons";
 import { SvgMap } from "../svg-map";
 import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";

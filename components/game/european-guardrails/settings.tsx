@@ -8,7 +8,7 @@ export function EuropeanGuardrailsSettings({
   return (
     <GroupPinSettings
       store="europeanGuardrails"
-      href="/european-chevrons/play"
+      href="/european-guardrails/play"
       className={className}
     />
   );

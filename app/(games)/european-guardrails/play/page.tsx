@@ -2,7 +2,7 @@ import { EuropeanGuardrailsGame } from "@/components/game/european-guardrails/ga
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "European Chevrons",
+  title: "European Guardrails",
 };
 
 export default async function EuropeanGuardrailsPlayPage() {

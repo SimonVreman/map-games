@@ -11,18 +11,16 @@ export function EuropeanGuardrailsControls() {
       <p>Where is it seen?</p>
 
       <svg
-        viewBox="0 0 200 100"
+        viewBox="300 0 300 152"
         className="absolute top-0 right-0 h-full"
-        preserveAspectRatio="xMinYMin"
+        preserveAspectRatio="xMidYMid slice"
       >
         <defs>{svgGuardrailPatterns}</defs>
         <rect
-          x={0}
-          y={0}
-          width="100%"
-          height="100%"
+          width="1002"
+          height="152"
           strokeWidth={0}
-          fill={`url(#${pattern?.name}-base)`}
+          fill={`url(#${pattern?.name})`}
         />
       </svg>
     </GroupPinControls>

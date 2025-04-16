@@ -1,7 +1,7 @@
 import {
   chevronPatterns,
   europeanChevrons,
-} from "@/lib/mapping/countries/chevrons";
+} from "@/lib/mapping/countries/registry/chevrons";
 
 const doublePatterns = europeanChevrons
   .filter((v) => v.subjects.length === 2)

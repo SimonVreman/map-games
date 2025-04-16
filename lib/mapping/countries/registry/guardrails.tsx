@@ -1,47 +1,45 @@
-import { albaniaPaths } from "./albania";
-import { austriaPaths } from "./austria";
-import { belarusPaths } from "./belarus";
-import { belgiumPaths } from "./belgium";
-import { bosniaAndHerzegovinaPaths } from "./bosnia-and-herzegovina";
-import { bulgariaPaths } from "./bulgaria";
-import { croatiaPaths } from "./croatia";
-import { cyprusPaths } from "./cyprus";
-import { czechiaPaths } from "./czechia";
-import { denmarkPaths } from "./denmark";
-import { estoniaPaths } from "./estonia";
-import { finlandPaths } from "./finland";
-import { francePaths } from "./france";
-import { germanyPaths } from "./germany";
-import { greecePaths } from "./greece";
-import { hungaryPaths } from "./hungary";
-import { icelandPaths } from "./iceland";
-import { irelandPaths } from "./ireland";
-import { italyPaths } from "./italy";
-import { kosovoPaths } from "./kosovo";
-import { latviaPaths } from "./latvia";
-import { lithuaniaPaths } from "./lithuania";
-import { luxembourgPaths } from "./luxembourg";
-import { moldovaPaths } from "./moldova";
-import { montenegroPaths } from "./montenegro";
-import { netherlandsPaths } from "./netherlands";
-import { northMacedoniaPaths } from "./north-macedonia";
-import { norwayPaths } from "./norway";
-import { polandPaths } from "./poland";
-import { portugalPaths } from "./portugal";
-import { republicOfSerbiaPaths } from "./republic-of-serbia";
-import { romaniaPaths } from "./romania";
-import { russiaPaths } from "./russia";
-import { slovakiaPaths } from "./slovakia";
-import { sloveniaPaths } from "./slovenia";
-import { spainPaths } from "./spain";
-import { swedenPaths } from "./sweden";
-import { switzerlandPaths } from "./switzerland";
-import { turkeyPaths } from "./turkey";
-import { ukrainePaths } from "./ukraine";
-import { unitedKingdomPaths } from "./united-kingdom";
+import { albaniaPaths } from "../paths/albania";
+import { austriaPaths } from "../paths/austria";
+import { belgiumPaths } from "../paths/belgium";
+import { bulgariaPaths } from "../paths/bulgaria";
+import { croatiaPaths } from "../paths/croatia";
+import { cyprusPaths } from "../paths/cyprus";
+import { czechiaPaths } from "../paths/czechia";
+import { denmarkPaths } from "../paths/denmark";
+import { estoniaPaths } from "../paths/estonia";
+import { finlandPaths } from "../paths/finland";
+import { francePaths } from "../paths/france";
+import { germanyPaths } from "../paths/germany";
+import { greecePaths } from "../paths/greece";
+import { hungaryPaths } from "../paths/hungary";
+import { icelandPaths } from "../paths/iceland";
+import { irelandPaths } from "../paths/ireland";
+import { italyPaths } from "../paths/italy";
+import { kosovoPaths } from "../paths/kosovo";
+import { latviaPaths } from "../paths/latvia";
+import { lithuaniaPaths } from "../paths/lithuania";
+import { luxembourgPaths } from "../paths/luxembourg";
+import { moldovaPaths } from "../paths/moldova";
+import { montenegroPaths } from "../paths/montenegro";
+import { netherlandsPaths } from "../paths/netherlands";
+import { northMacedoniaPaths } from "../paths/north-macedonia";
+import { norwayPaths } from "../paths/norway";
+import { polandPaths } from "../paths/poland";
+import { portugalPaths } from "../paths/portugal";
+import { republicOfSerbiaPaths } from "../paths/republic-of-serbia";
+import { romaniaPaths } from "../paths/romania";
+import { russiaPaths } from "../paths/russia";
+import { slovakiaPaths } from "../paths/slovakia";
+import { sloveniaPaths } from "../paths/slovenia";
+import { spainPaths } from "../paths/spain";
+import { swedenPaths } from "../paths/sweden";
+import { switzerlandPaths } from "../paths/switzerland";
+import { turkeyPaths } from "../paths/turkey";
+import { ukrainePaths } from "../paths/ukraine";
+import { unitedKingdomPaths } from "../paths/united-kingdom";
 
 export const guardrailTypes = [
-  { name: "A-profile", selectable: false },
+  { name: "A-profile", selectable: true },
   { name: "B-profile" },
   { name: "B-profile-thin" },
 ] as const;
@@ -49,13 +47,13 @@ export const guardrailTypes = [
 export const europeanGuardrails = [
   { name: "Albania", paths: albaniaPaths, subjects: ["A-profile"] },
   { name: "Austria", paths: austriaPaths, subjects: ["A-profile"] },
-  { name: "Belarus", paths: belarusPaths, subjects: [] },
+  // { name: "Belarus", paths: belarusPaths, subjects: [] },
   { name: "Belgium", paths: belgiumPaths, subjects: ["A-profile"] },
-  {
-    name: "Bosnia and Herzegovina",
-    paths: bosniaAndHerzegovinaPaths,
-    subjects: [],
-  },
+  // {
+  //   name: "Bosnia and Herzegovina",
+  //   paths: bosniaAndHerzegovinaPaths,
+  //   subjects: [],
+  // },
   { name: "Bulgaria", paths: bulgariaPaths, subjects: ["A-profile"] },
   { name: "Croatia", paths: croatiaPaths, subjects: ["B-profile"] },
   { name: "Cyprus", paths: cyprusPaths, subjects: ["A-profile"] },

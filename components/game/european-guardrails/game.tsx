@@ -1,6 +1,6 @@
 "use client";
 
-import { europeanGuardrails } from "@/lib/mapping/countries/guardrails";
+import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails";
 import { SvgMap } from "../svg-map";
 import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
@@ -47,7 +47,7 @@ export function EuropeanGuardrailsGame() {
         }}
         attribution={
           <>
-            <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
+            <span>Keaton</span>
             <span className="mx-1">-</span>
             <a href="https://www.naturalearthdata.com/" target="_blank">
               Made with Natural Earth.
@@ -69,7 +69,7 @@ export function EuropeanGuardrailsGame() {
               key={name}
               href={`#${name}`}
               className={cn({
-                "transition-colors fill-background hover:fill-primary": !(
+                "fill-background hover:fill-primary": !(
                   highlighted.includes(name) || hints
                 ),
               })}
@@ -81,35 +81,6 @@ export function EuropeanGuardrailsGame() {
               onClick={() => handleGuess(name)}
             />
           ))}
-          {/* {europeanGuardrails.map(({ name, subjects, paths }) => (
-            <g
-              key={name}
-              className={cn({
-                "fill-background hover:fill-primary": !(
-                  highlighted.includes(name) || hints
-                ),
-              })}
-              fill={
-                highlighted.includes(name) || hints
-                  ? `url(#${subjects.join(",")})`
-                  : undefined
-              }
-              onClick={() => handleGuess(name)}
-            >
-              {paths}
-            </g>
-          ))} */}
-          {/* {europeanGuardrails.map(({ name, paths, subjects }) => (
-            <g
-              key={name}
-              className="pointer-events-none"
-              fill={`url(#${subjects.join(",")})`}
-              fillOpacity={highlighted.includes(name) || hints ? 1 : 0}
-              stroke="transpararent"
-            >
-              {paths}
-            </g>
-          ))} */}
         </g>
       </SvgMap>
     </div>

@@ -1,5 +1,5 @@
-import { chevronPatterns } from "@/lib/mapping/countries/chevrons";
-import { europeanChevrons as countries } from "@/lib/mapping/countries/chevrons";
+import { chevronPatterns } from "@/lib/mapping/countries/registry/chevrons";
+import { europeanChevrons as countries } from "@/lib/mapping/countries/registry/chevrons";
 import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
 
 export type EuropeanChevronsSlice = {
