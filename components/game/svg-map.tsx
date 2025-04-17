@@ -89,7 +89,6 @@ export function SvgMap({
 
   const triggerOpacityHack = () =>
     setTimeout(() => {
-      console.log("triggerOpacityHack");
       const opacity = ref.current?.style.getPropertyValue("opacity");
       ref.current?.style.setProperty("opacity", "0.9999");
       setTimeout(() => {
