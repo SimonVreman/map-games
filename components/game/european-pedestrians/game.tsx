@@ -6,7 +6,7 @@ import { EuropeanPedestriansControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgPedestrianPatterns } from "./pedestrian-patterns";
-import { cn } from "@/lib/utils";
+import { SelectableCountries } from "../selectable-countries";
 
 export function EuropeanPedestriansGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -55,33 +55,12 @@ export function EuropeanPedestriansGame() {
           </>
         }
       >
-        <defs>
-          {svgPedestrianPatterns}
-          {europeanPedestrians.map(({ name, paths }) => (
-            <g id={name} key={name}>
-              {paths}
-            </g>
-          ))}
-        </defs>
-        <g className="stroke-secondary-foreground">
-          {europeanPedestrians.map(({ name, subjects }) => (
-            <use
-              key={name}
-              href={`#${name}`}
-              className={cn({
-                "fill-background hover:fill-primary": !(
-                  highlighted.includes(name) || hints
-                ),
-              })}
-              fill={
-                highlighted.includes(name) || hints
-                  ? `url(#${subjects.join(",")})`
-                  : undefined
-              }
-              onClick={() => handleGuess(name)}
-            />
-          ))}
-        </g>
+        <defs>{svgPedestrianPatterns}</defs>
+        <SelectableCountries
+          items={europeanPedestrians}
+          isHighlighted={(name) => highlighted.includes(name) || hints}
+          onClick={handleGuess}
+        />
       </SvgMap>
     </div>
   );

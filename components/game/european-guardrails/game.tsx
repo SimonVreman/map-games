@@ -6,7 +6,7 @@ import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgGuardrailPatterns } from "./guardrail-patterns";
-import { cn } from "@/lib/utils";
+import { SelectableCountries } from "../selectable-countries";
 
 export function EuropeanGuardrailsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -55,33 +55,12 @@ export function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <defs>
-          {svgGuardrailPatterns}
-          {europeanGuardrails.map(({ name, paths }) => (
-            <g id={name} key={name}>
-              {paths}
-            </g>
-          ))}
-        </defs>
-        <g className="stroke-secondary-foreground">
-          {europeanGuardrails.map(({ name, subjects }) => (
-            <use
-              key={name}
-              href={`#${name}`}
-              className={cn({
-                "fill-background hover:fill-primary": !(
-                  highlighted.includes(name) || hints
-                ),
-              })}
-              fill={
-                highlighted.includes(name) || hints
-                  ? `url(#${subjects.join(",")})`
-                  : undefined
-              }
-              onClick={() => handleGuess(name)}
-            />
-          ))}
-        </g>
+        <defs>{svgGuardrailPatterns}</defs>
+        <SelectableCountries
+          items={europeanGuardrails}
+          isHighlighted={(name) => highlighted.includes(name) || hints}
+          onClick={handleGuess}
+        />
       </SvgMap>
     </div>
   );

@@ -6,9 +6,7 @@ import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgChevronPatterns } from "./chevron-patterns";
-import { cn } from "@/lib/utils";
-import { Fragment } from "react";
-import { TapTargets } from "../tap-targets";
+import { SelectableCountries } from "../selectable-countries";
 
 export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -58,41 +56,11 @@ export function EuropeanChevronsGame() {
         }
       >
         <defs>{svgChevronPatterns}</defs>
-        <g className="stroke-secondary-foreground">
-          {europeanChevrons.map(({ name, paths, subjects }) => (
-            <g
-              key={name}
-              href={`#${name}`}
-              onClick={() => handleGuess(name)}
-              className={cn({
-                "fill-background hover:fill-foreground":
-                  !highlighted.includes(name) && !hints,
-              })}
-              fill={
-                highlighted.includes(name) || hints
-                  ? `url(#${subjects.join(",")})`
-                  : "none"
-              }
-            >
-              {paths}
-            </g>
-          ))}
-
-          <TapTargets
-            items={europeanChevrons}
-            props={({ name, subjects }) => ({
-              onClick: () => handleGuess(name),
-              className: cn({
-                "fill-background/30 hover:fill-foreground":
-                  !highlighted.includes(name) && !hints,
-              }),
-              fill:
-                highlighted.includes(name) || hints
-                  ? `url(#${subjects.join(",")})`
-                  : "none",
-            })}
-          />
-        </g>
+        <SelectableCountries
+          items={europeanChevrons}
+          isHighlighted={(name) => highlighted.includes(name) || hints}
+          onClick={handleGuess}
+        />
       </SvgMap>
     </div>
   );
