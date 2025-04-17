@@ -1,50 +1,58 @@
-import { albaniaPaths, albaniaBounds } from "../paths/albania";
-import { austriaPaths, austriaBounds } from "../paths/austria";
-import { belarusPaths, belarusBounds } from "../paths/belarus";
-import { belgiumPaths, belgiumBounds } from "../paths/belgium";
+import { albaniaPaths, albaniaMeta } from "../paths/albania";
+import { andorraMeta, andorraPaths } from "../paths/andorra";
+import { austriaPaths, austriaMeta } from "../paths/austria";
+import { belarusPaths, belarusMeta } from "../paths/belarus";
+import { belgiumPaths, belgiumMeta } from "../paths/belgium";
 import {
   bosniaAndHerzegovinaPaths,
-  bosniaAndHerzegovinaBounds,
+  bosniaAndHerzegovinaMeta,
 } from "../paths/bosnia-and-herzegovina";
-import { bulgariaPaths, bulgariaBounds } from "../paths/bulgaria";
-import { croatiaPaths, croatiaBounds } from "../paths/croatia";
-import { cyprusPaths, cyprusBounds } from "../paths/cyprus";
-import { czechiaPaths, czechiaBounds } from "../paths/czechia";
-import { denmarkPaths, denmarkBounds } from "../paths/denmark";
-import { estoniaPaths, estoniaBounds } from "../paths/estonia";
-import { finlandPaths, finlandBounds } from "../paths/finland";
-import { francePaths, franceBounds } from "../paths/france";
-import { germanyPaths, germanyBounds } from "../paths/germany";
-import { greecePaths, greeceBounds } from "../paths/greece";
-import { hungaryPaths, hungaryBounds } from "../paths/hungary";
-import { icelandPaths, icelandBounds } from "../paths/iceland";
-import { irelandPaths, irelandBounds } from "../paths/ireland";
-import { italyPaths, italyBounds } from "../paths/italy";
-import { kosovoPaths, kosovoBounds } from "../paths/kosovo";
-import { latviaPaths, latviaBounds } from "../paths/latvia";
-import { lithuaniaPaths, lithuaniaBounds } from "../paths/lithuania";
-import { luxembourgPaths, luxembourgBounds } from "../paths/luxembourg";
-import { moldovaPaths, moldovaBounds } from "../paths/moldova";
-import { montenegroPaths, montenegroBounds } from "../paths/montenegro";
-import { netherlandsPaths, netherlandsBounds } from "../paths/netherlands";
-import { northMacedoniaPaths, northMacedoniaBounds } from "../paths/north-macedonia";
-import { norwayPaths, norwayBounds } from "../paths/norway";
-import { polandPaths, polandBounds } from "../paths/poland";
-import { portugalPaths, portugalBounds } from "../paths/portugal";
+import { bulgariaPaths, bulgariaMeta } from "../paths/bulgaria";
+import { croatiaPaths, croatiaMeta } from "../paths/croatia";
+import { cyprusPaths, cyprusMeta } from "../paths/cyprus";
+import { czechiaPaths, czechiaMeta } from "../paths/czechia";
+import { denmarkPaths, denmarkMeta } from "../paths/denmark";
+import { estoniaPaths, estoniaMeta } from "../paths/estonia";
+import { finlandPaths, finlandMeta } from "../paths/finland";
+import { francePaths, franceMeta } from "../paths/france";
+import { germanyPaths, germanyMeta } from "../paths/germany";
+import { greecePaths, greeceMeta } from "../paths/greece";
+import { hungaryPaths, hungaryMeta } from "../paths/hungary";
+import { icelandPaths, icelandMeta } from "../paths/iceland";
+import { irelandPaths, irelandMeta } from "../paths/ireland";
+import { italyPaths, italyMeta } from "../paths/italy";
+import { kosovoPaths, kosovoMeta } from "../paths/kosovo";
+import { latviaPaths, latviaMeta } from "../paths/latvia";
+import { liechtensteinMeta, liechtensteinPaths } from "../paths/liechtenstein";
+import { lithuaniaPaths, lithuaniaMeta } from "../paths/lithuania";
+import { luxembourgPaths, luxembourgMeta } from "../paths/luxembourg";
+import { maltaMeta, maltaPaths } from "../paths/malta";
+import { moldovaPaths, moldovaMeta } from "../paths/moldova";
+import { monacoMeta, monacoPaths } from "../paths/monaco";
+import { montenegroPaths, montenegroMeta } from "../paths/montenegro";
+import { netherlandsPaths, netherlandsMeta } from "../paths/netherlands";
+import {
+  northMacedoniaPaths,
+  northMacedoniaMeta,
+} from "../paths/north-macedonia";
+import { norwayPaths, norwayMeta } from "../paths/norway";
+import { polandPaths, polandMeta } from "../paths/poland";
+import { portugalPaths, portugalMeta } from "../paths/portugal";
 import {
   republicOfSerbiaPaths,
-  republicOfSerbiaBounds,
+  republicOfSerbiaMeta,
 } from "../paths/republic-of-serbia";
-import { romaniaPaths, romaniaBounds } from "../paths/romania";
-import { russiaPaths, russiaBounds } from "../paths/russia";
-import { slovakiaPaths, slovakiaBounds } from "../paths/slovakia";
-import { sloveniaPaths, sloveniaBounds } from "../paths/slovenia";
-import { spainPaths, spainBounds } from "../paths/spain";
-import { swedenPaths, swedenBounds } from "../paths/sweden";
-import { switzerlandPaths, switzerlandBounds } from "../paths/switzerland";
-import { turkeyPaths, turkeyBounds } from "../paths/turkey";
-import { ukrainePaths, ukraineBounds } from "../paths/ukraine";
-import { unitedKingdomPaths, unitedKingdomBounds } from "../paths/united-kingdom";
+import { romaniaPaths, romaniaMeta } from "../paths/romania";
+import { russiaPaths, russiaMeta } from "../paths/russia";
+import { sanMarinoMeta, sanMarinoPaths } from "../paths/san-marino";
+import { slovakiaPaths, slovakiaMeta } from "../paths/slovakia";
+import { sloveniaPaths, sloveniaMeta } from "../paths/slovenia";
+import { spainPaths, spainMeta } from "../paths/spain";
+import { swedenPaths, swedenMeta } from "../paths/sweden";
+import { switzerlandPaths, switzerlandMeta } from "../paths/switzerland";
+import { turkeyPaths, turkeyMeta } from "../paths/turkey";
+import { ukrainePaths, ukraineMeta } from "../paths/ukraine";
+import { unitedKingdomPaths, unitedKingdomMeta } from "../paths/united-kingdom";
 
 export const chevronPatterns = [
   { name: "blackOnWhite", background: "white", foreground: "black" },
@@ -62,248 +70,277 @@ export const europeanChevrons = [
   {
     name: "Albania",
     paths: albaniaPaths,
-    bounds: albaniaBounds,
+    meta: albaniaMeta,
     subjects: ["redOnWhite", "whiteOnBlack", "whiteOnRed"],
+  },
+  {
+    name: "Andorra",
+    paths: andorraPaths,
+    meta: andorraMeta,
+    subjects: ["whiteOnBlue"],
   },
   {
     name: "Austria",
     paths: austriaPaths,
-    bounds: austriaBounds,
+    meta: austriaMeta,
     subjects: ["redOnYellow", "whiteOnRed"],
   },
   {
     name: "Belarus",
     paths: belarusPaths,
-    bounds: belarusBounds,
+    meta: belarusMeta,
     subjects: ["whiteOnRed"],
   },
   {
     name: "Belgium",
     paths: belgiumPaths,
-    bounds: belgiumBounds,
+    meta: belgiumMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Bosnia and Herzegovina",
     paths: bosniaAndHerzegovinaPaths,
-    bounds: bosniaAndHerzegovinaBounds,
+    meta: bosniaAndHerzegovinaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Bulgaria",
     paths: bulgariaPaths,
-    bounds: bulgariaBounds,
+    meta: bulgariaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Croatia",
     paths: croatiaPaths,
-    bounds: croatiaBounds,
+    meta: croatiaMeta,
     subjects: ["redOnWhite", "redOnYellow"],
   },
   {
     name: "Cyprus",
     paths: cyprusPaths,
-    bounds: cyprusBounds,
+    meta: cyprusMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Czechia",
     paths: czechiaPaths,
-    bounds: czechiaBounds,
+    meta: czechiaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Denmark",
     paths: denmarkPaths,
-    bounds: denmarkBounds,
+    meta: denmarkMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Estonia",
     paths: estoniaPaths,
-    bounds: estoniaBounds,
+    meta: estoniaMeta,
     subjects: ["whiteOnRed"],
   },
   {
     name: "Finland",
     paths: finlandPaths,
-    bounds: finlandBounds,
+    meta: finlandMeta,
     subjects: ["yellowOnBlack"],
   },
   {
     name: "France",
     paths: francePaths,
-    bounds: franceBounds,
+    meta: franceMeta,
     subjects: ["redOnWhite", "whiteOnBlue"],
   },
   {
     name: "Germany",
     paths: germanyPaths,
-    bounds: germanyBounds,
+    meta: germanyMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Greece",
     paths: greecePaths,
-    bounds: greeceBounds,
+    meta: greeceMeta,
     subjects: ["whiteOnBlack"],
   },
   {
     name: "Hungary",
     paths: hungaryPaths,
-    bounds: hungaryBounds,
+    meta: hungaryMeta,
     subjects: ["redOnWhite", "whiteOnRed"],
   },
   {
     name: "Iceland",
     paths: icelandPaths,
-    bounds: icelandBounds,
+    meta: icelandMeta,
     subjects: ["yellowOnBlack"],
   },
   {
     name: "Ireland",
     paths: irelandPaths,
-    bounds: irelandBounds,
+    meta: irelandMeta,
     subjects: ["yellowOnBlack"],
   },
   {
     name: "Italy",
     paths: italyPaths,
-    bounds: italyBounds,
+    meta: italyMeta,
     subjects: ["whiteOnBlack", "whiteOnRed"],
   },
   {
     name: "Kosovo",
     paths: kosovoPaths,
-    bounds: kosovoBounds,
+    meta: kosovoMeta,
     subjects: ["blackOnWhite"],
   },
   {
     name: "Latvia",
     paths: latviaPaths,
-    bounds: latviaBounds,
+    meta: latviaMeta,
     subjects: ["redOnWhite"],
+  },
+  {
+    name: "Liechtenstein",
+    paths: liechtensteinPaths,
+    meta: liechtensteinMeta,
+    subjects: ["whiteOnBlack"],
   },
   {
     name: "Lithuania",
     paths: lithuaniaPaths,
-    bounds: lithuaniaBounds,
+    meta: lithuaniaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Luxembourg",
     paths: luxembourgPaths,
-    bounds: luxembourgBounds,
+    meta: luxembourgMeta,
     subjects: ["redOnWhite", "yellowOnBlack", "yellowOnBlue"],
   },
-  // { name: "Malta", paths: maltaPaths, bounds: maltaBounds, subjects: ["whiteOnBlack"] }, Too small to click
+  {
+    name: "Malta",
+    paths: maltaPaths,
+    meta: maltaMeta,
+    subjects: ["whiteOnBlack"],
+  },
+  {
+    name: "Monaco",
+    paths: monacoPaths,
+    meta: monacoMeta,
+    subjects: ["redOnWhite"],
+  },
   {
     name: "Montenegro",
     paths: montenegroPaths,
-    bounds: montenegroBounds,
+    meta: montenegroMeta,
     subjects: ["blackOnWhite", "redOnYellow"],
   },
   {
     name: "Netherlands",
     paths: netherlandsPaths,
-    bounds: netherlandsBounds,
+    meta: netherlandsMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "North Macedonia",
     paths: northMacedoniaPaths,
-    bounds: northMacedoniaBounds,
+    meta: northMacedoniaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Norway",
     paths: norwayPaths,
-    bounds: norwayBounds,
+    meta: norwayMeta,
     subjects: ["yellowOnBlack"],
   },
   {
     name: "Moldova",
     paths: moldovaPaths,
-    bounds: moldovaBounds,
+    meta: moldovaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Poland",
     paths: polandPaths,
-    bounds: polandBounds,
+    meta: polandMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Portugal",
     paths: portugalPaths,
-    bounds: portugalBounds,
+    meta: portugalMeta,
     subjects: ["yellowOnBlack"],
+  },
+  {
+    name: "San Marino",
+    paths: sanMarinoPaths,
+    meta: sanMarinoMeta,
+    subjects: ["redOnYellow"],
   },
   {
     name: "Serbia",
     paths: republicOfSerbiaPaths,
-    bounds: republicOfSerbiaBounds,
+    meta: republicOfSerbiaMeta,
     subjects: ["blackOnWhite"],
   },
   {
     name: "Romania",
     paths: romaniaPaths,
-    bounds: romaniaBounds,
+    meta: romaniaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Russia",
     paths: russiaPaths,
-    bounds: russiaBounds,
+    meta: russiaMeta,
     subjects: ["whiteOnRed"],
   },
   {
     name: "Slovakia",
     paths: slovakiaPaths,
-    bounds: slovakiaBounds,
+    meta: slovakiaMeta,
     subjects: ["redOnWhite"],
   },
   {
     name: "Slovenia",
     paths: sloveniaPaths,
-    bounds: sloveniaBounds,
+    meta: sloveniaMeta,
     subjects: ["blackOnWhite", "redOnWhite"],
   },
   {
     name: "Spain",
     paths: spainPaths,
-    bounds: spainBounds,
+    meta: spainMeta,
     subjects: ["redOnWhite", "whiteOnBlack", "whiteOnBlue"],
   },
   {
     name: "Sweden",
     paths: swedenPaths,
-    bounds: swedenBounds,
+    meta: swedenMeta,
     subjects: ["yellowOnBlue", "yellowOnRed"],
   },
   {
     name: "Switzerland",
     paths: switzerlandPaths,
-    bounds: switzerlandBounds,
+    meta: switzerlandMeta,
     subjects: ["whiteOnBlack"],
   },
   {
     name: "Turkey",
     paths: turkeyPaths,
-    bounds: turkeyBounds,
+    meta: turkeyMeta,
     subjects: ["redOnWhite", "yellowOnBlack"],
   },
   {
     name: "Ukraine",
     paths: ukrainePaths,
-    bounds: ukraineBounds,
+    meta: ukraineMeta,
     subjects: ["whiteOnRed"],
   },
   {
     name: "United Kingdom",
     paths: unitedKingdomPaths,
-    bounds: unitedKingdomBounds,
+    meta: unitedKingdomMeta,
     subjects: ["whiteOnBlack"],
   },
 ] as const;

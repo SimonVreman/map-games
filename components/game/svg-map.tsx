@@ -94,7 +94,7 @@ export function SvgMap({
       setTimeout(() => {
         ref.current?.style.setProperty("opacity", opacity ?? "1");
       }, 100);
-    }, 1000);
+    }, 500);
 
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault();

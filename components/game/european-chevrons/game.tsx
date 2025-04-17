@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { svgChevronPatterns } from "./chevron-patterns";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
+import { TapTargets } from "../tap-targets";
 
 export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -62,6 +63,7 @@ export function EuropeanChevronsGame() {
             <g
               key={name}
               href={`#${name}`}
+              onClick={() => handleGuess(name)}
               className={cn({
                 "fill-background hover:fill-foreground":
                   !highlighted.includes(name) && !hints,
@@ -71,11 +73,25 @@ export function EuropeanChevronsGame() {
                   ? `url(#${subjects.join(",")})`
                   : "none"
               }
-              onClick={() => handleGuess(name)}
             >
               {paths}
             </g>
           ))}
+
+          <TapTargets
+            items={europeanChevrons}
+            props={({ name, subjects }) => ({
+              onClick: () => handleGuess(name),
+              className: cn({
+                "fill-background/30 hover:fill-foreground":
+                  !highlighted.includes(name) && !hints,
+              }),
+              fill:
+                highlighted.includes(name) || hints
+                  ? `url(#${subjects.join(",")})`
+                  : "none",
+            })}
+          />
         </g>
       </SvgMap>
     </div>
