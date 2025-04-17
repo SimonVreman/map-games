@@ -1,7 +1,7 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { cn } from "@/lib/utils";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSpring, a } from "@react-spring/web";
 
 type Bounds = {
@@ -83,6 +83,20 @@ export function SvgMap({
   const ref = useRef<SVGSVGElement>(null);
   const [style, api] = useSpring(() => ({ x: 0, y: 0, scale: 0.25 }));
 
+  const [opacityTimeout, setOpacityTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
+  const triggerOpacityHack = () =>
+    setTimeout(() => {
+      console.log("triggerOpacityHack");
+      const opacity = ref.current?.style.getPropertyValue("opacity");
+      ref.current?.style.setProperty("opacity", "0.9999");
+      setTimeout(() => {
+        ref.current?.style.setProperty("opacity", opacity ?? "1");
+      }, 100);
+    }, 1000);
+
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault();
     document.addEventListener("gesturestart", handler);
@@ -97,8 +111,13 @@ export function SvgMap({
 
   useGesture(
     {
-      onDrag: ({ pinching, cancel, offset: [x, y] }) => {
+      onDrag: ({ pinching, cancel, first, last, offset: [x, y] }) => {
         if (pinching) return cancel();
+
+        // Hack to rerender svg, fixes issues with pixelation. But not when interacting with the map
+        if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
+        if (last) setOpacityTimeout(triggerOpacityHack());
+
         const bounding = ref.current?.getBoundingClientRect();
         api.start(clampMap({ bounding, x, y, scale: style.scale.get() }));
       },
@@ -117,14 +136,9 @@ export function SvgMap({
           memo = [style.x.get(), style.y.get(), tx, ty];
         }
 
-        // Hack to rerender svg, fixes issues with pixelation
-        if (last) {
-          const opacity = ref.current?.style.getPropertyValue("opacity");
-          ref.current?.style.setProperty("opacity", "0.9999");
-          setTimeout(() => {
-            ref.current?.style.setProperty("opacity", opacity ?? "1");
-          }, 50);
-        }
+        // Hack to rerender svg, fixes issues with pixelation. But not when interacting with the map
+        if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
+        if (last) setOpacityTimeout(triggerOpacityHack());
 
         const { x, y } = clampMap({
           bounding: ref.current?.getBoundingClientRect(),
