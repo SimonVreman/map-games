@@ -5,17 +5,17 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import merge from "deepmerge";
 import { CityBlocksSlice, createCityBlocksSlice } from "./game/city-blocks";
 import {
-  BrazilTelephoneCodesSlice,
-  createBrazilTelephoneCodesSlice,
-} from "./game/brazil-telephone-codes";
+  BrazilDialingCodesSlice,
+  createBrazilDialingCodesSlice,
+} from "./game/brazil-dialing-codes";
 import {
   createEuropeanChevronsSlice,
   EuropeanChevronsSlice,
 } from "./game/european-chevrons";
 import {
-  createSpainTelephoneCodesSlice,
-  SpainTelephoneCodesSlice,
-} from "./game/spain-telephone-codes";
+  createSpainDialingCodesSlice,
+  SpainDialingCodesSlice,
+} from "./game/spain-dialing-codes";
 import {
   createEuropeanGuardrailsSlice,
   EuropeanGuardrailsSlice,
@@ -27,9 +27,9 @@ import {
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
-  BrazilTelephoneCodesSlice &
+  BrazilDialingCodesSlice &
   EuropeanChevronsSlice &
-  SpainTelephoneCodesSlice &
+  SpainDialingCodesSlice &
   EuropeanGuardrailsSlice &
   EuropeanPedestriansSlice;
 
@@ -39,9 +39,9 @@ export const createAppStore = () =>
       immer((...a) => ({
         ...createCityCoverSlice(...a),
         ...createCityBlocksSlice(...a),
-        ...createBrazilTelephoneCodesSlice(...a),
+        ...createBrazilDialingCodesSlice(...a),
         ...createEuropeanChevronsSlice(...a),
-        ...createSpainTelephoneCodesSlice(...a),
+        ...createSpainDialingCodesSlice(...a),
         ...createEuropeanGuardrailsSlice(...a),
         ...createEuropeanPedestriansSlice(...a),
       })),

@@ -1,18 +1,19 @@
+import { GameGrid } from "@/components/browse/game-grid";
+import { regularGames } from "@/lib/games/regular-registry";
+import { geoguessrGames } from "@/lib/games/geoguessr-registry";
+
 # Simple & fun map games
 
 A collection of map-based games, to which I (plan) to add new ones occasionally. Have a cool idea? Reach out via [Bluesky](https://bsky.app/profile/simonvreman.nl)!.
 
-## Games
+## Quizzes
 
-- [City Cover](/city-cover) - Fill the map by guessing cities around the world. Each correct guess creates a horizontal band across the map at the guessed city's latitude, with some margin to account for nearby areas. Your goal is to guess cities to cover as much of the map as possible.
-- [City Blocks](/city-blocks) - Fill the map by guessing cities around the world. Each city is in a block, which size depends on the difficulty. Your goal is to guess cities to cover as much of the map as possible.
+Fun map-based trivia games, where you can test your knowledge of the world.
+
+<GameGrid games={regularGames} />
 
 ## GeoGuessr
 
-Because I have failed lost too many duels by failing to memorize these maps, I made simple games to help me memorize them. Taking suggestions for new ones!
+Because I have failed lost too many duels by failing to know these maps by heart, I made simple games to help me memorize them. Taking suggestions for new ones!
 
-- [Brazil Telephone Codes](/brazil-telephone-codes) - A simple streak-based game to memorize which Brazilian telephone code corresponds to which locations.
-- [Spain Telephone Codes](/spain-telephone-codes) - A very simliar game to memorize which Spanish telephone code corresponds to which locations.
-- [European Chevrons](/european-chevrons) - A simple streak-based game to memorize which European chevrons correspond to which countries.
-- [European Guardrails](/european-guardrails) - A simple streak-based game to memorize which countries use the different variations of guardrails in Europe.
-- [European Pedestrians](/european-pedestrians) - A simple streak-based game to memorize which countries use the different variations of pedestrians in Europe.
+<GameGrid games={geoguessrGames} />

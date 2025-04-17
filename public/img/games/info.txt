@@ -1,1 +1,1 @@
-made in chrome, dpr 3, 1800x900
+made in chrome, dpr 3, 900x600

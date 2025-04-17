@@ -1,55 +1,42 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useAppForm } from "@/components/ui/tanstack-form";
 import { AppStore } from "@/lib/store";
 import { SinglePinSliceName } from "@/lib/store/slice/single-pin";
 import { useAppStore } from "@/lib/store/provider";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function SinglePinSettings<TName extends SinglePinSliceName<AppStore>>({
-  href,
+  slug,
   store,
-  className,
 }: {
-  href: string;
+  slug: string;
   store: TName;
-  className?: string;
 }) {
   const router = useRouter();
+  const href = `/${slug}/play`;
 
   const [reset, canResume] = useAppStore((s) => [
     s[store].reset,
     s[store].guesses.length > 0,
   ]);
 
-  const form = useAppForm({
-    onSubmit: () => {
-      reset();
-      handleResume();
-    },
-  });
-
-  const handleResume = () => {
+  const handleStart = () => {
+    reset();
     router.push(href);
   };
 
   return (
-    <form.Form form={form} className={cn("space-y-6", className)}>
-      <div className="flex gap-4 max-sm:flex-col max-sm:justify-stretch justify-end">
-        {canResume && (
-          <Button
-            type="button"
-            variant="secondary"
-            size="lg"
-            onClick={handleResume}
-          >
-            Resume
-          </Button>
-        )}
-        <form.Submit size="lg">Start game</form.Submit>
-      </div>
-    </form.Form>
+    <div className="flex gap-4 max-sm:flex-col max-sm:justify-stretch justify-end not-prose">
+      {canResume && (
+        <Button variant="secondary" size="lg" asChild>
+          <Link href={href}>Resume</Link>
+        </Button>
+      )}
+      <Button size="lg" onClick={handleStart}>
+        Start game
+      </Button>
+    </div>
   );
 }
