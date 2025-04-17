@@ -389,36 +389,16 @@ const quadrupleTypes = europeanPedestrians
   .map((v) => v.subjects.join(","))
   .filter((v, i, a) => a.indexOf(v) === i);
 
-const colors = [
-  "fill-chart-1/50",
-  "fill-chart-2/50",
-  "fill-chart-3/50",
-  "fill-chart-4/50",
-  "fill-chart-5/50",
-  "fill-chart-1/30",
-  "fill-chart-2/30",
-  "fill-chart-3/30",
-  "fill-chart-4/30",
-  "fill-chart-5/30",
-  "fill-chart-1/10",
-  "fill-chart-2/10",
-  "fill-chart-3/10",
-  "fill-chart-4/10",
-  "fill-chart-5/10",
-] as const;
-
-const colorsForPedestrians = europeanPedestrians
-  .map((v) => v.subjects.join(","))
-  .filter((v, i, a) => a.indexOf(v) === i)
-  .reduce((acc, v) => {
-    return {
-      ...acc,
-      [v]: colors[Object.keys(acc).length % colors.length],
-    };
-  }, {} as Record<string, string>);
-
-export const getColorForPedestrian = (name: string) => {
-  return colorsForPedestrians[name] ?? colors[0];
+const colorsForPedestrians = {
+  None: "fill-chart-1/50",
+  Three: "fill-chart-2/50",
+  Four: "fill-chart-3/50",
+  Five: "fill-chart-4/50",
+  Six: "fill-chart-1/30",
+  Seven: "fill-chart-2/30",
+  Eight: "fill-chart-3/30",
+  Twelve: "fill-chart-4/30",
+  Ball: "fill-chart-1/10",
 };
 
 export const svgPedestrianPatterns = (
@@ -433,6 +413,7 @@ export const svgPedestrianPatterns = (
         preserveAspectRatio="xMidYMid meet"
         patternUnits="userSpaceOnUse"
       >
+        <rect width="200" height="200" className={colorsForPedestrians[name]} />
         {name === "Ball"
           ? ball
           : name === "None"
@@ -463,11 +444,6 @@ export const svgPedestrianPatterns = (
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
       >
-        <rect
-          width="3000"
-          height="200"
-          className={getColorForPedestrian(name)}
-        />
         <rect width="3000" height="200" fill={`url(#${name + "-base"})`} />
       </pattern>
     ))}
@@ -482,11 +458,6 @@ export const svgPedestrianPatterns = (
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
       >
-        <rect
-          width="3000"
-          height="400"
-          className={getColorForPedestrian(types)}
-        />
         <rect
           width="3000"
           height="200"
@@ -511,11 +482,6 @@ export const svgPedestrianPatterns = (
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
       >
-        <rect
-          width="3000"
-          height="600"
-          className={getColorForPedestrian(types)}
-        />
         <rect
           width="3000"
           height="200"
@@ -546,11 +512,6 @@ export const svgPedestrianPatterns = (
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
       >
-        <rect
-          width="3000"
-          height="800"
-          className={getColorForPedestrian(types)}
-        />
         <rect
           width="3000"
           height="200"

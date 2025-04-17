@@ -268,7 +268,7 @@ export const europeanPedestrians = [
     name: "San Marino",
     paths: sanMarinoPaths,
     meta: sanMarinoMeta,
-    subjects: [],
+    subjects: ["Five"],
   },
   {
     name: "Slovakia",
