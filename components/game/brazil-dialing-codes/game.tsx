@@ -9,10 +9,10 @@ import {
   brazilPaths,
 } from "@/lib/mapping/brazil/paths";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { SelectableRegions } from "../selectable-regions";
 
 export function BrazilDialingCodesGame() {
-  const [guess, correct, { positive, negative }, hints] = useAppStore((s) => [
+  const [guess, correct, highlighted, hints] = useAppStore((s) => [
     s.brazilDialingCodes.guess,
     s.brazilDialingCodes.code,
     s.brazilDialingCodes.highlighted,
@@ -49,56 +49,15 @@ export function BrazilDialingCodesGame() {
           </a>
         }
       >
-        {brazilPhoneCodes.map(({ code, paths }) => (
-          <g
-            key={code}
-            onClick={() => handleGuess(code)}
-            className={cn(
-              "fill-background stroke-foreground/10 transition-colors",
-              {
-                "fill-green-500/20 stroke-green-500/30": positive === code,
-                "fill-red-500/20 stroke-red-500/30": negative === code,
-                "hover:fill-secondary-foreground":
-                  positive !== code && negative !== code && !hints,
-                "fill-chart-1/50":
-                  hints && (code < 20 || (code >= 80 && code < 90)),
-                "fill-chart-2/50":
-                  hints &&
-                  ((code >= 20 && code < 30) || (code >= 60 && code < 70)),
-                "fill-chart-3/50": hints && code >= 30 && code < 40,
-                "fill-chart-4/50":
-                  hints && ((code >= 40 && code < 50) || code >= 90),
-                "fill-chart-5/50":
-                  hints &&
-                  ((code >= 50 && code < 60) || (code >= 70 && code < 80)),
-              }
-            )}
-          >
-            {paths}
-          </g>
-        ))}
-        {brazilPhoneCodes.map(({ code, center }) => (
-          <text
-            key={code}
-            x={center[0]}
-            y={center[1]}
-            z={100}
-            fillOpacity={1}
-            strokeWidth={0}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            className="pointer-events-none fill-foreground"
-            opacity={positive === code || negative === code || hints ? 1 : 0}
-          >
-            {code}
-          </text>
-        ))}
-        <g className="stroke-secondary-foreground/30 pointer-events-none">
-          {brazilFirstAdministrativePaths}
-        </g>
-        <g className="stroke-secondary-foreground pointer-events-none">
-          {brazilPaths}
-        </g>
+        <SelectableRegions
+          regions={brazilPhoneCodes}
+          countryPaths={brazilPaths}
+          firstAdministrativePaths={brazilFirstAdministrativePaths}
+          hints={hints}
+          highlighted={highlighted}
+          getCodeGroup={(code) => code.toString()[0]}
+          onClick={handleGuess}
+        />
       </SvgMap>
     </div>
   );
