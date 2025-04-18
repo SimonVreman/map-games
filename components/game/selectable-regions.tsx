@@ -41,6 +41,12 @@ export function SelectableRegions({
   const groups = regions.map(({ code }) => getCodeGroup(code));
   const uniqueGroups = [...new Set(groups)].sort();
 
+  const labelsVisible = hints
+    ? regions
+    : positive || negative
+    ? regions.filter(({ code }) => code === positive || code === negative)
+    : [];
+
   return (
     <>
       {regions.map(({ code, paths }) => {
@@ -100,22 +106,22 @@ export function SelectableRegions({
         </feMerge>
       </filter>
 
-      {regions.map(({ code, center }) => (
-        <text
-          key={code}
-          x={center[0]}
-          y={center[1]}
-          opacity={positive === code || negative === code || hints ? 1 : 0}
-          className="pointer-events-none fill-secondary-foreground"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          strokeWidth={0}
-          fontSize={scaling * 12}
-          filter="url(#outline)"
-        >
-          {code}
-        </text>
-      ))}
+      <g className="pointer-events-none fill-secondary-foreground">
+        {labelsVisible.map(({ code, center }) => (
+          <text
+            key={code}
+            x={center[0]}
+            y={center[1]}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            strokeWidth={0}
+            fontSize={scaling * 12}
+            filter="url(#outline)"
+          >
+            {code}
+          </text>
+        ))}
+      </g>
     </>
   );
 }
