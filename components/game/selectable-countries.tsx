@@ -6,6 +6,7 @@ const minTapSize = 1.5;
 export function SelectableCountries({
   items,
   isHighlighted,
+  scaling,
   onClick,
 }: {
   items: readonly {
@@ -21,6 +22,7 @@ export function SelectableCountries({
       y: number;
     };
   }[];
+  scaling: number;
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
@@ -30,7 +32,7 @@ export function SelectableCountries({
   );
 
   return (
-    <g className="stroke-secondary-foreground">
+    <g className="stroke-neutral-500">
       {items.map(({ name, paths, subjects }) => (
         <g
           key={name}
@@ -58,8 +60,8 @@ export function SelectableCountries({
             cx={meta.x}
             cy={meta.y}
             r={minTapSize}
-            strokeDasharray={!isHighlighted(name) ? 1 : undefined}
-            strokeWidth={0.2}
+            strokeDasharray={!isHighlighted(name) ? scaling * 3 : undefined}
+            strokeWidth={scaling * 2}
             onClick={() => onClick(name)}
             className={cn({
               "fill-background/30 hover:fill-primary/70": !isHighlighted(name),

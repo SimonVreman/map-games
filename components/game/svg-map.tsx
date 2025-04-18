@@ -30,13 +30,18 @@ function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
     lng: east + padding,
   });
 
-  const x = Math.round(northWest.x * 100) / 100;
-  const y = Math.round(northWest.y * 100) / 100;
-  const width = Math.round(Math.abs(southEast.x - northWest.x) * 100) / 100;
-  const height = Math.round(Math.abs(northWest.y - southEast.y) * 100) / 100;
-
-  return `${x} ${y} ${width} ${height}`;
+  return {
+    x: Math.round(northWest.x * 100) / 100,
+    y: Math.round(northWest.y * 100) / 100,
+    width: Math.round(Math.abs(southEast.x - northWest.x) * 100) / 100,
+    height: Math.round(Math.abs(northWest.y - southEast.y) * 100) / 100,
+  };
 }
+
+export const scalingForBounds = (bounds: Bounds) => {
+  const viewBox = calculateViewBox(bounds);
+  return Math.max(viewBox.width, viewBox.height) / 750;
+};
 
 function clampMap({
   bounding,
@@ -161,6 +166,9 @@ export function SvgMap({
     }
   );
 
+  const viewBox = calculateViewBox(bounds);
+  const scaling = scalingForBounds(bounds);
+
   return (
     <div
       className={cn(
@@ -173,11 +181,11 @@ export function SvgMap({
           {/* @ts-expect-error - doesnt expect children for some reason */}
           <a.svg
             ref={ref}
-            className="bg-secondary touch-none size-full translate-z-0 will-change-transform"
-            viewBox={calculateViewBox(bounds)}
+            className="bg-secondary touch-none select-none size-full translate-z-0 will-change-transform"
+            viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
             fill="none"
             stroke="#000"
-            strokeWidth="0.1"
+            strokeWidth={scaling * 1}
             strokeLinejoin="round"
             style={style}
             {...props}

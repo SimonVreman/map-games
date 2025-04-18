@@ -1,12 +1,20 @@
 "use client";
 
 import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails";
-import { SvgMap } from "../svg-map";
+import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgGuardrailPatterns } from "./guardrail-patterns";
 import { SelectableCountries } from "../selectable-countries";
+
+const bounds = {
+  north: 71,
+  west: -25,
+  south: 34,
+  east: 38,
+  padding: 2,
+};
 
 export function EuropeanGuardrailsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -38,13 +46,7 @@ export function EuropeanGuardrailsGame() {
 
       <SvgMap
         fontSize={2}
-        bounds={{
-          north: 71,
-          west: -25,
-          south: 34,
-          east: 38,
-          padding: 2,
-        }}
+        bounds={bounds}
         attribution={
           <>
             <span>Keaton</span>
@@ -59,6 +61,7 @@ export function EuropeanGuardrailsGame() {
         <SelectableCountries
           items={europeanGuardrails}
           isHighlighted={(name) => highlighted.includes(name) || hints}
+          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>

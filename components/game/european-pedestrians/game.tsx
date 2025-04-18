@@ -1,12 +1,20 @@
 "use client";
 
 import { europeanPedestrians } from "@/lib/mapping/countries/registry/pedestrians";
-import { SvgMap } from "../svg-map";
+import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanPedestriansControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgPedestrianPatterns } from "./pedestrian-patterns";
 import { SelectableCountries } from "../selectable-countries";
+
+const bounds = {
+  north: 71,
+  west: -25,
+  south: 34,
+  east: 38,
+  padding: 2,
+};
 
 export function EuropeanPedestriansGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -38,13 +46,7 @@ export function EuropeanPedestriansGame() {
 
       <SvgMap
         fontSize={2}
-        bounds={{
-          north: 71,
-          west: -25,
-          south: 34,
-          east: 38,
-          padding: 2,
-        }}
+        bounds={bounds}
         attribution={
           <>
             <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
@@ -59,6 +61,7 @@ export function EuropeanPedestriansGame() {
         <SelectableCountries
           items={europeanPedestrians}
           isHighlighted={(name) => highlighted.includes(name) || hints}
+          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>

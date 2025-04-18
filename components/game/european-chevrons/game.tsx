@@ -1,12 +1,20 @@
 "use client";
 
 import { europeanChevrons } from "@/lib/mapping/countries/registry/chevrons";
-import { SvgMap } from "../svg-map";
+import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { toast } from "sonner";
 import { svgChevronPatterns } from "./chevron-patterns";
 import { SelectableCountries } from "../selectable-countries";
+
+const bounds = {
+  north: 71,
+  west: -25,
+  south: 34,
+  east: 38,
+  padding: 2,
+};
 
 export function EuropeanChevronsGame() {
   const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
@@ -38,13 +46,7 @@ export function EuropeanChevronsGame() {
 
       <SvgMap
         fontSize={2}
-        bounds={{
-          north: 71,
-          west: -25,
-          south: 34,
-          east: 38,
-          padding: 2,
-        }}
+        bounds={bounds}
         attribution={
           <>
             <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
@@ -59,6 +61,7 @@ export function EuropeanChevronsGame() {
         <SelectableCountries
           items={europeanChevrons}
           isHighlighted={(name) => highlighted.includes(name) || hints}
+          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>
