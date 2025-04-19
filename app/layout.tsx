@@ -3,7 +3,6 @@ import { Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { AppStoreProvider } from "@/lib/store/provider";
 import { Toaster } from "sonner";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 
 const figtree = Figtree({
@@ -31,13 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <Script
-          src="https://cdn.seline.com/seline.js"
-          data-token="f55036587aca014"
-          strategy="afterInteractive"
-        />
-      </head>
       <body
         className={`${figtree.variable} ${geistMono.variable} antialiased min-w-dvw min-h-dvh font-sans`}
       >
