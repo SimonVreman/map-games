@@ -38,22 +38,22 @@ export function PinControlsBase({
     <ControlsBase>
       <div className="flex max-sm:gap-2 gap-4 w-full">
         {graphic && (
-          <div className="rounded-md shadow-md overflow-hidden relative">
+          <div className="rounded-md shadow-md overflow-hidden relative pointer-events-auto">
             {graphic}
           </div>
         )}
-        <div className="relative overflow-hidden rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center grow text-lg">
+        <div className="relative overflow-hidden rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center grow text-lg pointer-events-auto">
           {children}
         </div>
       </div>
 
       <div className="flex max-sm:gap-2 gap-4 max-sm:w-full">
-        <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap mr-auto">
+        <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap mr-auto pointer-events-auto">
           {stats}
         </div>
 
         {onToggleHints && (
-          <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center">
+          <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center pointer-events-auto">
             <Button variant="ghost" size="icon" onClick={onToggleHints}>
               {hints ? (
                 <LightbulbOffIcon className="size-6 stroke-[1.5]" />
@@ -64,7 +64,7 @@ export function PinControlsBase({
           </div>
         )}
 
-        <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center">
+        <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center pointer-events-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">

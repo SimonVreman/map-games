@@ -39,16 +39,16 @@ export function InputControlsBase({
       <Input
         value={inputValue}
         placeholder="Enter city name"
-        className="bg-background dark:bg-background shadow-md h-14 grow md:text-md"
+        className="bg-background dark:bg-background shadow-md h-14 grow md:text-md pointer-events-auto"
         onChange={(e) => handleInputChange(e.target.value)}
       />
 
       <div className="flex items-center max-sm:justify-between max-sm:gap-2 gap-4 max-sm:w-full">
-        <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap">
+        <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap pointer-events-auto">
           {children}
         </div>
 
-        <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center">
+        <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center pointer-events-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
