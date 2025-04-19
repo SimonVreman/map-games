@@ -24,6 +24,10 @@ import {
   createEuropeanPedestriansSlice,
   EuropeanPedestriansSlice,
 } from "./game/european-pedestrians";
+import {
+  createEuropeanBollardsSlice,
+  EuropeanBollardsSlice,
+} from "./game/european-bollards";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -31,7 +35,8 @@ export type AppStore = CityCoverSlice &
   EuropeanChevronsSlice &
   SpainDialingCodesSlice &
   EuropeanGuardrailsSlice &
-  EuropeanPedestriansSlice;
+  EuropeanPedestriansSlice &
+  EuropeanBollardsSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -44,6 +49,7 @@ export const createAppStore = () =>
         ...createSpainDialingCodesSlice(...a),
         ...createEuropeanGuardrailsSlice(...a),
         ...createEuropeanPedestriansSlice(...a),
+        ...createEuropeanBollardsSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),

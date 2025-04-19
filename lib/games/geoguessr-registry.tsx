@@ -9,6 +9,8 @@ import { EuropeanPedestriansGame } from "@/components/game/european-pedestrians/
 import { GameDefinition } from "./types";
 import SpainDialingCodesDescription from "@/components/game/spain-dialing-codes/description.mdx";
 import { SpainDialingCodesGame } from "@/components/game/spain-dialing-codes/game";
+import EuropeanBollardsDescription from "@/components/game/european-bollards/description.mdx";
+import { EuropeanBollardsGame } from "@/components/game/european-bollards/game";
 
 export const geoguessrGames: GameDefinition[] = [
   {
@@ -38,6 +40,16 @@ export const geoguessrGames: GameDefinition[] = [
     pages: {
       Description: EuropeanPedestriansDescription,
       Game: EuropeanPedestriansGame,
+    },
+  },
+  {
+    name: "European Bollards",
+    description:
+      "Can you guess which countries use each of the different bollard types?",
+    slug: "european-bollards",
+    pages: {
+      Description: EuropeanBollardsDescription,
+      Game: EuropeanBollardsGame,
     },
   },
   {
