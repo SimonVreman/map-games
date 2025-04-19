@@ -123,7 +123,7 @@ export function SvgMap({
         if (last) setOpacityTimeout(triggerOpacityHack());
 
         const bounding = ref.current?.getBoundingClientRect();
-        api.start(clampMap({ bounding, x, y, scale: style.scale.get() }));
+        api.set(clampMap({ bounding, x, y, scale: style.scale.get() }));
       },
       onPinch: ({
         origin: [ox, oy],
@@ -151,7 +151,7 @@ export function SvgMap({
           scale: s,
         });
 
-        api.start({ x, y, scale: s });
+        api.set({ x, y, scale: s });
 
         return memo;
       },
@@ -162,7 +162,10 @@ export function SvgMap({
         filterTaps: true,
         from: () => [style.x.get(), style.y.get()],
       },
-      pinch: { scaleBounds: { min: 0.25, max: 1 } },
+      pinch: {
+        scaleBounds: { min: 0.25, max: 1 },
+        from: () => [style.scale.get(), 0],
+      },
     }
   );
 
