@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppStoreProvider } from "@/lib/store/provider";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -44,6 +45,7 @@ export default function RootLayout({
           <main className="h-dvh w-dvw">{children}</main>
           <Toaster richColors position="bottom-center" theme="system" />
         </AppStoreProvider>
+        <Analytics />
       </body>
     </html>
   );
