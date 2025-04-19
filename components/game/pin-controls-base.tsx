@@ -18,12 +18,14 @@ import { ControlsBase } from "./controls-base";
 
 export function PinControlsBase({
   stats,
+  graphic,
   children,
   onReset,
   onToggleHints,
   hints,
 }: {
   stats: React.ReactNode;
+  graphic?: React.ReactNode;
   children: React.ReactNode;
   onReset: () => void;
   onToggleHints?: () => void;
@@ -34,11 +36,18 @@ export function PinControlsBase({
 
   return (
     <ControlsBase>
-      <div className="relative overflow-hidden rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center w-full text-lg">
-        {children}
+      <div className="flex max-sm:gap-2 gap-4 w-full">
+        {graphic && (
+          <div className="rounded-md shadow-md overflow-hidden relative">
+            {graphic}
+          </div>
+        )}
+        <div className="relative overflow-hidden rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center grow text-lg">
+          {children}
+        </div>
       </div>
 
-      <div className="flex items-center max-sm:gap-2 gap-4 max-sm:w-full">
+      <div className="flex max-sm:gap-2 gap-4 max-sm:w-full">
         <div className="rounded-md shadow-md bg-background px-3 py-2 h-14 flex items-center whitespace-nowrap mr-auto">
           {stats}
         </div>

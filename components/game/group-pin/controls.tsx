@@ -7,9 +7,11 @@ import { AppStore } from "@/lib/store";
 
 export function GroupPinControls<TName extends GroupPinSliceName<AppStore>>({
   store,
+  graphic,
   children,
 }: {
   store: TName;
+  graphic?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [streak, guessed, maximum, reset, hints, toggleHints] = useAppStore(
@@ -25,6 +27,7 @@ export function GroupPinControls<TName extends GroupPinSliceName<AppStore>>({
 
   return (
     <PinControlsBase
+      graphic={graphic}
       hints={hints}
       onToggleHints={toggleHints}
       onReset={reset}

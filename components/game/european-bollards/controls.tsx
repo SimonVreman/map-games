@@ -7,24 +7,25 @@ export function EuropeanBollardsControls() {
   const pattern = useAppStore((s) => s.europeanBollards.subject);
 
   return (
-    <GroupPinControls store="europeanBollards">
-      <div>
-        <p className="text-base">Where is it seen?</p>
-      </div>
-
-      <svg
-        viewBox="0 0 400 500"
-        className="absolute top-0 right-0 h-full bg-secondary"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <defs>{svgBollardPatterns}</defs>
-        <rect
-          width="400"
-          height="500"
-          strokeWidth={0}
-          fill={`url(#${pattern?.name}-base)`}
-        />
-      </svg>
+    <GroupPinControls
+      store="europeanBollards"
+      graphic={
+        <svg
+          viewBox="0 0 400 500"
+          className="w-20 bg-secondary"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>{svgBollardPatterns}</defs>
+          <rect
+            width="400"
+            height="500"
+            strokeWidth={0}
+            fill={`url(#${pattern?.name}-base)`}
+          />
+        </svg>
+      }
+    >
+      <p className="text-base">Where is it seen?</p>
     </GroupPinControls>
   );
 }
