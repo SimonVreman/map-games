@@ -29,7 +29,9 @@ export function GameGrid({ games }: { games: GameDefinition[] }) {
           </div>
 
           <div className="p-4">
-            <h3 className="text-xl font-medium">{name}</h3>
+            <h3 className="text-xl font-medium group-hover:underline">
+              {name}
+            </h3>
             <p className="text-muted-foreground mt-1">{description}</p>
           </div>
         </Link>
