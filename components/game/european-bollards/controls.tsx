@@ -12,7 +12,7 @@ export function EuropeanBollardsControls() {
       graphic={
         <svg
           viewBox="0 0 400 500"
-          className="w-20 bg-secondary"
+          className="w-32 bg-secondary"
           preserveAspectRatio="xMidYMid slice"
         >
           <defs>{svgBollardPatterns}</defs>

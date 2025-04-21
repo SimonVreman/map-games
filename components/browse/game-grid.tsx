@@ -9,7 +9,7 @@ export function GameGrid({ games }: { games: GameDefinition[] }) {
         <Link
           key={slug}
           href={slug}
-          className="shadow-sm hover:shadow-md transition-all rounded-md overflow-hidden cursor-pointer group"
+          className="shadow-sm hover:shadow-md transition-all rounded-md overflow-hidden cursor-pointer group dark:border"
         >
           <div className="overflow-hidden">
             <Image

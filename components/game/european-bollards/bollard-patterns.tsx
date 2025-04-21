@@ -870,13 +870,13 @@ export const svgBollardPatterns = (
       <pattern
         key={name}
         id={name}
-        y="0.2"
+        y="0.25"
+        height="0.5"
         width="1"
-        height="0.6"
         viewBox="0 0 4000 500"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
+        preserveAspectRatio="xMinYMid slice"
       >
         <rect width="4000" height="500" fill={`url(#${name + "-base"})`} />
       </pattern>

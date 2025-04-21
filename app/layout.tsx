@@ -35,7 +35,12 @@ export default function RootLayout({
       >
         <AppStoreProvider>
           <main className="h-dvh w-dvw">{children}</main>
-          <Toaster richColors position="bottom-center" theme="system" />
+          <Toaster
+            richColors
+            position="bottom-center"
+            theme="system"
+            visibleToasts={1}
+          />
         </AppStoreProvider>
         <Analytics />
       </body>
