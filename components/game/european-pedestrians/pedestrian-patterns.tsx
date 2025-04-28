@@ -116,86 +116,86 @@ const paths = {
 
   Three: (
     <>
-      <path d="M100 0H84V80H100V0Z" fill="white" />
-      <path d="M16 0H0V80H16V0Z" fill="white" />
+      <path d="M150 60H134V140H150V60Z" fill="white" />
+      <path d="M66 60H50V140H66V60Z" fill="white" />
       <path
-        d="M58 80H42V70.8467C44.391 71.4825 46.8443 71.7676 49.3096 71.7676C52.2795 71.7676 55.198 71.3282 58 70.3945V80Z"
+        d="M108 140H92V130.847C94.391 131.482 96.8443 131.768 99.3096 131.768C102.28 131.768 105.198 131.328 108 130.395V140Z"
         fill="white"
       />
       <path
-        d="M45.5703 56.4902C45.5403 56.4803 45.5102 56.4712 45.4805 56.4609L45.2578 56.3799C45.36 56.4189 45.4643 56.4551 45.5703 56.4902Z"
+        d="M95.5703 116.49C95.5403 116.48 95.5102 116.471 95.4805 116.461L95.2578 116.38C95.36 116.419 95.4643 116.455 95.5703 116.49Z"
         fill="white"
       />
       <path
-        d="M53.2754 56.1787L52.8457 56.3438C52.9909 56.2918 53.1337 56.2362 53.2744 56.1777L53.6904 55.9932C53.5543 56.0581 53.4161 56.1203 53.2754 56.1787Z"
+        d="M103.275 116.179L102.846 116.344C102.991 116.292 103.134 116.236 103.274 116.178L103.69 115.993C103.554 116.058 103.416 116.12 103.275 116.179Z"
         fill="white"
       />
       <path
-        d="M54.4814 55.5645L54.4209 55.5986C54.4562 55.5774 54.4914 55.5559 54.5264 55.5342C54.511 55.5437 54.4968 55.555 54.4814 55.5645Z"
+        d="M104.481 115.564L104.421 115.599C104.456 115.577 104.491 115.556 104.526 115.534C104.511 115.544 104.497 115.555 104.481 115.564Z"
         fill="white"
       />
       <path
-        d="M42.0781 54.3438C42.4408 54.7064 42.8518 55.0421 43.3105 55.3516L43.6631 55.5791C43.1803 55.283 42.7451 54.9607 42.3584 54.6113L42.0781 54.3438Z"
+        d="M92.0781 114.344C92.4408 114.706 92.8518 115.042 93.3105 115.352L93.6631 115.579C93.1803 115.283 92.7452 114.961 92.3584 114.611L92.0781 114.344Z"
         fill="white"
       />
       <path
-        d="M57.501 52.4199L57.4648 52.4805C57.4888 52.4379 57.513 52.3955 57.5361 52.3525C57.5241 52.3748 57.5132 52.3977 57.501 52.4199Z"
+        d="M107.501 112.42L107.465 112.48C107.489 112.438 107.513 112.396 107.536 112.353C107.524 112.375 107.513 112.398 107.501 112.42Z"
         fill="white"
       />
       <path
-        d="M50.0762 39.7041L50.4932 39.7881C50.3376 39.7549 50.1799 39.7241 50.0205 39.6943C50.039 39.6978 50.0577 39.7006 50.0762 39.7041Z"
+        d="M100.076 99.7041L100.493 99.7881C100.338 99.7549 100.18 99.7241 100.021 99.6943C100.039 99.6978 100.058 99.7006 100.076 99.7041Z"
         fill="white"
       />
       <path
-        d="M48.6211 34.5146L48.0137 34.5801C48.2465 34.5581 48.4751 34.5311 48.7002 34.5029C48.6738 34.5062 48.6476 34.5114 48.6211 34.5146Z"
+        d="M98.6211 94.5146L98.0137 94.5801C98.2465 94.5581 98.4751 94.5311 98.7002 94.5029C98.6738 94.5062 98.6476 94.5114 98.6211 94.5146Z"
         fill="white"
       />
       <path
-        d="M51.3857 33.9707C51.2311 34.0148 51.0737 34.0556 50.9141 34.0957L51.3857 33.9707Z"
+        d="M101.386 93.9707C101.231 94.0148 101.074 94.0556 100.914 94.0957L101.386 93.9707Z"
         fill="white"
       />
       <path
-        d="M52.3662 33.6523L52.2734 33.6836C52.3301 33.6632 52.3865 33.6431 52.4424 33.6221C52.4169 33.6317 52.3919 33.6429 52.3662 33.6523Z"
+        d="M102.366 93.6523L102.273 93.6836C102.33 93.6632 102.387 93.6431 102.442 93.6221C102.417 93.6317 102.392 93.6429 102.366 93.6523Z"
         fill="white"
       />
       <path
-        d="M54.875 32.335L54.8369 32.3604C54.8816 32.3276 54.9253 32.2941 54.9688 32.2607C54.9372 32.2849 54.9071 32.3111 54.875 32.335Z"
+        d="M104.875 92.335L104.837 92.3604C104.882 92.3276 104.925 92.2941 104.969 92.2607C104.937 92.2849 104.907 92.3111 104.875 92.335Z"
         fill="white"
       />
       <path
-        d="M55.8311 31.4834C55.7464 31.5747 55.657 31.6631 55.5654 31.751L55.8311 31.4834Z"
+        d="M105.831 91.4834C105.746 91.5747 105.657 91.6631 105.565 91.751L105.831 91.4834Z"
         fill="white"
       />
       <path
-        d="M42.5449 22.3848L42.25 22.6318C42.3473 22.5465 42.4456 22.4648 42.5449 22.3848L42.8457 22.1523C42.7443 22.227 42.6443 22.3047 42.5449 22.3848Z"
+        d="M92.5449 82.3848L92.25 82.6318C92.3473 82.5465 92.4456 82.4648 92.5449 82.3848L92.8457 82.1523C92.7444 82.227 92.6443 82.3047 92.5449 82.3848Z"
         fill="white"
       />
       <path
-        d="M47.9492 20.2695C47.9694 20.2679 47.9895 20.2652 48.0098 20.2637L48.4326 20.2402C48.2702 20.2463 48.1091 20.2564 47.9492 20.2695Z"
+        d="M97.9492 80.2695C97.9694 80.2679 97.9895 80.2652 98.0098 80.2637L98.4326 80.2402C98.2702 80.2463 98.1091 80.2564 97.9492 80.2695Z"
         fill="white"
       />
       <path
-        d="M56.8564 17.3701C57.1039 17.5102 57.3447 17.6555 57.5781 17.8076C57.4615 17.7317 57.3427 17.6579 57.2227 17.585L56.8564 17.3701Z"
+        d="M106.856 77.3701C107.104 77.5102 107.345 77.6555 107.578 77.8076C107.462 77.7317 107.343 77.6579 107.223 77.585L106.856 77.3701Z"
         fill="white"
       />
       <path
-        d="M54.5059 16.2959C54.779 16.3918 55.048 16.4955 55.3125 16.6074L55.7061 16.7822C55.4457 16.6622 55.1811 16.5503 54.9121 16.4463L54.5059 16.2959Z"
+        d="M104.506 76.2959C104.779 76.3918 105.048 76.4955 105.312 76.6074L105.706 76.7822C105.446 76.6622 105.181 76.5503 104.912 76.4463L104.506 76.2959Z"
         fill="white"
       />
       <path
-        d="M53.2471 15.918L53.6729 16.0322C53.507 15.9852 53.3397 15.9409 53.1709 15.8994C53.1963 15.9057 53.2217 15.9116 53.2471 15.918Z"
+        d="M103.247 75.918L103.673 76.0322C103.507 75.9852 103.34 75.9409 103.171 75.8994C103.196 75.9057 103.222 75.9116 103.247 75.918Z"
         fill="white"
       />
       <path
-        d="M44.918 15.9346C44.962 15.9233 45.0056 15.9103 45.0498 15.8994L45.1182 15.8838C45.0511 15.8999 44.9846 15.9176 44.918 15.9346Z"
+        d="M94.918 75.9346C94.962 75.9233 95.0056 75.9103 95.0498 75.8994L95.1182 75.8838C95.0511 75.8999 94.9846 75.9176 94.918 75.9346Z"
         fill="white"
       />
       <path
-        d="M58 0V6.92773C55.1367 5.89579 52.1428 5.43168 49.1182 5.43164C46.7212 5.43164 44.332 5.72016 42 6.36133V0H58Z"
+        d="M108 60V66.9277C105.137 65.8958 102.143 65.4317 99.1182 65.4316C96.7212 65.4316 94.332 65.7202 92 66.3613V60H108Z"
         fill="white"
       />
       <path
-        d="M49.539 62.768C47.107 62.768 44.8883 62.4053 42.883 61.68C40.8777 60.9547 39.1923 59.9307 37.827 58.608C36.4617 57.2853 35.4803 55.792 34.883 54.128L41.539 51.632C41.8803 52.2293 42.3497 52.8907 42.947 53.616C43.5443 54.3413 44.3337 54.9813 45.315 55.536C46.2963 56.048 47.555 56.304 49.091 56.304C51.523 56.304 53.443 55.6213 54.851 54.256C56.3017 52.848 57.027 51.0773 57.027 48.944C57.027 47.408 56.6217 46.0853 55.811 44.976C55.043 43.8667 53.827 43.0133 52.163 42.416C50.5417 41.8187 48.4937 41.52 46.019 41.52H43.971V36.272H45.827C48.4297 36.272 50.8403 36.5707 53.059 37.168C55.3203 37.7653 57.3043 38.6613 59.011 39.856C60.7603 41.008 62.1043 42.416 63.043 44.08C64.0243 45.744 64.515 47.6213 64.515 49.712C64.515 52.4 63.811 54.7253 62.403 56.688C61.0377 58.6507 59.2243 60.1653 56.963 61.232C54.7017 62.256 52.227 62.768 49.539 62.768ZM43.971 40.368V35.376H46.019C49.3043 35.376 51.8003 34.8213 53.507 33.712C55.2137 32.6027 56.067 31.0453 56.067 29.04C56.067 27.888 55.7683 26.864 55.171 25.968C54.6163 25.0293 53.8057 24.2827 52.739 23.728C51.6723 23.1733 50.4137 22.896 48.963 22.896C48.0243 22.896 47.107 23.0453 46.211 23.344C45.315 23.6427 44.483 24.112 43.715 24.752C42.947 25.392 42.307 26.224 41.795 27.248L35.331 24.88C35.971 23.088 36.995 21.5733 38.403 20.336C39.811 19.056 41.4537 18.096 43.331 17.456C45.2083 16.7733 47.171 16.432 49.219 16.432C51.9497 16.432 54.3817 16.944 56.515 17.968C58.691 18.992 60.3977 20.4213 61.635 22.256C62.915 24.048 63.555 26.1173 63.555 28.464C63.555 30.4267 63.0643 32.1547 62.083 33.648C61.1443 35.1413 59.843 36.4 58.179 37.424C56.515 38.4053 54.6163 39.152 52.483 39.664C50.3923 40.1333 48.1523 40.368 45.763 40.368H43.971Z"
+        d="M99.539 122.768C97.107 122.768 94.8883 122.405 92.883 121.68C90.8777 120.955 89.1923 119.931 87.827 118.608C86.4617 117.285 85.4803 115.792 84.883 114.128L91.539 111.632C91.8803 112.229 92.3497 112.891 92.947 113.616C93.5443 114.341 94.3337 114.981 95.315 115.536C96.2963 116.048 97.555 116.304 99.091 116.304C101.523 116.304 103.443 115.621 104.851 114.256C106.302 112.848 107.027 111.077 107.027 108.944C107.027 107.408 106.622 106.085 105.811 104.976C105.043 103.867 103.827 103.013 102.163 102.416C100.542 101.819 98.4937 101.52 96.019 101.52H93.971V96.272H95.827C98.4297 96.272 100.84 96.5707 103.059 97.168C105.32 97.7653 107.304 98.6613 109.011 99.856C110.76 101.008 112.104 102.416 113.043 104.08C114.024 105.744 114.515 107.621 114.515 109.712C114.515 112.4 113.811 114.725 112.403 116.688C111.038 118.651 109.224 120.165 106.963 121.232C104.702 122.256 102.227 122.768 99.539 122.768ZM93.971 100.368V95.376H96.019C99.3043 95.376 101.8 94.8213 103.507 93.712C105.214 92.6027 106.067 91.0453 106.067 89.04C106.067 87.888 105.768 86.864 105.171 85.968C104.616 85.0293 103.806 84.2827 102.739 83.728C101.672 83.1733 100.414 82.896 98.963 82.896C98.0243 82.896 97.107 83.0453 96.211 83.344C95.315 83.6427 94.483 84.112 93.715 84.752C92.947 85.392 92.307 86.224 91.795 87.248L85.331 84.88C85.971 83.088 86.995 81.5733 88.403 80.336C89.811 79.056 91.4537 78.096 93.331 77.456C95.2083 76.7733 97.171 76.432 99.219 76.432C101.95 76.432 104.382 76.944 106.515 77.968C108.691 78.992 110.398 80.4213 111.635 82.256C112.915 84.048 113.555 86.1173 113.555 88.464C113.555 90.4267 113.064 92.1547 112.083 93.648C111.144 95.1413 109.843 96.4 108.179 97.424C106.515 98.4053 104.616 99.152 102.483 99.664C100.392 100.133 98.1523 100.368 95.763 100.368H93.971Z"
         fill="white"
       />
     </>
@@ -617,6 +617,8 @@ const paths = {
   ),
 } as const;
 
+type PedestrianType = keyof typeof paths;
+
 const doubleTypes = europeanPedestrians
   .filter((v) => v.subjects.length === 2)
   .map((v) => v.subjects.join(","))
@@ -633,15 +635,15 @@ const quadrupleTypes = europeanPedestrians
   .filter((v, i, a) => a.indexOf(v) === i);
 
 const colorsForPedestrians = {
-  None: "fill-chart-1/50",
-  Three: "fill-chart-2/50",
-  Four: "fill-chart-3/50",
-  Five: "fill-chart-4/50",
-  Six: "fill-chart-1/30",
-  Seven: "fill-chart-2/30",
-  Eight: "fill-chart-3/30",
-  Twelve: "fill-chart-4/30",
-  Ball: "fill-chart-1/10",
+  None: { fill: "fill-chart-1/50", stroke: "stroke-chart-1/50" },
+  Three: { fill: "fill-chart-2/50", stroke: "stroke-chart-2/50" },
+  Four: { fill: "fill-chart-3/50", stroke: "stroke-chart-3/50" },
+  Five: { fill: "fill-chart-4/50", stroke: "stroke-chart-4/50" },
+  Six: { fill: "fill-chart-1/30", stroke: "stroke-chart-1/30" },
+  Seven: { fill: "fill-chart-2/30", stroke: "stroke-chart-2/30" },
+  Eight: { fill: "fill-chart-3/30", stroke: "stroke-chart-3/30" },
+  Twelve: { fill: "fill-chart-4/30", stroke: "stroke-chart-4/30" },
+  Ball: { fill: "fill-chart-1/10", stroke: "stroke-chart-1/10" },
 };
 
 export const svgPedestrianPatterns = (
@@ -653,10 +655,15 @@ export const svgPedestrianPatterns = (
         width="200"
         height="200"
         viewBox="0 0 200 200"
+        strokeWidth="0"
         preserveAspectRatio="xMidYMid meet"
         patternUnits="userSpaceOnUse"
       >
-        <rect width="200" height="200" className={colorsForPedestrians[name]} />
+        <rect
+          width="200"
+          height="200"
+          className={colorsForPedestrians[name].fill}
+        />
         {paths[name]}
       </pattern>
     ))}
@@ -664,106 +671,139 @@ export const svgPedestrianPatterns = (
       <pattern
         key={name}
         id={name}
-        y="0.2"
+        y="0.1"
         width="1"
-        height="0.6"
+        height="0.4"
         viewBox="0 0 3000 200"
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMidYMid slice"
-      >
-        <rect width="3000" height="200" fill={`url(#${name + "-base"})`} />
-      </pattern>
-    ))}
-    {doubleTypes.map((types) => (
-      <pattern
-        key={types}
-        id={types}
-        width="1"
-        height="0.6"
-        viewBox="0 0 3000 400"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
+        // TODO restore strokeWidth (opacity issue)
+        strokeWidth={0}
       >
         <rect
           width="3000"
           height="200"
-          fill={`url(#${types.split(",")[0] + "-base"})`}
-        />
-        <rect
-          y="200"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[1] + "-base"})`}
+          fill={`url(#${name}-base)`}
+          className={colorsForPedestrians[name].stroke}
         />
       </pattern>
     ))}
-    {tripleTypes.map((types) => (
-      <pattern
-        key={types}
-        id={types}
-        width="1"
-        height="0.7"
-        viewBox="0 0 3000 600"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <rect
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[0] + "-base"})`}
-        />
-        <rect
-          y="200"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[1] + "-base"})`}
-        />
-        <rect
-          y="400"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[2] + "-base"})`}
-        />
-      </pattern>
-    ))}
-    {quadrupleTypes.map((types) => (
-      <pattern
-        key={types}
-        id={types}
-        width="1"
-        height="1"
-        viewBox="0 0 3000 800"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <rect
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[0] + "-base"})`}
-        />
-        <rect
-          y="200"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[1] + "-base"})`}
-        />
-        <rect
-          y="400"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[2] + "-base"})`}
-        />
-        <rect
-          y="600"
-          width="3000"
-          height="200"
-          fill={`url(#${types.split(",")[3] + "-base"})`}
-        />
-      </pattern>
-    ))}
+    {doubleTypes.map((types) => {
+      const [first, second] = types.split(",") as PedestrianType[];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          width="1"
+          height="0.6"
+          viewBox="0 0 3000 400"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMidYMid slice"
+          strokeWidth={0}
+        >
+          <rect
+            width="3000"
+            height="200"
+            fill={`url(#${first}-base)`}
+            className={colorsForPedestrians[first].stroke}
+          />
+          <rect
+            y="200"
+            width="3000"
+            height="200"
+            fill={`url(#${second}-base)`}
+            className={colorsForPedestrians[second].stroke}
+          />
+        </pattern>
+      );
+    })}
+    {tripleTypes.map((types) => {
+      const [first, second, third] = types.split(",") as PedestrianType[];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          width="1"
+          height="0.7"
+          viewBox="0 0 3000 600"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMidYMid slice"
+          strokeWidth={0}
+        >
+          <rect
+            width="3000"
+            height="200"
+            fill={`url(#${first}-base)`}
+            className={colorsForPedestrians[first].stroke}
+          />
+          <rect
+            y="200"
+            width="3000"
+            height="200"
+            fill={`url(#${second}-base)`}
+            className={colorsForPedestrians[second].stroke}
+          />
+          <rect
+            y="400"
+            width="3000"
+            height="200"
+            fill={`url(#${third}-base)`}
+            className={colorsForPedestrians[third].stroke}
+          />
+        </pattern>
+      );
+    })}
+    {quadrupleTypes.map((types) => {
+      const [first, second, third, fourth] = types.split(
+        ","
+      ) as PedestrianType[];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          width="1"
+          height="1"
+          viewBox="0 0 3000 800"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMidYMid slice"
+          strokeWidth={0}
+        >
+          <rect
+            width="3000"
+            height="200"
+            fill={`url(#${first}-base)`}
+            className={colorsForPedestrians[first].stroke}
+          />
+          <rect
+            y="200"
+            width="3000"
+            height="200"
+            fill={`url(#${second}-base)`}
+            className={colorsForPedestrians[second].stroke}
+          />
+          <rect
+            y="400"
+            width="3000"
+            height="200"
+            fill={`url(#${third}-base)`}
+            className={colorsForPedestrians[third].stroke}
+          />
+          <rect
+            y="600"
+            width="3000"
+            height="200"
+            fill={`url(#${fourth}-base)`}
+            className={colorsForPedestrians[fourth].stroke}
+          />
+        </pattern>
+      );
+    })}
   </>
 );

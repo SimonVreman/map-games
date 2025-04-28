@@ -877,65 +877,89 @@ export const svgBollardPatterns = (
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMid slice"
-      >
-        <rect width="4000" height="500" fill={`url(#${name + "-base"})`} />
-      </pattern>
-    ))}
-    {doubleTypes.map((types) => (
-      <pattern
-        key={types}
-        id={types}
-        y="0.1"
-        width="1"
-        height="0.8"
-        viewBox="0 0 4000 1000"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
+        strokeWidth={0}
       >
         <rect
           width="4000"
           height="500"
-          fill={`url(#${types.split(",")[0] + "-base"})`}
-        />
-        <rect
-          y="500"
-          width="4000"
-          height="500"
-          fill={`url(#${types.split(",")[1] + "-base"})`}
+          fill={`url(#${name}-base)`}
+          className={colorsForBollards[name].stroke}
         />
       </pattern>
     ))}
-    {tripleTypes.map((types) => (
-      <pattern
-        key={types}
-        id={types}
-        y="0.3"
-        width="1"
-        height="0.8"
-        viewBox="0 0 4000 1500"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <rect
-          width="4000"
-          height="500"
-          fill={`url(#${types.split(",")[0] + "-base"})`}
-        />
-        <rect
-          y="500"
-          width="4000"
-          height="500"
-          fill={`url(#${types.split(",")[1] + "-base"})`}
-        />
-        <rect
-          y="1000"
-          width="4000"
-          height="500"
-          fill={`url(#${types.split(",")[2] + "-base"})`}
-        />
-      </pattern>
-    ))}
+    {doubleTypes.map((types) => {
+      const [first, second] = types.split(",") as (typeof typeNames)[number][];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          y="0.1"
+          width="1"
+          height="0.8"
+          viewBox="0 0 4000 1000"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMidYMid slice"
+          strokeWidth={0}
+        >
+          <rect
+            width="4000"
+            height="500"
+            fill={`url(#${first}-base)`}
+            className={colorsForBollards[first].stroke}
+          />
+          <rect
+            y="500"
+            width="4000"
+            height="500"
+            fill={`url(#${second}-base)`}
+            className={colorsForBollards[second].stroke}
+          />
+        </pattern>
+      );
+    })}
+    {tripleTypes.map((types) => {
+      const [first, second, third] = types.split(
+        ","
+      ) as (typeof typeNames)[number][];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          y="0.3"
+          width="1"
+          height="0.8"
+          viewBox="0 0 4000 1500"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMidYMid slice"
+          // TODO restore strokeWidth (opacity issue)
+          strokeWidth={0}
+        >
+          <rect
+            width="4000"
+            height="500"
+            fill={`url(#${first}-base)`}
+            className={colorsForBollards[first].stroke}
+          />
+          <rect
+            y="500"
+            width="4000"
+            height="500"
+            fill={`url(#${second}-base)`}
+            className={colorsForBollards[second].stroke}
+          />
+          <rect
+            y="1000"
+            width="4000"
+            height="500"
+            fill={`url(#${third}-base)`}
+            className={colorsForBollards[third].stroke}
+          />
+        </pattern>
+      );
+    })}
   </>
 );

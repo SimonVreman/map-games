@@ -21,6 +21,13 @@ const colors = {
   white: { stroke: "stroke-neutral-50", fill: "fill-neutral-50" },
 };
 
+type PatternName = (typeof chevronPatterns)[number]["name"];
+
+const backgroundForPattern = chevronPatterns.reduce(
+  (acc, { name, background }) => ({ ...acc, [name]: background }),
+  {} as Record<PatternName, keyof typeof colors>
+);
+
 export const svgChevronPatterns = (
   <>
     {chevronPatterns.map(({ name, background, foreground }) => (
@@ -58,78 +65,93 @@ export const svgChevronPatterns = (
         patternUnits="objectBoundingBox"
         patternContentUnits="userSpaceOnUse"
         preserveAspectRatio="xMinYMin slice"
+        strokeWidth={0.5}
       >
         <rect
           x="0"
           y="0"
           width="1500"
           height="100"
-          strokeWidth={1}
           className={colors[background].stroke}
-          fill={`url(#${name + "-base"})`}
+          fill={`url(#${name}-base)`}
         />
       </pattern>
     ))}
-    {doublePatterns.map((colors) => (
-      <pattern
-        key={colors}
-        id={colors}
-        width="1"
-        height=".6"
-        viewBox="0 0 1500 200"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMinYMin slice"
-      >
-        <rect
-          x="0"
-          y="0"
-          width="1500"
-          height="100"
-          fill={`url(#${colors.split(",")[0] + "-base"})`}
-        />
-        <rect
-          x="0"
-          y="100"
-          width="1500"
-          height="100"
-          fill={`url(#${colors.split(",")[1] + "-base"})`}
-        />
-      </pattern>
-    ))}
-    {triplePatterns.map((colors) => (
-      <pattern
-        key={colors}
-        id={colors}
-        width="1"
-        height=".9"
-        viewBox="0 0 1500 300"
-        patternUnits="objectBoundingBox"
-        patternContentUnits="userSpaceOnUse"
-        preserveAspectRatio="xMinYMin slice"
-      >
-        <rect
-          x="0"
-          y="0"
-          width="1500"
-          height="100"
-          fill={`url(#${colors.split(",")[0] + "-base"})`}
-        />
-        <rect
-          x="0"
-          y="100"
-          width="1500"
-          height="100"
-          fill={`url(#${colors.split(",")[1] + "-base"})`}
-        />
-        <rect
-          x="0"
-          y="200"
-          width="1500"
-          height="100"
-          fill={`url(#${colors.split(",")[2] + "-base"})`}
-        />
-      </pattern>
-    ))}
+    {doublePatterns.map((types) => {
+      const [first, second] = types.split(",") as PatternName[];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          width="1"
+          height=".6"
+          viewBox="0 0 1500 200"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMinYMin slice"
+          strokeWidth={0.5}
+        >
+          <rect
+            x="0"
+            y="0"
+            width="1500"
+            height="100"
+            fill={`url(#${first}-base)`}
+            className={colors[backgroundForPattern[first]].stroke}
+          />
+          <rect
+            x="0"
+            y="100"
+            width="1500"
+            height="100"
+            fill={`url(#${second}-base)`}
+            className={colors[backgroundForPattern[second]].stroke}
+          />
+        </pattern>
+      );
+    })}
+    {triplePatterns.map((types) => {
+      const [first, second, third] = types.split(",") as PatternName[];
+
+      return (
+        <pattern
+          key={types}
+          id={types}
+          width="1"
+          height=".9"
+          viewBox="0 0 1500 300"
+          patternUnits="objectBoundingBox"
+          patternContentUnits="userSpaceOnUse"
+          preserveAspectRatio="xMinYMin slice"
+          strokeWidth={0.5}
+        >
+          <rect
+            x="0"
+            y="0"
+            width="1500"
+            height="100"
+            fill={`url(#${first}-base)`}
+            className={colors[backgroundForPattern[first]].stroke}
+          />
+          <rect
+            x="0"
+            y="100"
+            width="1500"
+            height="100"
+            fill={`url(#${second}-base)`}
+            className={colors[backgroundForPattern[second]].stroke}
+          />
+          <rect
+            x="0"
+            y="200"
+            width="1500"
+            height="100"
+            fill={`url(#${third}-base)`}
+            className={colors[backgroundForPattern[third]].stroke}
+          />
+        </pattern>
+      );
+    })}
   </>
 );
