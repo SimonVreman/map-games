@@ -4,9 +4,9 @@ import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails"
 import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { toast } from "sonner";
 import { svgGuardrailPatterns } from "./guardrail-patterns";
 import { SelectableCountries } from "../selectable-countries";
+import { useHandleGroupGuess } from "../group-pin/guess";
 
 const bounds = {
   north: 71,
@@ -17,28 +17,15 @@ const bounds = {
 };
 
 export function EuropeanGuardrailsGame() {
-  const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
-    (s) => [
-      s.europeanGuardrails.guess,
-      s.europeanGuardrails.subject,
-      s.europeanGuardrails.highlighted,
-      s.europeanGuardrails.guessed,
-      s.europeanGuardrails.maximum,
-      s.europeanGuardrails.hints,
-    ]
-  );
+  const [highlighted, hints] = useAppStore((s) => [
+    s.europeanGuardrails.highlighted,
+    s.europeanGuardrails.hints,
+  ]);
 
-  const handleGuess = (country: string) => {
-    if (guessed.includes(country) || hints) return;
-    const isCorrect = europeanGuardrails
-      .find((v) => v.name === country)
-      ?.subjects.includes((pattern?.name || "") as never);
-
-    if (isCorrect && guessed.length >= maximum - 1) toast.success("Correct!");
-    else if (!isCorrect) toast.error("Incorrect!");
-
-    guess(country);
-  };
+  const { handleGuess } = useHandleGroupGuess({
+    store: "europeanGuardrails",
+    targets: europeanGuardrails,
+  });
 
   return (
     <div className="size-full relative">

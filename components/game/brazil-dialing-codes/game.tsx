@@ -4,10 +4,10 @@ import { brazilPhoneCodes } from "@/lib/mapping/brazil/paths/phone-codes";
 import { scalingForBounds, SvgMap } from "../svg-map";
 import { BrazilDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { toast } from "sonner";
 import { SelectableRegions } from "../selectable-regions";
 import { brazilStatesPaths } from "@/lib/mapping/brazil/paths/states";
 import { brazilPaths } from "@/lib/mapping/brazil/paths/country";
+import { useHandleSingleGuess } from "../single-pin/guess";
 
 const bounds = {
   north: 5,
@@ -18,22 +18,14 @@ const bounds = {
 };
 
 export function BrazilDialingCodesGame() {
-  const [guess, correct, highlighted, hints] = useAppStore((s) => [
-    s.brazilDialingCodes.guess,
-    s.brazilDialingCodes.code,
+  const [highlighted, hints] = useAppStore((s) => [
     s.brazilDialingCodes.highlighted,
     s.brazilDialingCodes.hints,
   ]);
 
-  const handleGuess = (code: number) => {
-    if (hints) return;
-    const isCorrect = code === correct;
-
-    if (isCorrect) toast.success("Correct!");
-    else toast.error("Incorrect!");
-
-    guess(code);
-  };
+  const { handleGuess } = useHandleSingleGuess({
+    store: "brazilDialingCodes",
+  });
 
   return (
     <div className="size-full relative">

@@ -4,10 +4,10 @@ import { spainPhoneCodes } from "@/lib/mapping/spain/paths/phone-codes";
 import { scalingForBounds, SvgMap } from "../svg-map";
 import { SpainDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { toast } from "sonner";
 import { SelectableRegions } from "../selectable-regions";
 import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
 import { spainPaths } from "@/lib/mapping/spain/paths/country";
+import { useHandleSingleGuess } from "../single-pin/guess";
 
 const bounds = {
   north: 44,
@@ -18,22 +18,12 @@ const bounds = {
 };
 
 export function SpainDialingCodesGame() {
-  const [guess, correct, highlighted, hints] = useAppStore((s) => [
-    s.spainDialingCodes.guess,
-    s.spainDialingCodes.code,
+  const [highlighted, hints] = useAppStore((s) => [
     s.spainDialingCodes.highlighted,
     s.spainDialingCodes.hints,
   ]);
 
-  const handleGuess = (code: number) => {
-    if (hints) return;
-    const isCorrect = code === correct;
-
-    if (isCorrect) toast.success("Correct!");
-    else toast.error("Incorrect!");
-
-    guess(code);
-  };
+  const { handleGuess } = useHandleSingleGuess({ store: "spainDialingCodes" });
 
   return (
     <div className="size-full relative">

@@ -37,7 +37,7 @@ export default function RootLayout({
           <main className="h-dvh w-dvw">{children}</main>
           <Toaster
             richColors
-            position="bottom-center"
+            position="bottom-right"
             theme="system"
             visibleToasts={1}
           />

@@ -4,9 +4,9 @@ import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
 import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanBollardsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { toast } from "sonner";
 import { svgBollardPatterns } from "./bollard-patterns";
 import { SelectableCountries } from "../selectable-countries";
+import { useHandleGroupGuess } from "../group-pin/guess";
 
 const bounds = {
   north: 71,
@@ -17,28 +17,15 @@ const bounds = {
 };
 
 export function EuropeanBollardsGame() {
-  const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
-    (s) => [
-      s.europeanBollards.guess,
-      s.europeanBollards.subject,
-      s.europeanBollards.highlighted,
-      s.europeanBollards.guessed,
-      s.europeanBollards.maximum,
-      s.europeanBollards.hints,
-    ]
-  );
+  const [highlighted, hints] = useAppStore((s) => [
+    s.europeanBollards.highlighted,
+    s.europeanBollards.hints,
+  ]);
 
-  const handleGuess = (country: string) => {
-    if (guessed.includes(country) || hints) return;
-    const isCorrect = europeanBollards
-      .find((v) => v.name === country)
-      ?.subjects.includes((pattern?.name || "") as never);
-
-    if (isCorrect && guessed.length >= maximum - 1) toast.success("Correct!");
-    else if (!isCorrect) toast.error("Incorrect!");
-
-    guess(country);
-  };
+  const { handleGuess } = useHandleGroupGuess({
+    store: "europeanBollards",
+    targets: europeanBollards,
+  });
 
   return (
     <div className="size-full relative">

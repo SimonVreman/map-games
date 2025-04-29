@@ -4,9 +4,9 @@ import { europeanPedestrians } from "@/lib/mapping/countries/registry/pedestrian
 import { scalingForBounds, SvgMap } from "../svg-map";
 import { EuropeanPedestriansControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { toast } from "sonner";
 import { svgPedestrianPatterns } from "./pedestrian-patterns";
 import { SelectableCountries } from "../selectable-countries";
+import { useHandleGroupGuess } from "../group-pin/guess";
 
 const bounds = {
   north: 71,
@@ -17,28 +17,15 @@ const bounds = {
 };
 
 export function EuropeanPedestriansGame() {
-  const [guess, pattern, highlighted, guessed, maximum, hints] = useAppStore(
-    (s) => [
-      s.europeanPedestrians.guess,
-      s.europeanPedestrians.subject,
-      s.europeanPedestrians.highlighted,
-      s.europeanPedestrians.guessed,
-      s.europeanPedestrians.maximum,
-      s.europeanPedestrians.hints,
-    ]
-  );
+  const [highlighted, hints] = useAppStore((s) => [
+    s.europeanPedestrians.highlighted,
+    s.europeanPedestrians.hints,
+  ]);
 
-  const handleGuess = (country: string) => {
-    if (guessed.includes(country) || hints) return;
-    const isCorrect = europeanPedestrians
-      .find((v) => v.name === country)
-      ?.subjects.includes((pattern?.name || "") as never);
-
-    if (isCorrect && guessed.length >= maximum - 1) toast.success("Correct!");
-    else if (!isCorrect) toast.error("Incorrect!");
-
-    guess(country);
-  };
+  const { handleGuess } = useHandleGroupGuess({
+    store: "europeanPedestrians",
+    targets: europeanPedestrians,
+  });
 
   return (
     <div className="size-full relative">
