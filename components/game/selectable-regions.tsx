@@ -22,6 +22,7 @@ export function SelectableRegions({
   regions,
   firstAdministrativePaths,
   countryPaths,
+  divider,
   hints,
   highlighted: { positive, negative },
   scaling,
@@ -31,6 +32,7 @@ export function SelectableRegions({
   regions: { code: number; center: number[]; paths: React.ReactNode }[];
   firstAdministrativePaths?: React.ReactNode;
   countryPaths?: React.ReactNode;
+  divider?: React.ReactNode;
   hints: boolean;
   highlighted: { positive: number | null; negative: number | null };
   scaling: number;
@@ -81,6 +83,15 @@ export function SelectableRegions({
         {firstAdministrativePaths && (
           <g strokeWidth={scaling * 0.5} className="stroke-neutral-400">
             {firstAdministrativePaths}
+          </g>
+        )}
+
+        {divider && (
+          <g
+            className="stroke-neutral-300 dark:stroke-neutral-700"
+            strokeDasharray={hints ? 0 : scaling * 3}
+          >
+            {divider}
           </g>
         )}
 

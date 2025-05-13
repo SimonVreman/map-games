@@ -8,6 +8,7 @@ import { SelectableRegions } from "../selectable-regions";
 import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
 import { spainPaths } from "@/lib/mapping/spain/paths/country";
 import { useHandleSingleGuess } from "../single-pin/guess";
+import { spainDivider } from "@/lib/mapping/spain/paths/divider";
 
 const bounds = {
   north: 44,
@@ -45,6 +46,7 @@ export function SpainDialingCodesGame() {
           regions={spainPhoneCodes}
           countryPaths={spainPaths}
           firstAdministrativePaths={spainProvincesPaths}
+          divider={spainDivider}
           hints={hints}
           highlighted={highlighted}
           scaling={scalingForBounds(bounds)}

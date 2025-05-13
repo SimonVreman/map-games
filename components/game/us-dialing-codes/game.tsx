@@ -8,10 +8,11 @@ import { useHandleSingleGuess } from "../single-pin/guess";
 import { usPaths } from "@/lib/mapping/us/paths/country";
 import { usStatesPaths } from "@/lib/mapping/us/paths/states";
 import { usPhoneCodes } from "@/lib/mapping/us/paths/phone-codes";
+import { usDivider } from "@/lib/mapping/us/paths/divider";
 
 const bounds = {
   north: 50,
-  south: 24,
+  south: 10,
   east: -67,
   west: -125,
   padding: 2,
@@ -51,6 +52,7 @@ export function USDialingCodesGame() {
           regions={usPhoneCodes}
           countryPaths={usPaths}
           firstAdministrativePaths={usStatesPaths}
+          divider={usDivider}
           hints={hints}
           highlighted={highlighted}
           scaling={scalingForBounds(bounds)}
