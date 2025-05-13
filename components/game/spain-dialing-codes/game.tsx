@@ -31,7 +31,6 @@ export function SpainDialingCodesGame() {
       <SpainDialingCodesControls />
 
       <SvgMap
-        className="pt-24"
         bounds={bounds}
         attribution={
           <a

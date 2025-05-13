@@ -10,7 +10,7 @@ import { brazilPaths } from "@/lib/mapping/brazil/paths/country";
 import { useHandleSingleGuess } from "../single-pin/guess";
 
 const bounds = {
-  north: 5,
+  north: 9,
   south: -34,
   east: -35,
   west: -74,
@@ -32,7 +32,6 @@ export function BrazilDialingCodesGame() {
       <BrazilDialingCodesControls />
 
       <SvgMap
-        className="pt-24"
         bounds={bounds}
         attribution={
           <a href="https://data.humdata.org/dataset/cod-ab-bra" target="_blank">

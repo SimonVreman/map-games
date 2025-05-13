@@ -2,7 +2,7 @@ import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { cn } from "@/lib/utils";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import { useEffect, useRef, useState } from "react";
-import { a } from "@react-spring/web";
+import { a, to } from "@react-spring/web";
 import { MapProvider, useMap } from "@/lib/context/map";
 
 type Bounds = {
@@ -24,10 +24,9 @@ const defaultBounds = {
   east: 180,
 };
 
-const minimumScale = 0.125;
-// const scaleExponent = -Math.log2(minimumScale);
+const minimumScale = 1;
+const maximumScale = 8;
 const defaultStyle = { x: 0, y: 0, scale: minimumScale };
-// const zoomLevels = 6;
 
 function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
   const northWest = projectMercator({
@@ -61,46 +60,19 @@ function calculateStrokeWidth({
   );
 }
 
-// function zoomLevelForScale(scale: number) {
-//   return Math.round(
-//     Math.log2(scale / minimumScale) * ((zoomLevels - 1) / scaleExponent)
-//   );
-// }
-
-// function scaleForZoomLevel(zoomLevel: number) {
-//   return 2 ** ((scaleExponent * zoomLevel) / (zoomLevels - 1)) * minimumScale;
-// }
-
-const clampFactor = (-1 / minimumScale) * 2;
-
-function clampMap({
+function calculateMapBounds({
   bounding,
-  x,
-  y,
   scale,
 }: {
   bounding?: DOMRect;
-  x: number;
-  y: number;
   scale: number;
 }) {
-  const top = (1 / (clampFactor * scale) + 0.5) * (bounding?.height ?? 0);
-  const bottom = (1 / (clampFactor * scale) + 0.5) * -(bounding?.height ?? 0);
-  const left = (1 / (clampFactor * scale) + 0.5) * (bounding?.width ?? 0);
-  const right = (1 / (clampFactor * scale) + 0.5) * -(bounding?.width ?? 0);
+  if (!bounding) return { left: 0, right: 0, top: 0, bottom: 0 };
 
-  // For 4x zoom
-  // 0.25 -> 0 x bounding
-  // 0.5  -> 6/24 x bounding
-  // 0.75 -> 8/24 x bounding
-  // 1    -> 9/24 x bounding
-  // = 1/-8x + 1/2
-  // Where 8 is 2*4 for 4x zoom
+  const xBound = bounding.width * scale * 0.5;
+  const yBound = bounding.height * scale * 0.5;
 
-  return {
-    x: Math.min(Math.max(x, right), left),
-    y: Math.min(Math.max(y, bottom), top),
-  };
+  return { left: -xBound, right: xBound, top: -yBound, bottom: yBound };
 }
 
 const useGesture = createUseGesture([dragAction, pinchAction]);
@@ -121,19 +93,18 @@ export function SvgMap({
       )}
     >
       <div className="size-full relative">
-        <div className="absolute size-[800%] -inset-[350%]">
-          <MapProvider
-            style={{
-              ...defaultStyle,
-              strokeWidth: calculateStrokeWidth({
-                bounds,
-                scale: defaultStyle.scale,
-              }),
-            }}
-          >
-            <Map bounds={bounds} {...props} />
-          </MapProvider>
-        </div>
+        <MapProvider
+          style={{
+            ...defaultStyle,
+            strokeWidth: calculateStrokeWidth({
+              bounds,
+              scale: defaultStyle.scale,
+            }),
+          }}
+        >
+          <Map bounds={bounds} {...props} />
+        </MapProvider>
+
         {attribution && (
           <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
             {attribution}
@@ -182,8 +153,7 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
         if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
         if (last) setOpacityTimeout(triggerOpacityHack());
 
-        const bounding = ref.current?.getBoundingClientRect();
-        api.set(clampMap({ bounding, x, y, scale: style.scale.get() }));
+        api.set({ x, y });
       },
       onPinch: ({
         origin: [ox, oy],
@@ -194,9 +164,11 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
         memo,
       }) => {
         if (first) {
-          const { width, height, x, y } = ref.current!.getBoundingClientRect();
+          const bounding = ref.current!.getBoundingClientRect();
+          const { width, height, x, y } = bounding;
           const tx = ox - (x + width / 2);
           const ty = oy - (y + height / 2);
+
           memo = [style.x.get(), style.y.get(), tx, ty];
         }
 
@@ -204,19 +176,19 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
         if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
         if (last) setOpacityTimeout(triggerOpacityHack());
 
-        const { x, y } = clampMap({
-          bounding: ref.current?.getBoundingClientRect(),
-          x: memo[0] - (ms - 1) * memo[2],
-          y: memo[1] - (ms - 1) * memo[3],
+        const unboundedX = ms * memo[0] - (ms - 1) * memo[2];
+        const unboundedY = ms * memo[1] - (ms - 1) * memo[3];
+
+        const { left, right, top, bottom } = calculateMapBounds({
+          bounding: ref.current!.getBoundingClientRect(),
           scale: s,
         });
 
-        api.set({
-          x,
-          y,
-          scale: s,
-          strokeWidth: calculateStrokeWidth({ bounds, scale: s }),
-        });
+        const x = Math.min(Math.max(unboundedX, left), right);
+        const y = Math.min(Math.max(unboundedY, top), bottom);
+        const strokeWidth = calculateStrokeWidth({ bounds, scale: s });
+
+        api.set({ x, y, scale: s, strokeWidth });
 
         return memo;
       },
@@ -226,9 +198,14 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
       drag: {
         filterTaps: true,
         from: () => [style.x.get(), style.y.get()],
+        bounds: () => {
+          const scale = style.scale.get();
+          const bounding = ref.current?.getBoundingClientRect();
+          return calculateMapBounds({ bounding, scale });
+        },
       },
       pinch: {
-        scaleBounds: { min: minimumScale, max: 1 },
+        scaleBounds: { min: minimumScale, max: maximumScale },
         from: () => [style.scale.get(), 0],
       },
     }
@@ -236,18 +213,61 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
 
   const viewBox = calculateViewBox(bounds);
 
+  const viewBoxAnimated = to(
+    [style.x, style.y, style.scale],
+    (rawX, rawY, scale) => {
+      const bounding = ref.current?.getBoundingClientRect();
+
+      if (!bounding)
+        return `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
+
+      console.log(rawX, rawY);
+
+      const x = rawX / scale;
+      const y = rawY / scale;
+
+      const aspectBounding = bounding.width / bounding.height;
+      const aspectViewBox = viewBox.width / viewBox.height;
+
+      const widthFactor = Math.max(aspectBounding / aspectViewBox, 1);
+      const heightFactor = Math.max(aspectViewBox / aspectBounding, 1);
+
+      const width = Math.min(
+        (viewBox.width / scale) * widthFactor,
+        viewBox.width
+      );
+      const height = Math.min(
+        (viewBox.height / scale) * heightFactor,
+        viewBox.height
+      );
+
+      const offsetX = (x / bounding.width) * viewBox.width;
+      const offsetY = (y / bounding.height) * viewBox.height;
+
+      const newXCenter = viewBox.x + viewBox.width / 2 - offsetX * widthFactor;
+      const newYCenter =
+        viewBox.y + viewBox.height / 2 - offsetY * heightFactor;
+
+      const left = newXCenter - width / 2;
+      const top = newYCenter - height / 2;
+
+      return `${left} ${top} ${width} ${height}`;
+    }
+  );
+
   return (
-    <a.svg
-      ref={ref}
-      className="bg-secondary touch-none select-none size-full translate-z-0 will-change-transform"
-      viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-      fill="none"
-      stroke="#000"
-      strokeLinejoin="round"
-      style={style}
-      {...props}
-    >
-      {children}
-    </a.svg>
+    <>
+      <a.svg
+        ref={ref}
+        className="bg-secondary touch-none select-none size-full"
+        fill="none"
+        strokeLinejoin="round"
+        viewBox={viewBoxAnimated}
+        style={{ strokeWidth: style.strokeWidth }}
+        {...props}
+      >
+        {children}
+      </a.svg>
+    </>
   );
 }

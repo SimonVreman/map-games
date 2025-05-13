@@ -11,7 +11,7 @@ import { usPhoneCodes } from "@/lib/mapping/us/paths/phone-codes";
 import { usDivider } from "@/lib/mapping/us/paths/divider";
 
 const bounds = {
-  north: 50,
+  north: 51,
   south: 10,
   east: -67,
   west: -125,
@@ -33,7 +33,6 @@ export function USDialingCodesGame() {
       <USDialingCodesControls />
 
       <SvgMap
-        className="pt-24"
         bounds={bounds}
         attribution={
           <>
