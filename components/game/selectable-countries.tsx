@@ -1,6 +1,7 @@
 import { useMap } from "@/lib/context/map";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
+import { a } from "@react-spring/web";
 
 const minTapSize = 1.5;
 
@@ -25,7 +26,7 @@ export function SelectableCountries({
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
-  const { scale } = useMap();
+  const { style } = useMap();
   const needTarget = items.filter(
     ({ meta }) =>
       meta.east - meta.west < minTapSize || meta.south - meta.north < minTapSize
@@ -37,7 +38,8 @@ export function SelectableCountries({
         <g
           key={name}
           className={cn({
-            "fill-background hover:fill-primary/70": !isHighlighted(name),
+            "fill-background hover:fill-primary/70 transition-colors":
+              !isHighlighted(name),
           })}
           fill={isHighlighted(name) ? `url(#${subjects.join(",")})` : undefined}
           onClick={() => onClick(name)}
@@ -56,17 +58,20 @@ export function SelectableCountries({
               className="fill-secondary"
             />
           )}
-          <circle
+          <a.circle
             cx={meta.x}
             cy={meta.y}
             r={minTapSize}
-            strokeDasharray={!isHighlighted(name) ? scale * 3 : undefined}
-            strokeWidth={scale * 2}
+            style={{
+              strokeWidth: style.strokeWidth.to((w) => 2 * w),
+              strokeDasharray: style.strokeWidth.to((w) => 3 * w),
+            }}
             onClick={() => onClick(name)}
-            className={cn({
-              "fill-background/30 hover:fill-primary/70": !isHighlighted(name),
-            })}
             fill={isHighlighted(name) ? `url(#${subjects.join(",")})` : "none"}
+            className={cn({
+              "fill-background/30 hover:fill-primary/70 transition-colors":
+                !isHighlighted(name),
+            })}
           />
         </Fragment>
       ))}

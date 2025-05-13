@@ -63,7 +63,7 @@ export function SelectableRegions({
               key={code}
               onClick={() => onClick(code)}
               className={cn(
-                "fill-background stroke-neutral-200 dark:stroke-neutral-800",
+                "fill-background stroke-neutral-200 dark:stroke-neutral-800 transition-colors",
                 {
                   [`${color.stroke} ${color.fill}`]: hints,
                   "hover:fill-primary/70":
@@ -103,40 +103,19 @@ export function SelectableRegions({
         {countryPaths}
       </g>
 
-      <filter id="outline">
-        <feMorphology
-          in="SourceAlpha"
-          result="DILATED"
-          operator="dilate"
-          // radius={scale * 0.4}
-        />
-        <feFlood
-          floodColor="var(--background)"
-          floodOpacity="1"
-          result="TEXT"
-        />
-        <feComposite in="TEXT" in2="DILATED" operator="in" result="OUTLINE" />
-
-        <feMerge>
-          <feMergeNode in="OUTLINE" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-
       <g className="pointer-events-none fill-secondary-foreground">
         {labelsVisible.map(({ code, center }) => (
-          <text
+          <a.text
             key={code}
             x={center[0]}
             y={center[1]}
             textAnchor="middle"
             dominantBaseline="middle"
             strokeWidth={0}
-            // fontSize={scale * 12}
-            filter="url(#outline)"
+            fontSize={style.strokeWidth.to((f) => f * 12)}
           >
             {code}
-          </text>
+          </a.text>
         ))}
       </g>
     </>

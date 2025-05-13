@@ -1,7 +1,7 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { cn } from "@/lib/utils";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { a, to } from "@react-spring/web";
 import { MapProvider, useMap } from "@/lib/context/map";
 
@@ -119,19 +119,6 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
   const ref = useRef<SVGSVGElement>(null);
   const { style, styleApi: api } = useMap();
 
-  const [opacityTimeout, setOpacityTimeout] = useState<NodeJS.Timeout | null>(
-    null
-  );
-
-  const triggerOpacityHack = () =>
-    setTimeout(() => {
-      const opacity = ref.current?.style.getPropertyValue("opacity");
-      ref.current?.style.setProperty("opacity", "0.9999");
-      setTimeout(() => {
-        ref.current?.style.setProperty("opacity", opacity ?? "1");
-      }, 100);
-    }, 500);
-
   useEffect(() => {
     const handler = (e: Event) => e.preventDefault();
     document.addEventListener("gesturestart", handler);
@@ -146,19 +133,13 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
 
   useGesture(
     {
-      onDrag: ({ pinching, cancel, first, last, offset: [x, y] }) => {
+      onDrag: ({ pinching, cancel, offset: [x, y] }) => {
         if (pinching) return cancel();
-
-        // Hack to rerender svg, fixes issues with pixelation. But not when interacting with the map
-        if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
-        if (last) setOpacityTimeout(triggerOpacityHack());
-
         api.set({ x, y });
       },
       onPinch: ({
         origin: [ox, oy],
         first,
-        last,
         movement: [ms],
         offset: [s],
         memo,
@@ -171,10 +152,6 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
 
           memo = [style.x.get(), style.y.get(), tx, ty];
         }
-
-        // Hack to rerender svg, fixes issues with pixelation. But not when interacting with the map
-        if ((first || last) && opacityTimeout) clearTimeout(opacityTimeout);
-        if (last) setOpacityTimeout(triggerOpacityHack());
 
         const unboundedX = ms * memo[0] - (ms - 1) * memo[2];
         const unboundedY = ms * memo[1] - (ms - 1) * memo[3];
