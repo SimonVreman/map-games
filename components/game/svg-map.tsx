@@ -197,7 +197,7 @@ export function SvgMap({
           </a.svg>
         </div>
         {attribution && (
-          <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none">
+          <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
             {attribution}
           </div>
         )}

@@ -9,6 +9,8 @@ import { EuropeanPedestriansGame } from "@/components/game/european-pedestrians/
 import { GameDefinition } from "./types";
 import SpainDialingCodesDescription from "@/components/game/spain-dialing-codes/description.mdx";
 import { SpainDialingCodesGame } from "@/components/game/spain-dialing-codes/game";
+import USDialingCodesDescription from "@/components/game/us-dialing-codes/description.mdx";
+import { USDialingCodesGame } from "@/components/game/us-dialing-codes/game";
 import EuropeanBollardsDescription from "@/components/game/european-bollards/description.mdx";
 import { EuropeanBollardsGame } from "@/components/game/european-bollards/game";
 
@@ -68,6 +70,15 @@ export const geoguessrGames: GameDefinition[] = [
     pages: {
       Description: SpainDialingCodesDescription,
       Game: SpainDialingCodesGame,
+    },
+  },
+  {
+    name: "US Dialing Codes",
+    description: "How well do you know the United States dialing codes?",
+    slug: "us-dialing-codes",
+    pages: {
+      Description: USDialingCodesDescription,
+      Game: USDialingCodesGame,
     },
   },
 ] as const;

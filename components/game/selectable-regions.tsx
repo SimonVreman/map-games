@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Fragment } from "react";
 
 const colors = [
   { fill: "fill-chart-1/50", stroke: "stroke-chart-1/50" },
@@ -49,27 +48,29 @@ export function SelectableRegions({
 
   return (
     <>
-      {regions.map(({ code, paths }) => {
-        const color = colors[uniqueGroups.indexOf(getCodeGroup(code))];
-        return (
-          <g
-            key={code}
-            onClick={() => onClick(code)}
-            className={cn(
-              "fill-background stroke-neutral-200 dark:stroke-neutral-800",
-              {
-                [`${color.stroke} ${color.fill}`]: hints,
-                "hover:fill-primary/70":
-                  positive !== code && negative !== code && !hints,
-                "fill-green-500/20": positive === code && !hints,
-                "fill-red-500/20": negative === code && !hints,
-              }
-            )}
-          >
-            {paths}
-          </g>
-        );
-      })}
+      <g strokeWidth={scaling * 0.5}>
+        {regions.map(({ code, paths }) => {
+          const color = colors[uniqueGroups.indexOf(getCodeGroup(code))];
+          return (
+            <g
+              key={code}
+              onClick={() => onClick(code)}
+              className={cn(
+                "fill-background stroke-neutral-200 dark:stroke-neutral-800",
+                {
+                  [`${color.stroke} ${color.fill}`]: hints,
+                  "hover:fill-primary/70":
+                    positive !== code && negative !== code && !hints,
+                  "fill-green-500/20": positive === code && !hints,
+                  "fill-red-500/20": negative === code && !hints,
+                }
+              )}
+            >
+              {paths}
+            </g>
+          );
+        })}
+      </g>
 
       <g
         className={cn(
@@ -78,7 +79,7 @@ export function SelectableRegions({
         )}
       >
         {firstAdministrativePaths && (
-          <g strokeDasharray={hints ? 0 : scaling * 3}>
+          <g strokeWidth={scaling * 0.5} className="stroke-neutral-400">
             {firstAdministrativePaths}
           </g>
         )}

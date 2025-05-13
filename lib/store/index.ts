@@ -28,6 +28,10 @@ import {
   createEuropeanBollardsSlice,
   EuropeanBollardsSlice,
 } from "./game/european-bollards";
+import {
+  createUSDialingCodesSlice,
+  USDialingCodesSlice,
+} from "./game/us-dialing-codes";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -36,7 +40,8 @@ export type AppStore = CityCoverSlice &
   SpainDialingCodesSlice &
   EuropeanGuardrailsSlice &
   EuropeanPedestriansSlice &
-  EuropeanBollardsSlice;
+  EuropeanBollardsSlice &
+  USDialingCodesSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -50,6 +55,7 @@ export const createAppStore = () =>
         ...createEuropeanGuardrailsSlice(...a),
         ...createEuropeanPedestriansSlice(...a),
         ...createEuropeanBollardsSlice(...a),
+        ...createUSDialingCodesSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),
