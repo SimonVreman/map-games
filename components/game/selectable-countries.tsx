@@ -1,3 +1,4 @@
+import { useMap } from "@/lib/context/map";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
 
@@ -6,7 +7,6 @@ const minTapSize = 1.5;
 export function SelectableCountries({
   items,
   isHighlighted,
-  scaling,
   onClick,
 }: {
   items: readonly {
@@ -22,10 +22,10 @@ export function SelectableCountries({
       y: number;
     };
   }[];
-  scaling: number;
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
+  const { scale } = useMap();
   const needTarget = items.filter(
     ({ meta }) =>
       meta.east - meta.west < minTapSize || meta.south - meta.north < minTapSize
@@ -60,8 +60,8 @@ export function SelectableCountries({
             cx={meta.x}
             cy={meta.y}
             r={minTapSize}
-            strokeDasharray={!isHighlighted(name) ? scaling * 3 : undefined}
-            strokeWidth={scaling * 2}
+            strokeDasharray={!isHighlighted(name) ? scale * 3 : undefined}
+            strokeWidth={scale * 2}
             onClick={() => onClick(name)}
             className={cn({
               "fill-background/30 hover:fill-primary/70": !isHighlighted(name),

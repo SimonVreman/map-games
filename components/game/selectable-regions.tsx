@@ -1,4 +1,6 @@
+import { useMap } from "@/lib/context/map";
 import { cn } from "@/lib/utils";
+import { a } from "@react-spring/web";
 
 const colors = [
   { fill: "fill-chart-1/50", stroke: "stroke-chart-1/50" },
@@ -25,7 +27,6 @@ export function SelectableRegions({
   divider,
   hints,
   highlighted: { positive, negative },
-  scaling,
   onClick,
   getCodeGroup,
 }: {
@@ -35,12 +36,16 @@ export function SelectableRegions({
   divider?: React.ReactNode;
   hints: boolean;
   highlighted: { positive: number | null; negative: number | null };
-  scaling: number;
   getCodeGroup: (code: number) => string;
   onClick: (code: number) => void;
 }) {
   const groups = regions.map(({ code }) => getCodeGroup(code));
   const uniqueGroups = [...new Set(groups)].sort();
+  const { style } = useMap();
+
+  const smallStrokeWidthStyle = {
+    strokeWidth: style.strokeWidth.to((w) => 0.75 * w),
+  };
 
   const labelsVisible = hints
     ? regions
@@ -50,7 +55,7 @@ export function SelectableRegions({
 
   return (
     <>
-      <g strokeWidth={scaling * 0.5}>
+      <a.g style={smallStrokeWidthStyle}>
         {regions.map(({ code, paths }) => {
           const color = colors[uniqueGroups.indexOf(getCodeGroup(code))];
           return (
@@ -72,7 +77,7 @@ export function SelectableRegions({
             </g>
           );
         })}
-      </g>
+      </a.g>
 
       <g
         className={cn(
@@ -81,18 +86,18 @@ export function SelectableRegions({
         )}
       >
         {firstAdministrativePaths && (
-          <g strokeWidth={scaling * 0.5} className="stroke-neutral-400">
+          <a.g style={smallStrokeWidthStyle} className="stroke-neutral-400">
             {firstAdministrativePaths}
-          </g>
+          </a.g>
         )}
 
         {divider && (
-          <g
+          <a.g
+            style={{ strokeDasharray: style.strokeWidth.to((w) => w * 10) }}
             className="stroke-neutral-300 dark:stroke-neutral-700"
-            strokeDasharray={hints ? 0 : scaling * 3}
           >
             {divider}
-          </g>
+          </a.g>
         )}
 
         {countryPaths}
@@ -103,7 +108,7 @@ export function SelectableRegions({
           in="SourceAlpha"
           result="DILATED"
           operator="dilate"
-          radius={scaling * 0.4}
+          // radius={scale * 0.4}
         />
         <feFlood
           floodColor="var(--background)"
@@ -127,7 +132,7 @@ export function SelectableRegions({
             textAnchor="middle"
             dominantBaseline="middle"
             strokeWidth={0}
-            fontSize={scaling * 12}
+            // fontSize={scale * 12}
             filter="url(#outline)"
           >
             {code}

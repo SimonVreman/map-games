@@ -2,7 +2,8 @@ import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { cn } from "@/lib/utils";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import { useEffect, useRef, useState } from "react";
-import { useSpring, a } from "@react-spring/web";
+import { a } from "@react-spring/web";
+import { MapProvider, useMap } from "@/lib/context/map";
 
 type Bounds = {
   north: number;
@@ -12,12 +13,21 @@ type Bounds = {
   padding?: number;
 };
 
+type MapProps = {
+  bounds?: Bounds;
+} & React.SVGProps<SVGSVGElement>;
+
 const defaultBounds = {
   north: mercatorConstants.reach,
   south: -mercatorConstants.reach,
   west: -180,
   east: 180,
 };
+
+const minimumScale = 0.125;
+// const scaleExponent = -Math.log2(minimumScale);
+const defaultStyle = { x: 0, y: 0, scale: minimumScale };
+// const zoomLevels = 6;
 
 function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
   const northWest = projectMercator({
@@ -38,10 +48,30 @@ function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
   };
 }
 
-export const scalingForBounds = (bounds: Bounds) => {
+function calculateStrokeWidth({
+  bounds,
+  scale,
+}: {
+  bounds: Bounds;
+  scale: number;
+}) {
   const viewBox = calculateViewBox(bounds);
-  return Math.max(viewBox.width, viewBox.height) / 750;
-};
+  return (
+    (Math.max(viewBox.width, viewBox.height) * minimumScale) / (750 * scale)
+  );
+}
+
+// function zoomLevelForScale(scale: number) {
+//   return Math.round(
+//     Math.log2(scale / minimumScale) * ((zoomLevels - 1) / scaleExponent)
+//   );
+// }
+
+// function scaleForZoomLevel(zoomLevel: number) {
+//   return 2 ** ((scaleExponent * zoomLevel) / (zoomLevels - 1)) * minimumScale;
+// }
+
+const clampFactor = (-1 / minimumScale) * 2;
 
 function clampMap({
   bounding,
@@ -54,10 +84,10 @@ function clampMap({
   y: number;
   scale: number;
 }) {
-  const top = (1 / (-8 * scale) + 0.5) * (bounding?.height ?? 0);
-  const bottom = (1 / (-8 * scale) + 0.5) * -(bounding?.height ?? 0);
-  const left = (1 / (-8 * scale) + 0.5) * (bounding?.width ?? 0);
-  const right = (1 / (-8 * scale) + 0.5) * -(bounding?.width ?? 0);
+  const top = (1 / (clampFactor * scale) + 0.5) * (bounding?.height ?? 0);
+  const bottom = (1 / (clampFactor * scale) + 0.5) * -(bounding?.height ?? 0);
+  const left = (1 / (clampFactor * scale) + 0.5) * (bounding?.width ?? 0);
+  const right = (1 / (clampFactor * scale) + 0.5) * -(bounding?.width ?? 0);
 
   // For 4x zoom
   // 0.25 -> 0 x bounding
@@ -78,15 +108,45 @@ const useGesture = createUseGesture([dragAction, pinchAction]);
 export function SvgMap({
   bounds = defaultBounds,
   attribution,
-  children,
   className,
   ...props
 }: {
-  bounds?: Bounds;
   attribution?: React.ReactNode;
-} & React.SVGProps<SVGSVGElement>) {
+} & MapProps) {
+  return (
+    <div
+      className={cn(
+        "size-full relative overflow-hidden bg-secondary",
+        className
+      )}
+    >
+      <div className="size-full relative">
+        <div className="absolute size-[800%] -inset-[350%]">
+          <MapProvider
+            style={{
+              ...defaultStyle,
+              strokeWidth: calculateStrokeWidth({
+                bounds,
+                scale: defaultStyle.scale,
+              }),
+            }}
+          >
+            <Map bounds={bounds} {...props} />
+          </MapProvider>
+        </div>
+        {attribution && (
+          <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
+            {attribution}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
   const ref = useRef<SVGSVGElement>(null);
-  const [style, api] = useSpring(() => ({ x: 0, y: 0, scale: 0.25 }));
+  const { style, styleApi: api } = useMap();
 
   const [opacityTimeout, setOpacityTimeout] = useState<NodeJS.Timeout | null>(
     null
@@ -151,7 +211,12 @@ export function SvgMap({
           scale: s,
         });
 
-        api.set({ x, y, scale: s });
+        api.set({
+          x,
+          y,
+          scale: s,
+          strokeWidth: calculateStrokeWidth({ bounds, scale: s }),
+        });
 
         return memo;
       },
@@ -163,45 +228,26 @@ export function SvgMap({
         from: () => [style.x.get(), style.y.get()],
       },
       pinch: {
-        scaleBounds: { min: 0.25, max: 1 },
+        scaleBounds: { min: minimumScale, max: 1 },
         from: () => [style.scale.get(), 0],
       },
     }
   );
 
   const viewBox = calculateViewBox(bounds);
-  const scaling = scalingForBounds(bounds);
 
   return (
-    <div
-      className={cn(
-        "size-full relative overflow-hidden bg-secondary",
-        className
-      )}
+    <a.svg
+      ref={ref}
+      className="bg-secondary touch-none select-none size-full translate-z-0 will-change-transform"
+      viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+      fill="none"
+      stroke="#000"
+      strokeLinejoin="round"
+      style={style}
+      {...props}
     >
-      <div className="size-full relative">
-        <div className="absolute size-[400%] -inset-[150%]">
-          {/* @ts-expect-error - doesnt expect children for some reason */}
-          <a.svg
-            ref={ref}
-            className="bg-secondary touch-none select-none size-full translate-z-0 will-change-transform"
-            viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-            fill="none"
-            stroke="#000"
-            strokeWidth={scaling * 1}
-            strokeLinejoin="round"
-            style={style}
-            {...props}
-          >
-            {children}
-          </a.svg>
-        </div>
-        {attribution && (
-          <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
-            {attribution}
-          </div>
-        )}
-      </div>
-    </div>
+      {children}
+    </a.svg>
   );
 }

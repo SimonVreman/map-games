@@ -1,7 +1,7 @@
 "use client";
 
 import { brazilPhoneCodes } from "@/lib/mapping/brazil/paths/phone-codes";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { BrazilDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { SelectableRegions } from "../selectable-regions";
@@ -46,7 +46,6 @@ export function BrazilDialingCodesGame() {
           firstAdministrativePaths={brazilStatesPaths}
           hints={hints}
           highlighted={highlighted}
-          scaling={scalingForBounds(bounds)}
           getCodeGroup={(code) => code.toString()[0]}
           onClick={handleGuess}
         />

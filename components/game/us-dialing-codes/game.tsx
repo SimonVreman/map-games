@@ -1,6 +1,6 @@
 "use client";
 
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { USDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { SelectableRegions } from "../selectable-regions";
@@ -55,7 +55,6 @@ export function USDialingCodesGame() {
           divider={usDivider}
           hints={hints}
           highlighted={highlighted}
-          scaling={scalingForBounds(bounds)}
           getCodeGroup={(code) => code.toString()[0]}
           onClick={handleGuess}
         />

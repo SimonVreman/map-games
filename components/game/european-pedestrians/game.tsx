@@ -1,7 +1,7 @@
 "use client";
 
 import { europeanPedestrians } from "@/lib/mapping/countries/registry/pedestrians";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { EuropeanPedestriansControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { svgPedestrianPatterns } from "./pedestrian-patterns";
@@ -48,7 +48,6 @@ export function EuropeanPedestriansGame() {
         <SelectableCountries
           items={europeanPedestrians}
           isHighlighted={(name) => highlighted.includes(name) || hints}
-          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>

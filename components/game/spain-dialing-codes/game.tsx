@@ -1,7 +1,7 @@
 "use client";
 
 import { spainPhoneCodes } from "@/lib/mapping/spain/paths/phone-codes";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { SpainDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { SelectableRegions } from "../selectable-regions";
@@ -49,7 +49,6 @@ export function SpainDialingCodesGame() {
           divider={spainDivider}
           hints={hints}
           highlighted={highlighted}
-          scaling={scalingForBounds(bounds)}
           getCodeGroup={(code) => code.toString().slice(0, 2)}
           onClick={handleGuess}
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { EuropeanBollardsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { svgBollardPatterns } from "./bollard-patterns";
@@ -48,7 +48,6 @@ export function EuropeanBollardsGame() {
         <SelectableCountries
           items={europeanBollards}
           isHighlighted={(name) => highlighted.includes(name) || hints}
-          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>

@@ -1,7 +1,7 @@
 "use client";
 
 import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { EuropeanGuardrailsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { svgGuardrailPatterns } from "./guardrail-patterns";
@@ -48,7 +48,6 @@ export function EuropeanGuardrailsGame() {
         <SelectableCountries
           items={europeanGuardrails}
           isHighlighted={(name) => highlighted.includes(name) || hints}
-          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>

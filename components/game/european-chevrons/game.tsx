@@ -1,7 +1,7 @@
 "use client";
 
 import { europeanChevrons } from "@/lib/mapping/countries/registry/chevrons";
-import { scalingForBounds, SvgMap } from "../svg-map";
+import { SvgMap } from "../svg-map";
 import { EuropeanChevronsControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
 import { svgChevronPatterns } from "./chevron-patterns";
@@ -48,7 +48,6 @@ export function EuropeanChevronsGame() {
         <SelectableCountries
           items={europeanChevrons}
           isHighlighted={(name) => highlighted.includes(name) || hints}
-          scaling={scalingForBounds(bounds)}
           onClick={handleGuess}
         />
       </SvgMap>
