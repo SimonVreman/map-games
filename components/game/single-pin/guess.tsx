@@ -13,10 +13,10 @@ export function useHandleSingleGuess<
   ]);
 
   return {
-    handleGuess: (clicked: number) => {
+    handleGuess: (clicked: number[]) => {
       if (hints) return;
 
-      const isCorrect = clicked === correct;
+      const isCorrect = correct && clicked.includes(correct);
 
       toast.getToasts().forEach((t) => toast.dismiss(t.id));
 

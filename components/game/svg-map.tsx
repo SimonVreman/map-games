@@ -198,8 +198,6 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
       if (!bounding)
         return `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`;
 
-      console.log(rawX, rawY);
-
       const x = rawX / scale;
       const y = rawY / scale;
 

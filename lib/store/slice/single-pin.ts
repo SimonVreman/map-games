@@ -5,11 +5,11 @@ import { WritableDraft } from "immer";
 export type SinglePinSlice = {
   guesses: boolean[];
   code: number | null;
-  highlighted: { positive: number | null; negative: number | null };
+  highlighted: { correctCode: number | null; incorrectKey: string | null };
   highlightTimeout: NodeJS.Timeout | null;
   hints: boolean;
 
-  guess: (code: number) => void;
+  guess: (codes: number[]) => void;
   toggleHints: () => void;
   reset: () => void;
 };
@@ -41,7 +41,7 @@ export const createSinglePinSlice = <
       setTimeout(
         () =>
           set((s) => {
-            s[name].highlighted = { positive: null, negative: null };
+            s[name].highlighted = { correctCode: null, incorrectKey: null };
           }),
         2000
       );
@@ -51,22 +51,22 @@ export const createSinglePinSlice = <
         // State
         guesses: [],
         code: null,
-        highlighted: { positive: null, negative: null },
+        highlighted: { correctCode: null, incorrectKey: null },
         highlightTimeout: null,
         hints: false,
 
         // Actions
-        guess: (code) => {
+        guess: (codes) => {
           set((s) => {
-            const isCorrect = code === s[name].code;
+            const isCorrect = !!s[name].code && codes.includes(s[name].code);
 
             // Make guess
-            s[name].guesses.push(code == s[name].code);
+            s[name].guesses.push(isCorrect);
 
             // Highlight the correct answer
             s[name].highlighted = {
-              positive: isCorrect ? code : s[name].code,
-              negative: isCorrect ? null : code,
+              correctCode: s[name].code,
+              incorrectKey: isCorrect ? null : codes.join(","),
             };
 
             // Set timeout to remove highlight

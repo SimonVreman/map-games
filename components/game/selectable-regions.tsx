@@ -1,4 +1,5 @@
 import { useMap } from "@/lib/context/map";
+import { SinglePinSlice } from "@/lib/store/slice/single-pin";
 import { cn } from "@/lib/utils";
 import { a } from "@react-spring/web";
 
@@ -26,20 +27,23 @@ export function SelectableRegions({
   countryPaths,
   divider,
   hints,
-  highlighted: { positive, negative },
+  highlighted,
   onClick,
   getCodeGroup,
 }: {
-  regions: { code: number; center: number[]; paths: React.ReactNode }[];
+  regions: {
+    codes: number[];
+    area: number;
+    center: number[];
+    paths: React.ReactNode;
+  }[];
   firstAdministrativePaths?: React.ReactNode;
   countryPaths?: React.ReactNode;
   divider?: React.ReactNode;
-  hints: boolean;
-  highlighted: { positive: number | null; negative: number | null };
-  getCodeGroup: (code: number) => string;
-  onClick: (code: number) => void;
-}) {
-  const groups = regions.map(({ code }) => getCodeGroup(code));
+  getCodeGroup: (codes: number[]) => string;
+  onClick: (codes: number[]) => void;
+} & Pick<SinglePinSlice, "hints" | "highlighted">) {
+  const groups = regions.map(({ codes }) => getCodeGroup(codes));
   const uniqueGroups = [...new Set(groups)].sort();
   const { style } = useMap();
 
@@ -49,27 +53,38 @@ export function SelectableRegions({
 
   const labelsVisible = hints
     ? regions
-    : positive || negative
-    ? regions.filter(({ code }) => code === positive || code === negative)
+    : highlighted.correctCode != null || highlighted.incorrectKey != null
+    ? regions.filter(
+        ({ codes }) =>
+          codes.some((c) => c === highlighted.correctCode) ||
+          codes.join(",") === highlighted.incorrectKey
+      )
     : [];
 
   return (
     <>
       <a.g style={smallStrokeWidthStyle}>
-        {regions.map(({ code, paths }) => {
-          const color = colors[uniqueGroups.indexOf(getCodeGroup(code))];
+        {regions.map(({ codes, paths }) => {
+          const color = colors[uniqueGroups.indexOf(getCodeGroup(codes))];
+
+          const isPositive =
+            highlighted.correctCode != null &&
+            codes.includes(highlighted.correctCode);
+          const isNegative =
+            highlighted.incorrectKey != null &&
+            codes.join(",") === highlighted.incorrectKey;
+
           return (
             <g
-              key={code}
-              onClick={() => onClick(code)}
+              key={codes.join(",")}
+              onClick={() => onClick(codes)}
               className={cn(
                 "fill-background stroke-neutral-200 dark:stroke-neutral-800 transition-colors",
                 {
                   [`${color.stroke} ${color.fill}`]: hints,
-                  "hover:fill-primary/70":
-                    positive !== code && negative !== code && !hints,
-                  "fill-green-500/20": positive === code && !hints,
-                  "fill-red-500/20": negative === code && !hints,
+                  "hover:fill-primary/70": !isPositive && !isNegative && !hints,
+                  "fill-green-500/20": isPositive && !hints,
+                  "fill-red-500/20": isNegative && !hints,
                 }
               )}
             >
@@ -104,17 +119,22 @@ export function SelectableRegions({
       </g>
 
       <g className="pointer-events-none fill-secondary-foreground">
-        {labelsVisible.map(({ code, center }) => (
+        {labelsVisible.map(({ codes, center, area }) => (
           <a.text
-            key={code}
+            key={codes.join(",")}
             x={center[0]}
             y={center[1]}
             textAnchor="middle"
             dominantBaseline="middle"
             strokeWidth={0}
-            fontSize={style.strokeWidth.to((f) => f * 12)}
+            fontSize={style.strokeWidth.to((w) => w * 12)}
+            style={{
+              display: style.scale.to((s) => {
+                return area < 4e4 / s ? "none" : "inline";
+              }),
+            }}
           >
-            {code}
+            {codes.join("/")}
           </a.text>
         ))}
       </g>
