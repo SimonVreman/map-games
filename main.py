@@ -13,9 +13,24 @@ simplify = 0.01
 
 
 class BoundaryPaths:
-    def __init__(self, exterior: list[float], interiors: list[list[float]] = None):
+    def __init__(
+        self,
+        exterior: list[tuple[float, float]],
+        interiors: list[list[tuple[float, float]]] = None,
+    ):
         self.exterior = exterior
         self.interiors = interiors
+
+
+class Transformation:
+    def __init__(self, translation: tuple[float, float], scale: float = 1):
+        self.translation = translation
+        self.scale = scale
+
+    def transform(self, point: tuple[float, float]) -> tuple[float, float]:
+        x = point[0] * self.scale + self.translation[0]
+        y = point[1] * self.scale + self.translation[1]
+        return (x, y)
 
 
 def lat_lon_to_mercator(lat, lon):
@@ -108,7 +123,10 @@ def read_internal_boundaries(df: gpd.GeoDataFrame) -> list[BoundaryPaths]:
     return paths
 
 
-def path_to_string(path: list[float]) -> str:
+def path_to_string(
+    path: list[tuple[float, float]],
+    transformation: Transformation | None = None,
+) -> str:
     result = "M"
     is_first = True
 
@@ -119,20 +137,30 @@ def path_to_string(path: list[float]) -> str:
             result += " L"
 
         x, y = lat_lon_to_mercator(lat, lon)
+
+        if transformation is not None:
+            x, y = transformation.transform((x, y))
+
         result += f" {round(x, rounding)} {round(y, rounding)}"
 
     return result
 
 
-def write_paths(output, boundaries: list[BoundaryPaths], close=True, interiors=False):
+def write_paths(
+    output,
+    boundaries: list[BoundaryPaths],
+    close=True,
+    interiors=False,
+    transformation: Transformation | None = None,
+):
     for boundary in boundaries:
         output.write(
-            f'<path d="{path_to_string(boundary.exterior)}{' Z' if close else ''}'
+            f'<path d="{path_to_string(boundary.exterior, transformation)}{' Z' if close else ''}'
         )
 
         if interiors and boundary.interiors:
             for interior in boundary.interiors:
-                output.write(f" {path_to_string(interior)} Z")
+                output.write(f" {path_to_string(interior, transformation)} Z")
 
         output.write('" />\n')
 
