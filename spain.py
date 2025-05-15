@@ -1,6 +1,12 @@
 import geopandas as gpd
 import shapely
-from main import read_boundaries, read_internal_boundaries, write_paths, open_utf8
+from main import (
+    read_boundaries,
+    read_internal_boundaries,
+    write_paths,
+    open_utf8,
+    write_code_paths,
+)
 
 rounding = 3
 
@@ -98,15 +104,12 @@ def write_spain_phone():
 
     for key, code in spain_area_codes.items():
         df_ddd = df[df["name_eng"].isin(code["adm2"])]
+
+        # TODO: change to use proper, mercator preserving, translation
         if "Santa Cruz de Tenerife" in code["adm2"] or "Las Palmas" in code["adm2"]:
             df_ddd = df_ddd.translate(xoff=5, yoff=9)
 
-        boundaries, center = read_boundaries(df_ddd, union=True)
-        output.write(
-            f"{{ code: {key}, center: [{round(center[0], rounding)},{round(center[1], rounding)}], paths: ({'<>' if len(boundaries) > 1 else ''}"
-        )
-        write_paths(output, boundaries, interiors=True)
-        output.write(f"{'</>' if len(boundaries) > 1 else ''})}},\n")
+        write_code_paths(output, [str(key)], df_ddd)
 
     output.write("]\n")
     output.close()

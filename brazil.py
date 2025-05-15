@@ -5,6 +5,7 @@ from main import (
     read_internal_boundaries,
     normalize_string,
     write_paths,
+    write_code_paths,
 )
 
 rounding = 3
@@ -5977,12 +5978,7 @@ def write_brazil_phone():
                 f"Warning: Not all cities found for DDD {key} in {ddd['adm1']}, missing: {cities_not_in_df}"
             )
 
-        boundaries, center = read_boundaries(df_ddd, union=True)
-        output.write(
-            f"{{ code: {key}, center: [{round(center[0], rounding)},{round(center[1], rounding)}], paths: ({'<>' if len(boundaries) > 1 else ''}"
-        )
-        write_paths(output, boundaries)
-        output.write(f"{'</>' if len(boundaries) > 1 else ''})}},\n")
+        write_code_paths(output, [str(key)], df_ddd)
 
     output.write("]\n")
     output.close()

@@ -165,6 +165,28 @@ def write_paths(
         output.write('" />\n')
 
 
+def write_code_paths(
+    output,
+    codes: list[str],
+    df: gpd.GeoDataFrame,
+    transformation: Transformation | None = None,
+):
+    boundaries, center = read_boundaries(df, union=True)
+    center = transformation.transform(center) if transformation else center
+    center_x = round(center[0], rounding)
+    center_y = round(center[1], rounding)
+    area = df.to_crs("+proj=cea").area.sum() / 1e6
+    open_paths = "<>" if len(boundaries) > 1 else ""
+    close_paths = "</>" if len(boundaries) > 1 else ""
+
+    output.write(
+        f"{{ codes: [{','.join(codes)}], center: [{center_x},{center_y}], area: {area:.3f}, paths: ({open_paths}"
+    )
+
+    write_paths(output, boundaries, transformation=transformation, interiors=True)
+    output.write(f"{close_paths})}},\n")
+
+
 def normalize_string(s):
     s = s.lower()
     s = "".join(

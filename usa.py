@@ -6,8 +6,10 @@ from main import (
     read_internal_boundaries,
     write_paths,
     Transformation,
+    write_code_paths,
 )
 import shapely
+import math
 
 rounding = 3
 
@@ -16,7 +18,12 @@ rounding = 3
 transformations = {
     "HI": Transformation([230, 100], 0.8),
     "AK": Transformation([160, 330], 0.4),
-    "PR": Transformation([-10, -10]),
+    "PR": Transformation([-12, -9]),
+    "VI": Transformation([-12, -9]),
+    "AS": Transformation([175, -625], 2),
+    "GU": Transformation([-1655, -470], 2),
+    "CNMI": Transformation([-1655, -470], 2),
+    "MP": Transformation([-1655, -470], 2),
 }
 
 
@@ -30,37 +37,52 @@ def write_usa():
 
     df = df[df["admin"] == "United States of America"]
 
-    df_mainland = df[
-        (df["name"] != "Alaska")
-        & (df["name"] != "Hawaii")
-        & (df["name"] != "Puerto Rico")
-    ]
+    df_mainland = df[(df["name"] != "Alaska") & (df["name"] != "Hawaii")]
     df_alaska = df[df["name"] == "Alaska"]
     df_hawaii = df[df["name"] == "Hawaii"]
     df_puerto_rico = df_countries[df_countries["ADMIN"] == "Puerto Rico"]
+    df_usvi = df_countries[df_countries["ADMIN"] == "United States Virgin Islands"]
+    df_samoa = df_countries[df_countries["ADMIN"] == "American Samoa"]
+    df_guam = df_countries[df_countries["ADMIN"] == "Guam"]
+    df_nmi = df_countries[df_countries["ADMIN"] == "Northern Mariana Islands"]
 
     output = open_utf8("output/usa.path.txt", "w")
 
-    boundaries, _ = read_boundaries(df_mainland, union=True)
-    boundaries_alaska, _ = read_boundaries(df_alaska, union=True)
-    boundaries_hawaii, _ = read_boundaries(df_hawaii, union=True)
-    boundaries_puerto_rico, _ = read_boundaries(df_puerto_rico, union=True)
-
-    write_paths(output, boundaries)
+    write_paths(output, read_boundaries(df_mainland, union=True)[0])
     write_paths(
         output,
-        boundaries_alaska,
+        read_boundaries(df_alaska, union=True)[0],
         transformation=transformations["AK"],
     )
     write_paths(
         output,
-        boundaries_hawaii,
+        read_boundaries(df_hawaii, union=True)[0],
         transformation=transformations["HI"],
     )
     write_paths(
         output,
-        boundaries_puerto_rico,
+        read_boundaries(df_puerto_rico, union=True)[0],
         transformation=transformations["PR"],
+    )
+    write_paths(
+        output,
+        read_boundaries(df_usvi, union=True)[0],
+        transformation=transformations["VI"],
+    )
+    write_paths(
+        output,
+        read_boundaries(df_samoa, union=True)[0],
+        transformation=transformations["AS"],
+    )
+    write_paths(
+        output,
+        read_boundaries(df_guam, union=True)[0],
+        transformation=transformations["GU"],
+    )
+    write_paths(
+        output,
+        read_boundaries(df_nmi, union=True)[0],
+        transformation=transformations["CNMI"],
     )
 
     output.close()
@@ -79,7 +101,6 @@ def write_usa_first_administrative():
     output.close()
 
 
-# Has overlaying codes, so we need to union them and exlculde these unioned areas from the other areas
 def write_usa_phone():
     df = gpd.read_file("input/usa/areacode.gdb")
     npa = pd.read_csv("input/usa/npa_report.csv", skiprows=1)
@@ -89,31 +110,49 @@ def write_usa_phone():
 
     for key in df["AREA_CODE"].unique():
         code_df = df[df["AREA_CODE"] == key]
-        state = code_df["STATE"].values[0]
+        npa_df = npa[npa["NPA_ID"] == int(key)]
+        state = code_df["STATE"].iat[0]
         transformation = transformations[state] if state in transformations else None
 
-        overlay = npa[npa["NPA_ID"] == int(key)]["OVERLAY_COMPLEX"].values[0]
-        if not isinstance(overlay, str):
-            overlay = ""
+        parent = npa_df["PARENT_NPA_ID"].iat[0]
+        parent = "" if math.isnan(parent) else str(int(parent))
+        parent_df = df[df["AREA_CODE"] == parent]
 
-        complex_codes = list(filter(lambda x: x not in (key, ""), overlay.split("/")))
-        overlaying = df[df["AREA_CODE"].isin(complex_codes)].union_all()
-        non_overlaying = shapely.difference(code_df.union_all(), overlaying)
-        area_non_overlaying = non_overlaying.area
+        if parent_df.size != 0:
+            # Has a parent with a geometry, only process if not included in its overlay
+            parent_overlay = npa[npa["NPA_ID"] == int(parent)]["OVERLAY_COMPLEX"].iat[0]
+            parent_overlay = parent_overlay if isinstance(parent_overlay, str) else ""
 
-        if area_non_overlaying < 0.001:
-            continue
+            if key in parent_overlay:
+                # Now check if this still isn't also a separate code
+                # (e.g. 321 in Florida being standalone, and overlay code)
+                if key == "321":
+                    # Use the standalone geometry only
+                    standalone = shapely.difference(
+                        code_df.union_all(), parent_df.union_all()
+                    )
+                    code_df = code_df.assign(geometry=standalone)
+                else:
+                    continue
 
-        code_df = code_df.assign(geometry=non_overlaying)
-        boundaries, center = read_boundaries(code_df, union=True)
-        center = transformation.transform(center) if transformation else center
+        # Have been merged, not reflected in my data yet
+        if key == "602":
+            code_df = code_df.assign(
+                geometry=df[df["AREA_CODE"].isin(["480", "623", "602"])].union_all()
+            )
 
-        output.write(
-            f"{{ code: {key}, center: [{round(center[0], rounding)},{round(center[1], rounding)}], paths: ({'<>' if len(boundaries) > 1 else ''}"
-        )
+        overlay = npa_df["OVERLAY_COMPLEX"].iat[0]
+        overlay = overlay if isinstance(overlay, str) else ""
+        overlay_codes = [key] if overlay == "" else sorted(overlay.split("/"))
 
-        write_paths(output, boundaries, transformation=transformation, interiors=True)
-        output.write(f"{'</>' if len(boundaries) > 1 else ''})}},\n")
+        write_code_paths(output, overlay_codes, code_df, transformation)
+
+    # American Samoa is not included in the dataset, handle separately
+    df_samoa = gpd.read_file(
+        "input/natural_earth_countries/ne_10m_admin_0_countries.shp"
+    )
+    df_samoa = df_samoa[df_samoa["ADMIN"] == "American Samoa"]
+    write_code_paths(output, ["684"], df_samoa, transformations["AS"])
 
     output.write("]\n")
     output.close()
