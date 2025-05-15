@@ -56,7 +56,7 @@ function calculateStrokeWidth({
 }) {
   const viewBox = calculateViewBox(bounds);
   return (
-    (Math.max(viewBox.width, viewBox.height) * minimumScale) / (750 * scale)
+    (Math.min(viewBox.width, viewBox.height) * minimumScale) / (500 * scale)
   );
 }
 
@@ -88,7 +88,7 @@ export function SvgMap({
   return (
     <div
       className={cn(
-        "size-full relative overflow-hidden bg-secondary",
+        "size-full relative overflow-hidden bg-neutral-50 dark:bg-neutral-700",
         className
       )}
     >
@@ -106,7 +106,7 @@ export function SvgMap({
         </MapProvider>
 
         {attribution && (
-          <div className="bg-muted absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
+          <div className="bg-neutral-50 dark:bg-neutral-700 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
             {attribution}
           </div>
         )}
@@ -234,7 +234,7 @@ function Map({ bounds = defaultBounds, children, ...props }: MapProps) {
     <>
       <a.svg
         ref={ref}
-        className="bg-secondary touch-none select-none size-full"
+        className="touch-none select-none size-full"
         fill="none"
         strokeLinejoin="round"
         viewBox={viewBoxAnimated}

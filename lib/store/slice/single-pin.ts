@@ -6,7 +6,6 @@ export type SinglePinSlice = {
   guesses: boolean[];
   code: number | null;
   highlighted: { correctCode: number | null; incorrectKey: string | null };
-  highlightTimeout: NodeJS.Timeout | null;
   hints: boolean;
 
   guess: (codes: number[]) => void;
@@ -36,23 +35,13 @@ export const createSinglePinSlice = <
         state: WritableDraft<AppStore & { [Key in T]: SinglePinSlice }>
       ) => void
     ) => void
-  ) => {
-    const createClearHighlightTimeout = () =>
-      setTimeout(
-        () =>
-          set((s) => {
-            s[name].highlighted = { correctCode: null, incorrectKey: null };
-          }),
-        2000
-      );
-
-    return {
+  ) =>
+    ({
       [name]: {
         // State
         guesses: [],
         code: null,
         highlighted: { correctCode: null, incorrectKey: null },
-        highlightTimeout: null,
         hints: false,
 
         // Actions
@@ -69,11 +58,6 @@ export const createSinglePinSlice = <
               incorrectKey: isCorrect ? null : codes.join(","),
             };
 
-            // Set timeout to remove highlight
-            if (s[name].highlightTimeout)
-              clearTimeout(s[name].highlightTimeout);
-            s[name].highlightTimeout = createClearHighlightTimeout();
-
             // Set new code
             s[name].code = randomCode();
           });
@@ -86,8 +70,8 @@ export const createSinglePinSlice = <
           set((s) => {
             s[name].guesses = [];
             s[name].code = randomCode();
+            s[name].highlighted = { correctCode: null, incorrectKey: null };
           }),
       } as SinglePinSlice,
-    } as TSlice;
-  };
+    } as TSlice);
 };

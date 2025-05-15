@@ -14,7 +14,7 @@ const bounds = {
   north: 51,
   south: 10,
   east: -67,
-  west: -125,
+  west: -129,
   padding: 2,
 };
 
@@ -54,7 +54,7 @@ export function USDialingCodesGame() {
           divider={usDivider}
           hints={hints}
           highlighted={highlighted}
-          getCodeGroup={(code) => code.toString()[0]}
+          getCodeGroup={(codes) => codes[0].toString()[0]}
           onClick={handleGuess}
         />
       </SvgMap>
