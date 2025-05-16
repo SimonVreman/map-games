@@ -1,6 +1,6 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { usPaths } from "@/lib/mapping/us/paths/country";
 
 type Style = {
@@ -28,7 +28,13 @@ const defaultBounds = {
   east: 180,
 };
 
-const maximumScale = 8;
+const defaultStyle = {
+  x: 0,
+  y: 0,
+  scale: 0,
+};
+
+const maximumScale = 20;
 
 function calculateViewBox({ north, south, west, east, padding = 0 }: Bounds) {
   const northWest = projectMercator({
@@ -71,19 +77,44 @@ function styleForBounds({
   return { x, y, scale };
 }
 
-function calculateMapBounds({
-  bounding,
-  scale,
+// TODO: scale doesnt need clamping, done by the gesture handler. Just need x,y, clamping
+function clampStyle({
+  bounds,
+  client,
+  style,
 }: {
-  bounding?: DOMRect;
-  scale: number;
-}) {
-  if (!bounding) return { left: 0, right: 0, top: 0, bottom: 0 };
+  bounds: Bounds;
+  client: DOMRect;
+  style: Style;
+}): Style {
+  const defaultStyle = styleForBounds({ bounds, client });
+  const scale = Math.max(defaultStyle.scale, style.scale);
+  const viewBox = calculateViewBox(bounds);
 
-  const xBound = bounding.width * scale * 0.5;
-  const yBound = bounding.height * scale * 0.5;
+  // The size of the domain in px at scale
+  const projectedSize = Math.min(client.width, client.height) * scale;
+  const projectedWidth =
+    (viewBox.width / mercatorConstants.domain) * projectedSize;
+  const projectedHeight =
+    (viewBox.height / mercatorConstants.domain) * projectedSize;
 
-  return { left: -xBound, right: xBound, top: -yBound, bottom: yBound };
+  const minX =
+    client.width -
+    ((viewBox.x + viewBox.width) / mercatorConstants.domain) * projectedSize;
+  const maxX = -(viewBox.x / mercatorConstants.domain) * projectedSize;
+  const minY =
+    client.height -
+    ((viewBox.y + viewBox.width) / mercatorConstants.domain) * projectedSize;
+  const maxY = -(viewBox.y / mercatorConstants.domain) * projectedSize;
+
+  // console.log(minX, style.x, maxX);
+
+  const x = Math.min(maxX, Math.max(style.x, minX));
+  const y = Math.min(maxY, Math.max(style.y, minY));
+  // const x = style.x;
+  // const y = style.y;
+
+  return { x, y, scale };
 }
 
 const useGesture = createUseGesture([dragAction, pinchAction]);
@@ -175,7 +206,7 @@ function prepareMap({
   ctx.translate(xOffset + xCentering, yOffset + yCentering);
   ctx.scale(scale, scale);
 
-  ctx.fillStyle = twColor("red-100");
+  ctx.fillStyle = twColor("neutral-50");
   ctx.fillRect(0, 0, 1000, 1000);
 
   ctx.canvas.style.width = `${width}px`;
@@ -186,42 +217,63 @@ function Canvas({ bounds }: MapProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const style = useRef({ x: 0, y: 0, scale: 1 });
 
-  const updateStyle = (newStyle: Partial<Style>) => {
-    style.current = { ...style.current, ...newStyle };
-    renderMap({ canvas, style });
-  };
+  const updateStyle = useCallback(
+    (newStyle: Partial<Style>) => {
+      const client = canvas.current?.parentElement?.getBoundingClientRect();
+      if (!client) return;
+
+      style.current = clampStyle({
+        bounds,
+        client,
+        style: { ...style.current, ...newStyle },
+      });
+
+      renderMap({ canvas, style });
+    },
+    [bounds]
+  );
+
+  const minimumScale = useMemo(() => {
+    const viewBox = calculateViewBox(bounds);
+
+    return Math.min(
+      mercatorConstants.domain / viewBox.width,
+      mercatorConstants.domain / viewBox.height
+    );
+  }, [bounds]);
 
   useEffect(() => {
     const gesture = (e: Event) => e.preventDefault();
-    const resize = () => renderMap({ canvas, style });
-
-    // Render the map on initial load
-    const parent = canvas.current?.parentElement;
-    if (parent)
-      updateStyle(
-        styleForBounds({ bounds, client: parent.getBoundingClientRect() })
-      );
 
     // Add event listeners
-    window.addEventListener("resize", resize);
     document.addEventListener("gesturestart", gesture);
     document.addEventListener("gesturechange", gesture);
     document.addEventListener("gestureend", gesture);
 
     // Clean up event listeners
     return () => {
-      window.removeEventListener("resize", resize);
       document.removeEventListener("gesturestart", gesture);
       document.removeEventListener("gesturechange", gesture);
       document.removeEventListener("gestureend", gesture);
     };
   }, []);
 
+  useEffect(() => {
+    const parent = canvas.current?.parentElement;
+    if (parent) updateStyle(defaultStyle);
+
+    const resize = () => updateStyle(style.current);
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  }, [updateStyle]);
+
   useGesture(
     {
       onDrag: ({ pinching, cancel, offset: [x, y] }) => {
         if (pinching) return cancel();
-        console.log(x, y);
         updateStyle({ x, y });
       },
       onPinch: ({
@@ -238,19 +290,8 @@ function Canvas({ bounds }: MapProps) {
           memo = [style.current.x, style.current.y, tx, ty];
         }
 
-        const unboundedX = ms * memo[0] - (ms - 1) * memo[2];
-        const unboundedY = ms * memo[1] - (ms - 1) * memo[3];
-
-        // const { left, right, top, bottom } = calculateMapBounds({
-        //   bounding,
-        //   scale: s,
-        // });
-
-        // const x = Math.min(Math.max(unboundedX, left), right);
-        // const y = Math.min(Math.max(unboundedY, top), bottom);
-
-        const x = unboundedX;
-        const y = unboundedY;
+        const x = ms * memo[0] - (ms - 1) * memo[2];
+        const y = ms * memo[1] - (ms - 1) * memo[3];
 
         updateStyle({ x, y, scale: s });
 
@@ -262,14 +303,9 @@ function Canvas({ bounds }: MapProps) {
       drag: {
         filterTaps: true,
         from: () => [style.current.x, style.current.y],
-        // bounds: () => {
-        //   const scale = style.current.scale;
-        //   const bounding = canvas.current?.getBoundingClientRect();
-        //   return calculateMapBounds({ bounding, scale });
-        // },
       },
       pinch: {
-        scaleBounds: { min: 1, max: maximumScale },
+        scaleBounds: { min: minimumScale, max: maximumScale },
         from: () => [style.current.scale, 0],
       },
     }
