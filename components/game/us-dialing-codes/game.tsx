@@ -1,14 +1,9 @@
 "use client";
 
-import { SvgMap } from "../svg-map";
 import { USDialingCodesControls } from "./controls";
 import { useAppStore } from "@/lib/store/provider";
-import { SelectableRegions } from "../selectable-regions";
 import { useHandleSingleGuess } from "../single-pin/guess";
-import { usPaths } from "@/lib/mapping/us/paths/country";
-import { usStatesPaths } from "@/lib/mapping/us/paths/states";
-import { usPhoneCodes } from "@/lib/mapping/us/paths/phone-codes";
-import { usDivider } from "@/lib/mapping/us/paths/divider";
+import { CanvasMap } from "../canvas-map";
 
 const bounds = {
   north: 51,
@@ -32,7 +27,7 @@ export function USDialingCodesGame() {
     <div className="size-full relative">
       <USDialingCodesControls />
 
-      <SvgMap
+      <CanvasMap
         bounds={bounds}
         attribution={
           <>
@@ -46,18 +41,7 @@ export function USDialingCodesGame() {
             </span>
           </>
         }
-      >
-        <SelectableRegions
-          regions={usPhoneCodes}
-          countryPaths={usPaths}
-          firstAdministrativePaths={usStatesPaths}
-          divider={usDivider}
-          hints={hints}
-          highlighted={highlighted}
-          getCodeGroup={(codes) => codes[0].toString()[0]}
-          onClick={handleGuess}
-        />
-      </SvgMap>
+      ></CanvasMap>
     </div>
   );
 }
