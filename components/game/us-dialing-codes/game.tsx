@@ -6,10 +6,10 @@ import { useHandleSingleGuess } from "../single-pin/guess";
 import { CanvasMap } from "../canvas-map";
 
 const bounds = {
-  north: 51,
+  north: 53,
   south: 10,
   east: -67,
-  west: -129,
+  west: -125,
   padding: 2,
 };
 
