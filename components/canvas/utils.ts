@@ -4,6 +4,11 @@ import { Style, ViewBox } from "./types";
 export const twColor = (name: string) =>
   getComputedStyle(document.body).getPropertyValue("--color-" + name);
 
+export const twFont = (type: "sans" | "mono") =>
+  getComputedStyle(document.body).getPropertyValue(
+    type === "sans" ? "--font-figtree" : "--font-geist-mono"
+  );
+
 export function mapToClient({
   bounding,
   style: { x, y, scale },
