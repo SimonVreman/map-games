@@ -1,9 +1,12 @@
 "use client";
 
 import { USDialingCodesControls } from "./controls";
-import { useAppStore } from "@/lib/store/provider";
-import { useHandleSingleGuess } from "../single-pin/guess";
-import { CanvasMap } from "../canvas-map";
+import { CanvasMap } from "../../canvas/canvas-map";
+import dynamic from "next/dynamic";
+
+const USDialingCodesRendering = dynamic(() => import("./rendering"), {
+  ssr: false,
+});
 
 const bounds = {
   north: 53,
@@ -14,15 +17,6 @@ const bounds = {
 };
 
 export function USDialingCodesGame() {
-  const [highlighted, hints] = useAppStore((s) => [
-    s.usDialingCodes.highlighted,
-    s.usDialingCodes.hints,
-  ]);
-
-  const { handleGuess } = useHandleSingleGuess({
-    store: "usDialingCodes",
-  });
-
   return (
     <div className="size-full relative">
       <USDialingCodesControls />
@@ -41,7 +35,9 @@ export function USDialingCodesGame() {
             </span>
           </>
         }
-      ></CanvasMap>
+      >
+        <USDialingCodesRendering />
+      </CanvasMap>
     </div>
   );
 }

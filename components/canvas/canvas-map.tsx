@@ -1,31 +1,13 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
-import { usPaths } from "@/lib/mapping/us/paths/country";
-
-type Style = {
-  x: number;
-  y: number;
-  scale: number;
-};
-
-type Bounds = {
-  north: number;
-  south: number;
-  west: number;
-  east: number;
-  padding?: number;
-};
-
-type ViewBox = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
+import { clientToMap, mapToClient, twColor } from "./utils";
+import { CanvasProvider, useCanvas } from "./canvas-provider";
+import { Bounds, Style, ViewBox } from "./types";
 
 type MapProps = {
   bounds: Bounds;
+  children?: React.ReactNode;
 };
 
 const defaultBounds = {
@@ -35,7 +17,7 @@ const defaultBounds = {
   east: 180,
 };
 
-const maximumScale = 20;
+const maximumScale = 100;
 
 function calculateViewBox({
   north,
@@ -110,44 +92,6 @@ function clampStyle({
   return { scale: clampedScale, x: clampedX, y: clampedY };
 }
 
-function mapToClient({
-  bounding,
-  style: { x, y, scale },
-  viewBox,
-}: {
-  bounding: DOMRect;
-  style: Style;
-  viewBox: ViewBox;
-}): Style {
-  const pxPerUnit =
-    ((bounding.width / bounding.height > viewBox.width / viewBox.height
-      ? bounding.height
-      : bounding.width) *
-      scale) /
-    mercatorConstants.domain;
-
-  return { x: -x * pxPerUnit, y: -y * pxPerUnit, scale };
-}
-
-function clientToMap({
-  bounding,
-  style: { x, y, scale },
-  viewBox,
-}: {
-  bounding: DOMRect;
-  style: Style;
-  viewBox: ViewBox;
-}): Style {
-  const unitsPerPx =
-    mercatorConstants.domain /
-    ((bounding.width / bounding.height > viewBox.width / viewBox.height
-      ? bounding.height
-      : bounding.width) *
-      scale);
-
-  return { x: -x * unitsPerPx, y: -y * unitsPerPx, scale };
-}
-
 const calculateMinimumScale = ({
   aspectRatio,
   viewBox,
@@ -159,9 +103,6 @@ const calculateMinimumScale = ({
   (aspectRatio > viewBox.width / viewBox.height
     ? viewBox.height
     : viewBox.width);
-
-const twColor = (name: string) =>
-  getComputedStyle(document.body).getPropertyValue("--color-" + name);
 
 function renderMap({
   canvas: canvasRef,
@@ -181,12 +122,6 @@ function renderMap({
   // Prepare the canvas
   const bounding = parent.getBoundingClientRect();
   prepareMap({ bounding, ctx, viewBox, style });
-
-  // Some test drawing
-  ctx.strokeStyle = "black";
-  ctx.miterLimit = 2;
-
-  for (const path of usPaths) ctx.stroke(new Path2D(path));
 }
 
 function prepareMap({
@@ -218,7 +153,7 @@ function prepareMap({
   ctx.canvas.height = height * dpr;
 
   // Set a background
-  ctx.fillStyle = twColor("neutral-50");
+  ctx.fillStyle = twColor("neutral-100");
   ctx.fillRect(0, 0, width * dpr, height * dpr);
 
   // Reset then apply transformations
@@ -235,12 +170,13 @@ const useGesture = createUseGesture([dragAction, pinchAction]);
 export function CanvasMap({
   bounds = defaultBounds,
   attribution,
+  ...props
 }: {
   attribution?: React.ReactNode;
 } & Partial<MapProps>) {
   return (
-    <div className="relative size-full overflow-hidden bg-neutral-50 dark:bg-neutral-700">
-      <Canvas bounds={bounds} />
+    <div className="relative size-full overflow-hidden bg-neutral-100 dark:bg-neutral-700">
+      <Canvas bounds={bounds} {...props} />
 
       {attribution && (
         <div className="bg-neutral-50 dark:bg-neutral-700 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
@@ -251,15 +187,48 @@ export function CanvasMap({
   );
 }
 
-function Canvas({ bounds }: MapProps) {
+function Canvas({ bounds, children }: MapProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const style = useRef({ x: 0, y: 0, scale: 1 });
   const viewBox = useMemo(() => calculateViewBox(bounds), [bounds]);
+
+  const baseRenderer = useCallback(
+    () => renderMap({ canvas, viewBox, style }),
+    [viewBox]
+  );
+
+  return (
+    <CanvasProvider
+      canvas={canvas}
+      style={style}
+      viewBox={viewBox}
+      baseRenderer={baseRenderer}
+    >
+      <canvas ref={canvas} className="touch-none select-none">
+        This is an interactive map that uses a canvas. Please use a browser that
+        supports canvas.
+      </canvas>
+      <CanvasGestures />
+      {children}
+    </CanvasProvider>
+  );
+}
+
+function CanvasGestures() {
+  const init = useRef(false);
+
+  const {
+    refs: { canvas, style },
+    update,
+    viewBox,
+  } = useCanvas();
 
   const updateStyle = useCallback(
     (newStyle: Partial<Style>) => {
       const client = canvas.current?.parentElement?.getBoundingClientRect();
       if (!client) return;
+
+      const oldStyle = JSON.stringify(style.current);
 
       style.current = clampStyle({
         viewBox,
@@ -271,10 +240,16 @@ function Canvas({ bounds }: MapProps) {
         }),
       });
 
-      renderMap({ canvas, viewBox, style });
+      if (oldStyle !== JSON.stringify(style.current)) update();
     },
-    [viewBox]
+    [viewBox, canvas, style, update]
   );
+
+  useEffect(() => {
+    if (init.current) return;
+    init.current = true;
+    updateStyle(style.current);
+  }, [updateStyle, style]);
 
   useEffect(() => {
     const gesture = (e: Event) => e.preventDefault();
@@ -293,11 +268,7 @@ function Canvas({ bounds }: MapProps) {
       document.removeEventListener("gesturechange", gesture);
       document.removeEventListener("gestureend", gesture);
     };
-  }, [updateStyle]);
-
-  useEffect(() => {
-    updateStyle(style.current);
-  }, [updateStyle]);
+  }, [updateStyle, style]);
 
   useGesture(
     {
@@ -337,7 +308,7 @@ function Canvas({ bounds }: MapProps) {
       target: canvas,
       drag: {
         filterTaps: true,
-        // TODO bounds some time
+        // TODO bounds at some point
         from: () => {
           const { x, y } = mapToClient({
             bounding: canvas.current!.getBoundingClientRect(),
@@ -363,10 +334,5 @@ function Canvas({ bounds }: MapProps) {
     }
   );
 
-  return (
-    <canvas ref={canvas} className="absolute top-0 left-0 touch-none">
-      This is an interactive map that uses a canvas. Please use a browser that
-      supports canvas.
-    </canvas>
-  );
+  return null;
 }
