@@ -87,6 +87,9 @@
   --color-chart-9: oklch(0.9064 0.0936 178.83);
   --color-chart-10: oklch(0.9289 0.1034 147.43);
 
+  --color-white: oklch(1 0 0);
+  --color-black: oklch(0 0 0);
+
   --chart-1: var(--color-chart-1);
   --chart-2: var(--color-chart-2);
   --chart-3: var(--color-chart-3);

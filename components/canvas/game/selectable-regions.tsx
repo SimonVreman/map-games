@@ -2,7 +2,13 @@ import { useEffect, useRef } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
 import { pathsHovered, twColor, twFont } from "../utils";
-import { Renderer } from "../types";
+import { CanvasAnimation, Renderer } from "../types";
+import {
+  interpolate,
+  useMode as applyMode,
+  modeOklch,
+  formatCss,
+} from "culori/fn";
 
 const rendererKey = "selectable-regions";
 
@@ -19,6 +25,7 @@ const _colors = [
   "fill-chart-8",
   "fill-chart-9",
   "fill-chart-10",
+  "fill-neutral-600",
 ];
 
 const colors = [
@@ -33,43 +40,6 @@ const colors = [
   "chart-9",
   "chart-10",
 ];
-// const _colors = [
-//   "fill-orange-200",
-//   "fill-lime-200",
-//   "fill-emerald-200",
-//   "fill-cyan-200",
-//   "fill-blue-200",
-//   "fill-violet-200",
-//   "fill-fuchsia-200",
-//   "fill-rose-200",
-//   "fill-orange-100",
-//   "fill-lime-100",
-//   "fill-emerald-100",
-//   "fill-cyan-100",
-//   "fill-blue-100",
-//   "fill-violet-100",
-//   "fill-fuchsia-100",
-//   "fill-rose-100",
-// ];
-
-// const colors = [
-//   "orange-200",
-//   "lime-200",
-//   "emerald-200",
-//   "cyan-200",
-//   "blue-200",
-//   "violet-200",
-//   "fuchsia-200",
-//   "rose-200",
-//   "orange-100",
-//   "lime-100",
-//   "emerald-100",
-//   "cyan-100",
-//   "blue-100",
-//   "violet-100",
-//   "fuchsia-100",
-//   "rose-100",
-// ];
 
 function getPlaceableLabels({
   regions,
@@ -102,6 +72,37 @@ function getPlaceableLabels({
   );
 }
 
+const oklch = applyMode(modeOklch);
+
+const animate =
+  ({
+    animation,
+    paths,
+    ctx,
+  }: {
+    animation: CanvasAnimation;
+    paths: Path2D[];
+    ctx: CanvasRenderingContext2D;
+  }) =>
+  (timestamp: number) => {
+    const { start, end } = animation.timestamp;
+    const t = Math.min((timestamp - start) / (end - start), 1);
+
+    if (animation.fill) {
+      const { from, to } = animation.fill;
+
+      const current = interpolate([from, to], "oklch")(t);
+      animation.fill.current = current;
+      ctx.fillStyle = formatCss(current);
+
+      for (const path of paths) ctx.fill(path);
+    }
+
+    if (t < 1)
+      animation.raf = requestAnimationFrame(animate({ animation, paths, ctx }));
+    //TODO should remove the animation from the animations ref
+  };
+
 export function SelectableRegions({
   regions,
   firstAdministrative = [],
@@ -132,6 +133,7 @@ export function SelectableRegions({
     refs: { canvas },
   } = useCanvas();
   const hoveredRegion = useRef<number>(-1);
+  const animations = useRef<Record<number, CanvasAnimation>>({});
 
   const groups = regions.map(({ codes }) => getCodeGroup(codes));
   const uniqueGroups = [...new Set(groups)].sort();
@@ -146,7 +148,56 @@ export function SelectableRegions({
       );
 
       if (hoveredRegion.current !== newHovered) {
+        if (hoveredRegion.current !== -1) {
+          const start = (document.timeline.currentTime ??
+            performance.now()) as number;
+
+          const out = {
+            fill: {
+              from: oklch(twColor("neutral-600"))!,
+              current: oklch(twColor("neutral-600"))!,
+              to: oklch(twColor("white"))!,
+            },
+            timestamp: { start, end: start + 200 },
+          };
+
+          animations.current[hoveredRegion.current] = out;
+
+          requestAnimationFrame(
+            animate({
+              ctx,
+              animation: out,
+              paths: regions[hoveredRegion.current].paths,
+            })
+          );
+        }
+
         hoveredRegion.current = newHovered;
+
+        if (hoveredRegion.current !== -1) {
+          const start = (document.timeline.currentTime ??
+            performance.now()) as number;
+
+          const out = {
+            fill: {
+              from: oklch(twColor("white"))!,
+              current: oklch(twColor("white"))!,
+              to: oklch(twColor("neutral-600"))!,
+            },
+            timestamp: { start, end: start + 200 },
+          };
+
+          animations.current[hoveredRegion.current] = out;
+
+          requestAnimationFrame(
+            animate({
+              ctx,
+              animation: out,
+              paths: regions[hoveredRegion.current].paths,
+            })
+          );
+        }
+
         update();
       }
     };
@@ -186,7 +237,7 @@ export function SelectableRegions({
         const isNegative =
           highlighted.incorrectKey != null &&
           codes.join(",") === highlighted.incorrectKey;
-        const isHovered = i === hoveredRegion.current;
+        const isHovered = false; // i === hoveredRegion.current;
 
         let fill;
         if (hints) {

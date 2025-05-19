@@ -1,3 +1,5 @@
+import { Oklch } from "culori";
+
 export type Style = {
   x: number;
   y: number;
@@ -25,3 +27,9 @@ export type Renderer = ({
   ctx: CanvasRenderingContext2D;
   scale: number;
 }) => void;
+
+export type CanvasAnimation = {
+  timestamp: { start: number; end: number };
+  fill?: { from: Oklch; current: Oklch; to: Oklch };
+  raf?: number;
+};
