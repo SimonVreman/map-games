@@ -12,7 +12,7 @@ const bounds = {
   north: 53,
   south: 10,
   east: -67,
-  west: -125,
+  west: -127,
   padding: 2,
 };
 

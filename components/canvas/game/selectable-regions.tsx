@@ -9,42 +9,98 @@ const rendererKey = "selectable-regions";
 // trigger tailwind to generate the colors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _colors = [
-  "fill-orange-200",
-  "fill-lime-200",
-  "fill-emerald-200",
-  "fill-cyan-200",
-  "fill-blue-200",
-  "fill-violet-200",
-  "fill-fuchsia-200",
-  "fill-rose-200",
-  "fill-orange-100",
-  "fill-lime-100",
-  "fill-emerald-100",
-  "fill-cyan-100",
-  "fill-blue-100",
-  "fill-violet-100",
-  "fill-fuchsia-100",
-  "fill-rose-100",
+  "fill-chart-1",
+  "fill-chart-2",
+  "fill-chart-3",
+  "fill-chart-4",
+  "fill-chart-5",
+  "fill-chart-6",
+  "fill-chart-7",
+  "fill-chart-8",
+  "fill-chart-9",
+  "fill-chart-10",
 ];
 
 const colors = [
-  "orange-200",
-  "lime-200",
-  "emerald-200",
-  "cyan-200",
-  "blue-200",
-  "violet-200",
-  "fuchsia-200",
-  "rose-200",
-  "orange-100",
-  "lime-100",
-  "emerald-100",
-  "cyan-100",
-  "blue-100",
-  "violet-100",
-  "fuchsia-100",
-  "rose-100",
+  "chart-1",
+  "chart-2",
+  "chart-3",
+  "chart-4",
+  "chart-5",
+  "chart-6",
+  "chart-7",
+  "chart-8",
+  "chart-9",
+  "chart-10",
 ];
+// const _colors = [
+//   "fill-orange-200",
+//   "fill-lime-200",
+//   "fill-emerald-200",
+//   "fill-cyan-200",
+//   "fill-blue-200",
+//   "fill-violet-200",
+//   "fill-fuchsia-200",
+//   "fill-rose-200",
+//   "fill-orange-100",
+//   "fill-lime-100",
+//   "fill-emerald-100",
+//   "fill-cyan-100",
+//   "fill-blue-100",
+//   "fill-violet-100",
+//   "fill-fuchsia-100",
+//   "fill-rose-100",
+// ];
+
+// const colors = [
+//   "orange-200",
+//   "lime-200",
+//   "emerald-200",
+//   "cyan-200",
+//   "blue-200",
+//   "violet-200",
+//   "fuchsia-200",
+//   "rose-200",
+//   "orange-100",
+//   "lime-100",
+//   "emerald-100",
+//   "cyan-100",
+//   "blue-100",
+//   "violet-100",
+//   "fuchsia-100",
+//   "rose-100",
+// ];
+
+function getPlaceableLabels({
+  regions,
+  lineHeight,
+  ctx,
+}: {
+  regions: { codes: number[]; center: number[]; area: number }[];
+  lineHeight: number;
+  ctx: CanvasRenderingContext2D;
+}) {
+  const labels = regions.map(({ codes, center, area }) => {
+    const label = codes.join("/");
+    const width = ctx.measureText(label).width;
+    const height = lineHeight;
+    return { label, x: center[0], y: center[1], width, height, area };
+  });
+
+  // Filter out labels that overlap, give priority to the ones with the largest area
+  return labels.filter(
+    (a) =>
+      !labels.some((b) => {
+        if (a === b || a.area > b.area) return false;
+        return (
+          a.x - a.width / 2 < b.x + b.width / 2 &&
+          a.x + a.width / 2 > b.x - b.width / 2 &&
+          a.y - a.height / 2 < b.y + b.height / 2 &&
+          a.y + a.height / 2 > b.y - b.height / 2
+        );
+      })
+  );
+}
 
 export function SelectableRegions({
   regions,
@@ -164,12 +220,14 @@ export function SelectableRegions({
 
       ctx.setLineDash([]);
 
+      const fontSize = 20 * scale;
+      const lineHeight = fontSize * 1.2;
       ctx.fillStyle = twColor("neutral-950");
-      ctx.font = `${scale * 20}px ${twFont("sans")}`;
+      ctx.font = `${fontSize}px ${twFont("sans")}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const labelsVisible = hints
+      const visible = hints
         ? regions
         : highlighted.correctCode != null || highlighted.incorrectKey != null
         ? regions.filter(
@@ -179,8 +237,13 @@ export function SelectableRegions({
           )
         : [];
 
-      for (const { codes, center } of labelsVisible)
-        ctx.fillText(codes.join("/"), center[0], center[1]);
+      const placeable = getPlaceableLabels({
+        regions: visible,
+        lineHeight,
+        ctx,
+      });
+
+      for (const { label, x, y } of placeable) ctx.fillText(label, x, y);
     };
 
     addRenderer(rendererKey, renderer);

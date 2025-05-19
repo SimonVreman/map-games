@@ -40,13 +40,18 @@ export function CanvasProvider({
 }) {
   const [renderers, setRenderers] = useState(new Map<string, Renderer>());
 
-  const ctx = canvas.current?.getContext("2d", { alpha: false }) ?? null;
-
   const render = useCallback(() => {
+    const ctx = canvas.current?.getContext("2d", { alpha: false }) ?? null;
     if (!ctx) return;
+
+    const bounding = canvas.current?.parentElement?.getBoundingClientRect();
+    const aspect = bounding ? bounding.width / bounding.height : 1;
+
     baseRenderer();
-    renderers.forEach((r) => r({ ctx, scale: 1 / style.current.scale }));
-  }, [baseRenderer, ctx, renderers, style]);
+    renderers.forEach((r) =>
+      r({ ctx, scale: 1 / (aspect * style.current.scale) })
+    );
+  }, [baseRenderer, canvas, renderers, style]);
 
   useEffect(() => render(), [render]);
 
@@ -74,8 +79,8 @@ export function CanvasProvider({
     <CanvasContext.Provider
       value={{
         refs: { canvas, style },
+        ctx: canvas.current?.getContext("2d", { alpha: false }) ?? null,
         viewBox,
-        ctx,
         update: render,
         addRenderer,
         removeRenderer,
