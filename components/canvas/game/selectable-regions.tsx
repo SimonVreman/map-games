@@ -1,12 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
 import { twColor, twFont } from "../utils";
 import { Renderer } from "../types";
-import { fadeFill } from "../animation";
-import { useAnimations } from "@/lib/hooks/use-animations";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
-import { usePathsHovered } from "@/lib/hooks/use-paths-hovered";
+import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 
 // trigger tailwind to generate the colors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,7 +87,7 @@ function getRegionColor({
 }
 
 const regionRenderer =
-  ({ paths }: { paths: Path2D[] }): Renderer =>
+  (paths: Path2D[]): Renderer =>
   ({ ctx, scale }) => {
     ctx.strokeStyle = twColor("neutral-200");
     ctx.lineWidth = scale;
@@ -118,11 +116,10 @@ export function SelectableRegions({
   firstAdministrative?: Path2D[];
   country?: Path2D[];
   divider?: Path2D[];
-  getCodeGroup: (codes: number[]) => string;
+  getCodeGroup: (codes: number[]) => number;
   onClick: (codes: number[]) => void;
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
-  const { addRenderer, removeRenderer, update } = useCanvas();
-  const { getActiveAnimations, startAnimation } = useAnimations();
+  const { addRenderer, removeRenderer } = useCanvas();
 
   const regionPaths = useMemo(() => regions.map((r) => r.paths), [regions]);
 
@@ -131,57 +128,28 @@ export function SelectableRegions({
     onClick: (i) => onClick(regions[i].codes),
   });
 
-  usePathsHovered({
+  const currentRegionColor = useCallback(
+    (i: number, hovered: boolean) => {
+      const codes = regions[i].codes;
+      const { correctCode, incorrectKey } = highlighted;
+
+      return getRegionColor({
+        positive: correctCode != null && codes.includes(correctCode),
+        negative: incorrectKey === codes.join(","),
+        group: getCodeGroup(codes),
+        hovered,
+        hints,
+      });
+    },
+    [highlighted, hints, getCodeGroup, regions]
+  );
+
+  useDynamicFill({
+    ...renderEntry.regions,
     paths: regionPaths,
-    onEnter: (i) => {
-      const render = regionRenderer({ paths: regions[i].paths });
-      const entry = renderEntry.regions;
-
-      return startAnimation({
-        animation: fadeFill({ subject: i, from: "white", to: "neutral-600" }),
-        render: (...args) => {
-          render(...args);
-          update(entry.layer, entry.order + 1);
-        },
-      });
-    },
-    onLeave: (i) => {
-      const render = regionRenderer({ paths: regions[i].paths });
-      const entry = renderEntry.regions;
-
-      return startAnimation({
-        animation: fadeFill({ subject: i, from: "neutral-600", to: "white" }),
-        render: (...args) => {
-          render(...args);
-          update(entry.layer, entry.order + 1);
-        },
-      });
-    },
+    renderer: regionRenderer,
+    getColor: currentRegionColor,
   });
-
-  /*
-    Animate region fill color changing
-  */
-
-  /*
-    Regions renderer
-  */
-  useEffect(() => {
-    const entry = renderEntry.regions;
-    const render: Renderer = ({ ctx, scale }) => {
-      const active = getActiveAnimations();
-      ctx.fillStyle = twColor("white");
-
-      for (let i = 0; i < regions.length; i++) {
-        if (active.includes(i)) continue;
-        const paths = regions[i].paths;
-        regionRenderer({ paths })({ ctx, scale });
-      }
-    };
-
-    addRenderer(entry.layer, { render, ...entry });
-    return () => removeRenderer(entry.layer, entry.key);
-  }, [addRenderer, removeRenderer, regions, getActiveAnimations]);
 
   /*
     Country outlines renderer

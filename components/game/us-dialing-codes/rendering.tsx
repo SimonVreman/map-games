@@ -24,7 +24,7 @@ export default function USDialingCodesRendering() {
       divider={usDivider}
       hints={hints}
       highlighted={highlighted}
-      getCodeGroup={(codes) => codes[0].toString()[0]}
+      getCodeGroup={(codes) => +codes[0].toString()[0]}
       onClick={handleGuess}
     />
   );

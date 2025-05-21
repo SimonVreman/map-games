@@ -1,6 +1,6 @@
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import { pathsHovered } from "@/components/canvas/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 export function usePathsHovered({
   paths,
@@ -11,7 +11,7 @@ export function usePathsHovered({
   onEnter: (index: number) => void;
   onLeave: (index: number) => void;
 }) {
-  const hovered = useRef<number>(-1);
+  const [hovered, setHovered] = useState<number | null>(null);
   const {
     ctxs: [ctx],
     refs: { base },
@@ -26,17 +26,19 @@ export function usePathsHovered({
         pathsHovered({ paths: subpaths, ctx, clientX, clientY })
       );
 
-      if (hovered.current === newHovered) return;
+      if (hovered === newHovered) return;
 
-      if (hovered.current !== -1) onLeave(hovered.current);
+      if (hovered !== null) onLeave(hovered);
       if (newHovered !== -1) onEnter(newHovered);
 
-      hovered.current = newHovered;
+      setHovered(newHovered === -1 ? null : newHovered);
     };
 
     const current = base.current;
 
     current?.addEventListener("pointermove", handle);
     return () => current?.removeEventListener("pointermove", handle);
-  }, [ctx, paths, onEnter, base, onLeave]);
+  }, [ctx, paths, onEnter, base, onLeave, hovered]);
+
+  return { hovered };
 }
