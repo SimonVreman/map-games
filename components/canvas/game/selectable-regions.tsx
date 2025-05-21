@@ -1,32 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
-import { pathsHovered, twColor, twFont } from "../utils";
-import { CanvasAnimation, Renderer } from "../types";
-import {
-  interpolate,
-  useMode as applyMode,
-  modeOklch,
-  formatCss,
-} from "culori/fn";
-
-const rendererKey = "selectable-regions";
+import { twColor, twFont } from "../utils";
+import { Renderer } from "../types";
+import { fadeFill } from "../animation";
+import { useAnimations } from "@/lib/hooks/use-animations";
+import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
+import { usePathsHovered } from "@/lib/hooks/use-paths-hovered";
 
 // trigger tailwind to generate the colors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _colors = [
-  "fill-chart-1",
-  "fill-chart-2",
-  "fill-chart-3",
-  "fill-chart-4",
-  "fill-chart-5",
-  "fill-chart-6",
-  "fill-chart-7",
-  "fill-chart-8",
-  "fill-chart-9",
-  "fill-chart-10",
-  "fill-neutral-600",
-];
+const _colors = ["fill-neutral-600"];
 
 const colors = [
   "chart-1",
@@ -41,6 +25,14 @@ const colors = [
   "chart-10",
 ];
 
+const baseKey = "selectable-regions";
+const renderEntry = {
+  regions: { key: baseKey + ":regions", order: 0, layer: 0 },
+  country: { key: baseKey + ":country", order: 1, layer: 0 },
+  labels: { key: baseKey + ":labels", order: 0, layer: 1 },
+} as const;
+
+// TODO might end up missing labels even at max zoom
 function getPlaceableLabels({
   regions,
   lineHeight,
@@ -72,35 +64,39 @@ function getPlaceableLabels({
   );
 }
 
-const oklch = applyMode(modeOklch);
+function getRegionColor({
+  positive,
+  negative,
+  hovered,
+  group,
+  hints,
+}: {
+  positive: boolean;
+  negative: boolean;
+  hovered: boolean;
+  hints: boolean;
+  group: number;
+}) {
+  if (hints) {
+    return colors[group % colors.length];
+  } else if (positive) {
+    return hovered ? "green-400" : "green-200";
+  } else if (negative) {
+    return hovered ? "red-400" : "red-300";
+  }
 
-const animate =
-  ({
-    animation,
-    paths,
-    ctx,
-  }: {
-    animation: CanvasAnimation;
-    paths: Path2D[];
-    ctx: CanvasRenderingContext2D;
-  }) =>
-  (timestamp: number) => {
-    const { start, end } = animation.timestamp;
-    const t = Math.min((timestamp - start) / (end - start), 1);
+  return hovered ? "neutral-600" : "white";
+}
 
-    if (animation.fill) {
-      const { from, to } = animation.fill;
-
-      const current = interpolate([from, to], "oklch")(t);
-      animation.fill.current = current;
-      ctx.fillStyle = formatCss(current);
-
-      for (const path of paths) ctx.fill(path);
+const regionRenderer =
+  ({ paths }: { paths: Path2D[] }): Renderer =>
+  ({ ctx, scale }) => {
+    ctx.strokeStyle = twColor("neutral-200");
+    ctx.lineWidth = scale;
+    for (const path of paths) {
+      ctx.fill(path);
+      ctx.stroke(path);
     }
-
-    if (t < 1)
-      animation.raf = requestAnimationFrame(animate({ animation, paths, ctx }));
-    //TODO should remove the animation from the animations ref
   };
 
 export function SelectableRegions({
@@ -125,152 +121,95 @@ export function SelectableRegions({
   getCodeGroup: (codes: number[]) => string;
   onClick: (codes: number[]) => void;
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
-  const {
-    addRenderer,
-    removeRenderer,
-    ctx,
-    update,
-    refs: { canvas },
-  } = useCanvas();
-  const hoveredRegion = useRef<number>(-1);
-  const animations = useRef<Record<number, CanvasAnimation>>({});
+  const { addRenderer, removeRenderer, update } = useCanvas();
+  const { getActiveAnimations, startAnimation } = useAnimations();
 
-  const groups = regions.map(({ codes }) => getCodeGroup(codes));
-  const uniqueGroups = [...new Set(groups)].sort();
+  const regionPaths = useMemo(() => regions.map((r) => r.paths), [regions]);
 
+  usePathsClicked({
+    paths: regionPaths,
+    onClick: (i) => onClick(regions[i].codes),
+  });
+
+  usePathsHovered({
+    paths: regionPaths,
+    onEnter: (i) => {
+      const render = regionRenderer({ paths: regions[i].paths });
+      const entry = renderEntry.regions;
+
+      return startAnimation({
+        animation: fadeFill({ subject: i, from: "white", to: "neutral-600" }),
+        render: (...args) => {
+          render(...args);
+          update(entry.layer, entry.order + 1);
+        },
+      });
+    },
+    onLeave: (i) => {
+      const render = regionRenderer({ paths: regions[i].paths });
+      const entry = renderEntry.regions;
+
+      return startAnimation({
+        animation: fadeFill({ subject: i, from: "neutral-600", to: "white" }),
+        render: (...args) => {
+          render(...args);
+          update(entry.layer, entry.order + 1);
+        },
+      });
+    },
+  });
+
+  /*
+    Animate region fill color changing
+  */
+
+  /*
+    Regions renderer
+  */
   useEffect(() => {
-    const handleMouseMove = (e: PointerEvent) => {
-      if (!ctx || e.pointerType !== "mouse") return;
-      const { clientX, clientY } = e;
-
-      const newHovered = regions.findIndex(({ paths }) =>
-        pathsHovered({ paths, ctx, clientX, clientY })
-      );
-
-      if (hoveredRegion.current !== newHovered) {
-        if (hoveredRegion.current !== -1) {
-          const start = (document.timeline.currentTime ??
-            performance.now()) as number;
-
-          const out = {
-            fill: {
-              from: oklch(twColor("neutral-600"))!,
-              current: oklch(twColor("neutral-600"))!,
-              to: oklch(twColor("white"))!,
-            },
-            timestamp: { start, end: start + 200 },
-          };
-
-          animations.current[hoveredRegion.current] = out;
-
-          requestAnimationFrame(
-            animate({
-              ctx,
-              animation: out,
-              paths: regions[hoveredRegion.current].paths,
-            })
-          );
-        }
-
-        hoveredRegion.current = newHovered;
-
-        if (hoveredRegion.current !== -1) {
-          const start = (document.timeline.currentTime ??
-            performance.now()) as number;
-
-          const out = {
-            fill: {
-              from: oklch(twColor("white"))!,
-              current: oklch(twColor("white"))!,
-              to: oklch(twColor("neutral-600"))!,
-            },
-            timestamp: { start, end: start + 200 },
-          };
-
-          animations.current[hoveredRegion.current] = out;
-
-          requestAnimationFrame(
-            animate({
-              ctx,
-              animation: out,
-              paths: regions[hoveredRegion.current].paths,
-            })
-          );
-        }
-
-        update();
-      }
-    };
-
-    const handleClick = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      if (!ctx) return;
-
-      const clicked = regions.find(({ paths }) =>
-        pathsHovered({ paths, ctx, clientX, clientY })
-      );
-
-      if (clicked) onClick(clicked.codes);
-    };
-
-    const current = canvas.current;
-
-    window.addEventListener("pointermove", handleMouseMove);
-    current?.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("pointermove", handleMouseMove);
-      current?.removeEventListener("click", handleClick);
-    };
-  }, [ctx, onClick, regions, update, canvas]);
-
-  useEffect(() => {
-    const renderer: Renderer = ({ ctx, scale }) => {
-      ctx.strokeStyle = twColor("neutral-200");
-      ctx.lineWidth = scale;
+    const entry = renderEntry.regions;
+    const render: Renderer = ({ ctx, scale }) => {
+      const active = getActiveAnimations();
+      ctx.fillStyle = twColor("white");
 
       for (let i = 0; i < regions.length; i++) {
-        const { paths, codes } = regions[i];
-
-        const isPositive =
-          highlighted.correctCode != null &&
-          codes.includes(highlighted.correctCode);
-        const isNegative =
-          highlighted.incorrectKey != null &&
-          codes.join(",") === highlighted.incorrectKey;
-        const isHovered = false; // i === hoveredRegion.current;
-
-        let fill;
-        if (hints) {
-          const index = uniqueGroups.indexOf(getCodeGroup(codes));
-          fill = colors[index % colors.length];
-        } else if (isPositive) {
-          fill = isHovered ? "green-400" : "green-200";
-        } else if (isNegative) {
-          fill = isHovered ? "red-400" : "red-300";
-        } else {
-          fill = isHovered ? "neutral-600" : "white";
-        }
-
-        ctx.fillStyle = twColor(fill);
-
-        for (const path of paths) {
-          ctx.fill(path);
-          ctx.stroke(path);
-        }
+        if (active.includes(i)) continue;
+        const paths = regions[i].paths;
+        regionRenderer({ paths })({ ctx, scale });
       }
+    };
 
+    addRenderer(entry.layer, { render, ...entry });
+    return () => removeRenderer(entry.layer, entry.key);
+  }, [addRenderer, removeRenderer, regions, getActiveAnimations]);
+
+  /*
+    Country outlines renderer
+  */
+  useEffect(() => {
+    const entry = renderEntry.country;
+    const render: Renderer = ({ ctx, scale }) => {
+      ctx.strokeStyle = twColor("neutral-200");
       ctx.lineWidth = scale * 2;
-
       for (const path of country) ctx.stroke(path);
       for (const path of firstAdministrative) ctx.stroke(path);
 
       ctx.strokeStyle = twColor("neutral-300");
       ctx.setLineDash([scale * 5, scale * 5]);
-
       for (const path of divider) ctx.stroke(path);
-
       ctx.setLineDash([]);
+    };
 
+    addRenderer(entry.layer, { render, ...entry });
+    return () => removeRenderer(entry.layer, entry.key);
+  }, [country, divider, firstAdministrative, addRenderer, removeRenderer]);
+
+  /*
+    Labels renderer
+  */
+  useEffect(() => {
+    const entry = renderEntry.labels;
+    const render: Renderer = ({ ctx, scale }) => {
       const fontSize = 20 * scale;
       const lineHeight = fontSize * 1.2;
       ctx.fillStyle = twColor("neutral-950");
@@ -278,15 +217,14 @@ export function SelectableRegions({
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const visible = hints
-        ? regions
-        : highlighted.correctCode != null || highlighted.incorrectKey != null
-        ? regions.filter(
-            ({ codes }) =>
-              codes.some((c) => c === highlighted.correctCode) ||
-              codes.join(",") === highlighted.incorrectKey
-          )
-        : [];
+      const visible = regions.filter(
+        ({ codes }) =>
+          hints ||
+          (highlighted.correctCode != null &&
+            codes.some((c) => c === highlighted.correctCode)) ||
+          (highlighted.incorrectKey != null &&
+            codes.join(",") === highlighted.incorrectKey)
+      );
 
       const placeable = getPlaceableLabels({
         regions: visible,
@@ -297,24 +235,9 @@ export function SelectableRegions({
       for (const { label, x, y } of placeable) ctx.fillText(label, x, y);
     };
 
-    addRenderer(rendererKey, renderer);
-
-    return () => {
-      removeRenderer(rendererKey);
-    };
-  }, [
-    country,
-    divider,
-    firstAdministrative,
-    regions,
-    hoveredRegion,
-    addRenderer,
-    removeRenderer,
-    highlighted,
-    hints,
-    getCodeGroup,
-    uniqueGroups,
-  ]);
+    addRenderer(entry.layer, { render, ...entry });
+    return () => removeRenderer(entry.layer, entry.key);
+  }, [regions, addRenderer, removeRenderer, highlighted, hints]);
 
   return null;
 }

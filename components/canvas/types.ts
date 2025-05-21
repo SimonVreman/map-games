@@ -1,4 +1,6 @@
-import { Oklch } from "culori";
+import { Oklch, interpolate } from "culori";
+
+type Interpolator = ReturnType<typeof interpolate<"oklch">>;
 
 export type Style = {
   x: number;
@@ -29,7 +31,10 @@ export type Renderer = ({
 }) => void;
 
 export type CanvasAnimation = {
+  subject: string | number;
   timestamp: { start: number; end: number };
-  fill?: { from: Oklch; current: Oklch; to: Oklch };
+  fill?: { from: Oklch; to: Oklch; interpolator?: Interpolator };
   raf?: number;
 };
+
+export type ActiveCanvasAnimation = CanvasAnimation & { raf: number };

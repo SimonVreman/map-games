@@ -1,9 +1,17 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
-import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { clientToMap, mapToClient, twColor } from "./utils";
 import { CanvasProvider, useCanvas } from "./canvas-provider";
 import { Bounds, Style, ViewBox } from "./types";
+import { cn } from "@/lib/utils";
 
 type MapProps = {
   bounds: Bounds;
@@ -104,37 +112,24 @@ const calculateMinimumScale = ({
     ? viewBox.height
     : viewBox.width);
 
-function renderMap({
-  canvas: canvasRef,
+function transformLayer({
+  base,
+  ctx,
   viewBox,
   style: styleRef,
 }: {
-  canvas: RefObject<HTMLCanvasElement | null>;
+  base: RefObject<HTMLDivElement | null>;
+  ctx: CanvasRenderingContext2D;
   viewBox: ViewBox;
   style: RefObject<Style>;
 }) {
-  const parent = canvasRef.current?.parentElement;
-  const ctx = canvasRef.current?.getContext("2d", { alpha: false });
-  const style = styleRef.current;
+  // console.log("transform called, has base:", !!base.current);
 
-  if (!parent || !ctx) return;
+  if (!base.current) return;
 
   // Prepare the canvas
-  const bounding = parent.getBoundingClientRect();
-  prepareMap({ bounding, ctx, viewBox, style });
-}
-
-function prepareMap({
-  bounding,
-  ctx,
-  viewBox,
-  style: unscaledStyle,
-}: {
-  bounding: DOMRect;
-  ctx: CanvasRenderingContext2D;
-  viewBox: ViewBox;
-  style: Style;
-}) {
+  const unscaledStyle = styleRef.current;
+  const bounding = base.current.getBoundingClientRect();
   const width = Math.ceil(bounding.width);
   const height = Math.ceil(bounding.height);
   const dpr = window.devicePixelRatio;
@@ -152,9 +147,11 @@ function prepareMap({
   ctx.canvas.width = width * dpr;
   ctx.canvas.height = height * dpr;
 
-  // Set a background
-  ctx.fillStyle = twColor("neutral-100");
-  ctx.fillRect(0, 0, width * dpr, height * dpr);
+  if (ctx.getContextAttributes().alpha === false) {
+    // Set a background
+    ctx.fillStyle = twColor("neutral-100");
+    ctx.fillRect(0, 0, width * dpr, height * dpr);
+  }
 
   // Reset then apply transformations
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -188,26 +185,43 @@ export function CanvasMap({
 }
 
 function Canvas({ bounds, children }: MapProps) {
-  const canvas = useRef<HTMLCanvasElement>(null);
+  const base = useRef<HTMLDivElement>(null);
+  const layer0 = useRef<HTMLCanvasElement>(null);
+  const layer1 = useRef<HTMLCanvasElement>(null);
   const style = useRef({ x: 0, y: 0, scale: 1 });
-  const viewBox = useMemo(() => calculateViewBox(bounds), [bounds]);
 
-  const baseRenderer = useCallback(
-    () => renderMap({ canvas, viewBox, style }),
+  const viewBox = useMemo(() => calculateViewBox(bounds), [bounds]);
+  const [initialized, setInitialized] = useState(false);
+  const layers = useMemo(() => [layer0, layer1], []);
+
+  const transform = useCallback(
+    (ctx: CanvasRenderingContext2D) =>
+      transformLayer({ base, ctx, viewBox, style }),
     [viewBox]
   );
 
+  useEffect(() => {
+    setTimeout(() => setInitialized(true), 150);
+  }, [setInitialized]);
+
   return (
     <CanvasProvider
-      canvas={canvas}
+      base={base}
+      layers={layers}
       style={style}
       viewBox={viewBox}
-      baseRenderer={baseRenderer}
+      transform={transform}
     >
-      <canvas ref={canvas} className="touch-none select-none">
-        This is an interactive map that uses a canvas. Please use a browser that
-        supports canvas.
-      </canvas>
+      <div
+        ref={base}
+        className={cn(
+          "relative size-full overflow-hidden touch-none select-none transition-opacity duration-500",
+          !initialized && "opacity-0"
+        )}
+      >
+        <canvas ref={layer0} className="absolute top-0 left-0" />
+        <canvas ref={layer1} className="absolute top-0 left-0" />
+      </div>
       <CanvasGestures />
       {children}
     </CanvasProvider>
@@ -218,14 +232,14 @@ function CanvasGestures() {
   const init = useRef(false);
 
   const {
-    refs: { canvas, style },
-    update,
+    refs: { base, style },
+    updateAll,
     viewBox,
   } = useCanvas();
 
   const updateStyle = useCallback(
     (newStyle: Partial<Style>) => {
-      const client = canvas.current?.parentElement?.getBoundingClientRect();
+      const client = base.current?.parentElement?.getBoundingClientRect();
       if (!client) return;
 
       const oldStyle = JSON.stringify(style.current);
@@ -240,11 +254,12 @@ function CanvasGestures() {
         }),
       });
 
-      if (oldStyle !== JSON.stringify(style.current)) update();
+      if (oldStyle !== JSON.stringify(style.current)) updateAll();
     },
-    [viewBox, canvas, style, update]
+    [viewBox, base, style, updateAll]
   );
 
+  // Clamp style to client window
   useEffect(() => {
     if (init.current) return;
     init.current = true;
@@ -274,8 +289,8 @@ function CanvasGestures() {
     {
       onDrag: ({ pinching, first, last, cancel, offset: [x, y] }) => {
         if (pinching) return cancel();
-        if (first) canvas.current!.style.cursor = "move";
-        if (last) canvas.current!.style.cursor = "auto";
+        if (first) base.current!.style.cursor = "move";
+        if (last) base.current!.style.cursor = "auto";
 
         updateStyle({ x, y });
       },
@@ -287,7 +302,7 @@ function CanvasGestures() {
         memo,
       }) => {
         if (first) {
-          const bounding = canvas.current!.getBoundingClientRect();
+          const bounding = base.current!.getBoundingClientRect();
           const current = mapToClient({
             bounding,
             style: style.current,
@@ -305,13 +320,13 @@ function CanvasGestures() {
       },
     },
     {
-      target: canvas,
+      target: base,
       drag: {
         filterTaps: true,
         // TODO bounds at some point
         from: () => {
           const { x, y } = mapToClient({
-            bounding: canvas.current!.getBoundingClientRect(),
+            bounding: base.current!.getBoundingClientRect(),
             style: style.current,
             viewBox,
           });
@@ -321,7 +336,7 @@ function CanvasGestures() {
       },
       pinch: {
         scaleBounds: () => {
-          const bounding = canvas.current!.getBoundingClientRect();
+          const bounding = base.current!.getBoundingClientRect();
           const aspectRatio = bounding.width / bounding.height;
 
           return {

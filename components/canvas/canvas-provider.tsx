@@ -11,77 +11,121 @@ import { produce, enableMapSet } from "immer";
 
 enableMapSet();
 
+type RendererEntry = { key: string; order: number; render: Renderer };
+type OrderlessRendererEntry = Omit<RendererEntry, "order"> & {
+  order?: number;
+};
+
 type CanvasContext = {
   refs: {
-    canvas: RefObject<HTMLCanvasElement | null>;
+    base: RefObject<HTMLDivElement | null>;
     style: RefObject<Style>;
+    layers: RefObject<HTMLCanvasElement | null>[];
   };
-  ctx: CanvasRenderingContext2D | null;
+  ctxs: (CanvasRenderingContext2D | null)[];
   viewBox: ViewBox;
-  update: () => void;
-  addRenderer: (key: string, r: Renderer) => void;
-  removeRenderer: (key: string) => void;
+  update: (layer: number, from?: number) => void;
+  updateAll: () => void;
+  addRenderer: (layer: number, r: OrderlessRendererEntry) => void;
+  removeRenderer: (layer: number, key: string) => void;
 };
 
 const CanvasContext = createContext<CanvasContext>({} as CanvasContext);
 
 export function CanvasProvider({
-  canvas,
+  base,
+  layers,
   style,
   viewBox,
-  baseRenderer,
+  transform,
   children,
 }: {
-  canvas: RefObject<HTMLCanvasElement | null>;
+  base: RefObject<HTMLDivElement | null>;
+  layers: RefObject<HTMLCanvasElement | null>[];
   style: RefObject<Style>;
   viewBox: ViewBox;
-  baseRenderer: () => void;
+  transform: (ctx: CanvasRenderingContext2D) => void;
   children?: React.ReactNode;
 }) {
-  const [renderers, setRenderers] = useState(new Map<string, Renderer>());
+  const [ctxs, setCtxs] = useState<(CanvasRenderingContext2D | null)[]>([]);
+  const [renderers, setRenderers] = useState(
+    new Map<number, RendererEntry[]>()
+  );
 
-  const render = useCallback(() => {
-    const ctx = canvas.current?.getContext("2d", { alpha: false }) ?? null;
-    if (!ctx) return;
-
-    const bounding = canvas.current?.parentElement?.getBoundingClientRect();
-    const aspect = bounding ? bounding.width / bounding.height : 1;
-
-    baseRenderer();
-    renderers.forEach((r) =>
-      r({ ctx, scale: 1 / (aspect * style.current.scale) })
+  const updateCtxs = useCallback(() => {
+    const newCtxs = layers.map(
+      (layer, i) => layer.current?.getContext("2d", { alpha: i > 0 }) ?? null
     );
-  }, [baseRenderer, canvas, renderers, style]);
+    setCtxs(newCtxs);
+  }, [layers]);
 
-  useEffect(() => render(), [render]);
+  const render = useCallback(
+    (layer: number, from: number = 0) => {
+      const canvas = layers[layer];
+      const ctx = ctxs[layer];
+
+      if (!ctx) return;
+
+      const bounding = canvas.current?.parentElement?.getBoundingClientRect();
+      const aspect = bounding ? bounding.width / bounding.height : 1;
+      const scale = 1 / (aspect * style.current.scale);
+
+      if (from === 0) transform(ctx);
+
+      for (const { order, render } of renderers.get(layer) ?? []) {
+        if (order < from) continue;
+        render({ ctx, scale });
+      }
+    },
+    [transform, renderers, style, layers, ctxs]
+  );
+
+  const renderAll = useCallback(() => {
+    for (let i = 0; i < ctxs.length; i++) render(i);
+  }, [render, ctxs]);
 
   const addRenderer = useCallback(
-    (key: string, r: Renderer) =>
+    (layer: number, r: OrderlessRendererEntry) =>
       setRenderers(
         produce((m) => {
-          m.set(key, r);
+          const list = m.get(layer) ?? [];
+          const item = { order: 0, ...r };
+          const index = list.findIndex((e) => e.key === r.key);
+
+          if (index === -1) list.push(item);
+          else list[index] = item;
+
+          list.sort((a, b) => a.order - b.order);
+          m.set(layer, list);
         })
       ),
     []
   );
 
   const removeRenderer = useCallback(
-    (key: string) =>
+    (layer: number, key: string) =>
       setRenderers(
         produce((m) => {
-          m.delete(key);
+          let list = m.get(layer);
+          list = list?.filter((e) => e.key !== key);
+          if (list?.length === 0) m.delete(layer);
+          else if (list != null) m.set(layer, list);
         })
       ),
     []
   );
 
+  useEffect(() => updateCtxs(), [updateCtxs]);
+  useEffect(() => renderAll(), [renderAll]);
+
   return (
     <CanvasContext.Provider
       value={{
-        refs: { canvas, style },
-        ctx: canvas.current?.getContext("2d", { alpha: false }) ?? null,
+        refs: { base, style, layers },
+        ctxs,
         viewBox,
         update: render,
+        updateAll: renderAll,
         addRenderer,
         removeRenderer,
       }}
