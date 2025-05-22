@@ -4,7 +4,6 @@ import { fadeFill } from "@/components/canvas/animation";
 import { useAnimations } from "./use-animations";
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import { useCallback, useEffect } from "react";
-import { twColor } from "@/components/canvas/utils";
 
 export function useDynamicFill({
   paths,
@@ -63,7 +62,7 @@ export function useDynamicFill({
 
       for (let i = 0; i < paths.length; i++) {
         if (active.includes(i)) continue;
-        ctx.fillStyle = twColor(getColor(i, hovered === i));
+        ctx.fillStyle = getColor(i, hovered === i);
         renderer(paths[i])({ ctx, scale });
       }
     };

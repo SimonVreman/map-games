@@ -69,8 +69,8 @@ export function useLabels<TItem extends BaseItem>({
     const render: Renderer = ({ ctx, scale }) => {
       const fontSize = 20 * scale;
       const lineHeight = fontSize * 1.2;
-      ctx.fillStyle = twColor("neutral-950");
-      ctx.strokeStyle = twColor("neutral-50");
+      ctx.fillStyle = twColor("neutral-950", "neutral-50");
+      ctx.strokeStyle = twColor("neutral-50", "neutral-950");
       ctx.lineWidth = 2 * scale;
       ctx.font = `${fontSize}px ${twFont("sans")}`;
       ctx.textAlign = "center";

@@ -128,6 +128,17 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+
+    --color-chart-1: oklch(0.5 0.0569 104.18);
+    --color-chart-2: oklch(0.5 0.0392 62.37);
+    --color-chart-3: oklch(0.5 0.0544 14);
+    --color-chart-4: oklch(0.5 0.0763 332.62);
+    --color-chart-5: oklch(0.5 0.0778 302.48);
+    --color-chart-6: oklch(0.5 0.0758 257.22);
+    --color-chart-7: oklch(0.5 0.0819 221.01);
+    --color-chart-8: oklch(0.5 0.0902 203.55);
+    --color-chart-9: oklch(0.5 0.0936 178.83);
+    --color-chart-10: oklch(0.5 0.1034 147.43);
   }
 }
 

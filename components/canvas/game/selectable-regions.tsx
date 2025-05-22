@@ -45,20 +45,26 @@ function getRegionColor({
   group: number;
 }) {
   if (hints) {
-    return colors[group % colors.length];
+    return twColor(colors[group % colors.length]);
   } else if (positive) {
-    return hovered ? "green-400" : "green-200";
+    return hovered
+      ? twColor("green-400", "green-800")
+      : twColor("green-200", "green-900");
   } else if (negative) {
-    return hovered ? "red-400" : "red-300";
+    return hovered
+      ? twColor("red-400", "red-800")
+      : twColor("red-300", "red-900");
   }
 
-  return hovered ? "neutral-400" : "white";
+  return hovered
+    ? twColor("neutral-600", "neutral-400")
+    : twColor("white", "neutral-900");
 }
 
 const regionRenderer =
   (paths: Path2D[]): Renderer =>
   ({ ctx, scale }) => {
-    ctx.strokeStyle = twColor("neutral-300");
+    ctx.strokeStyle = twColor("neutral-300", "neutral-800");
     ctx.lineWidth = scale;
     for (const path of paths) {
       ctx.fill(path);
@@ -138,7 +144,7 @@ export function SelectableRegions({
   useEffect(() => {
     const entry = renderEntry.country;
     const render: Renderer = ({ ctx, scale }) => {
-      ctx.strokeStyle = twColor("neutral-300");
+      ctx.strokeStyle = twColor("neutral-300", "neutral-800");
       ctx.lineWidth = scale * 2;
       for (const path of country) ctx.stroke(path);
       for (const path of firstAdministrative) ctx.stroke(path);

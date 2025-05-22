@@ -8,6 +8,10 @@ import { formatCss, interpolate } from "culori";
 import { useCallback, useEffect, useRef } from "react";
 import { documentTime, oklchEqual } from "../utils";
 
+function easeinOutSine(t: number) {
+  return -(Math.cos(Math.PI * t) - 1) / 2;
+}
+
 const animate =
   ({
     animation,
@@ -24,7 +28,7 @@ const animate =
   }) =>
   (timestamp: number) => {
     const { start, end } = animation.timestamp;
-    const t = Math.min((timestamp - start) / (end - start), 1);
+    const t = easeinOutSine(Math.min((timestamp - start) / (end - start), 1));
     const fill = animation.fill;
 
     if (fill) {

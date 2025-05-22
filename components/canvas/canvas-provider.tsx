@@ -122,6 +122,15 @@ export function CanvasProvider({
   useEffect(() => updateCtxs(), [updateCtxs]);
   useEffect(() => renderAll(), [renderAll]);
 
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const listener = () => renderAll();
+
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [renderAll]);
+
   return (
     <CanvasContext.Provider
       value={{

@@ -1,6 +1,5 @@
 import { CanvasAnimation } from "./types";
 import { useMode as applyMode, modeOklch } from "culori/fn";
-import { twColor } from "./utils";
 import { documentTime } from "@/lib/utils";
 
 const oklch = applyMode(modeOklch);
@@ -9,7 +8,7 @@ const fallbackColor = oklch("oklch(0 0 0)")!;
 export const fadeFill = ({
   subject,
   start = documentTime(),
-  duration = 200,
+  duration = 150,
   from,
   to,
 }: {
@@ -22,7 +21,7 @@ export const fadeFill = ({
   subject,
   timestamp: { start, end: start + duration },
   fill: {
-    from: oklch(twColor(from)) ?? fallbackColor,
-    to: oklch(twColor(to)) ?? fallbackColor,
+    from: oklch(from) ?? fallbackColor,
+    to: oklch(to) ?? fallbackColor,
   },
 });
