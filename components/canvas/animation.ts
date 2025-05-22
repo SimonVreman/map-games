@@ -1,13 +1,14 @@
 import { CanvasAnimation } from "./types";
 import { useMode as applyMode, modeOklch } from "culori/fn";
 import { twColor } from "./utils";
+import { documentTime } from "@/lib/utils";
 
 const oklch = applyMode(modeOklch);
 const fallbackColor = oklch("oklch(0 0 0)")!;
 
 export const fadeFill = ({
   subject,
-  start = (document.timeline.currentTime ?? performance.now()) as number,
+  start = documentTime(),
   duration = 200,
   from,
   to,

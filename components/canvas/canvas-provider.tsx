@@ -8,6 +8,7 @@ import {
 } from "react";
 import { Renderer, Style, ViewBox } from "./types";
 import { produce, enableMapSet } from "immer";
+import { isMobileWidth } from "@/lib/utils";
 
 enableMapSet();
 
@@ -28,6 +29,7 @@ type CanvasContext = {
   updateAll: () => void;
   addRenderer: (layer: number, r: OrderlessRendererEntry) => void;
   removeRenderer: (layer: number, key: string) => void;
+  getRenderScale: () => number;
 };
 
 const CanvasContext = createContext<CanvasContext>({} as CanvasContext);
@@ -59,25 +61,27 @@ export function CanvasProvider({
     setCtxs(newCtxs);
   }, [layers]);
 
+  const getRenderScale = useCallback(() => {
+    const multiplier = isMobileWidth() ? 1.5 : 1;
+    const aspect = viewBox.width / viewBox.height;
+    return multiplier / (aspect * style.current.scale);
+  }, [viewBox, style]);
+
   const render = useCallback(
     (layer: number, from: number = 0) => {
-      const canvas = layers[layer];
       const ctx = ctxs[layer];
-
       if (!ctx) return;
 
-      const bounding = canvas.current?.parentElement?.getBoundingClientRect();
-      const aspect = bounding ? bounding.width / bounding.height : 1;
-      const scale = 1 / (aspect * style.current.scale);
-
       if (from === 0) transform(ctx);
+
+      const scale = getRenderScale();
 
       for (const { order, render } of renderers.get(layer) ?? []) {
         if (order < from) continue;
         render({ ctx, scale });
       }
     },
-    [transform, renderers, style, layers, ctxs]
+    [transform, renderers, ctxs, getRenderScale]
   );
 
   const renderAll = useCallback(() => {
@@ -128,6 +132,7 @@ export function CanvasProvider({
         updateAll: renderAll,
         addRenderer,
         removeRenderer,
+        getRenderScale,
       }}
     >
       {children}
