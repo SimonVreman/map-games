@@ -4,7 +4,7 @@ import { USDialingCodesControls } from "./controls";
 import { CanvasMap } from "../../canvas/canvas-map";
 import dynamic from "next/dynamic";
 
-const USDialingCodesRendering = dynamic(() => import("./rendering"), {
+const Rendering = dynamic(() => import("./rendering"), {
   ssr: false,
 });
 
@@ -36,7 +36,7 @@ export function USDialingCodesGame() {
           </>
         }
       >
-        <USDialingCodesRendering />
+        <Rendering />
       </CanvasMap>
     </div>
   );

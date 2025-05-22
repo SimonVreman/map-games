@@ -149,7 +149,7 @@ function transformLayer({
 
   if (ctx.getContextAttributes().alpha === false) {
     // Set a background
-    ctx.fillStyle = twColor("neutral-100", "neutral-700");
+    ctx.fillStyle = twColor("neutral-100", "neutral-800");
     ctx.fillRect(0, 0, width * dpr, height * dpr);
   }
 

@@ -1,14 +1,12 @@
 "use client";
 
-import { spainPhoneCodes } from "@/lib/mapping/spain/paths/phone-codes";
-import { SvgMap } from "../svg-map";
+import { CanvasMap } from "@/components/canvas/canvas-map";
 import { SpainDialingCodesControls } from "./controls";
-import { useAppStore } from "@/lib/store/provider";
-import { SelectableRegions } from "../selectable-regions";
-import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
-import { spainPaths } from "@/lib/mapping/spain/paths/country";
-import { useHandleSingleGuess } from "../single-pin/guess";
-import { spainDivider } from "@/lib/mapping/spain/paths/divider";
+import dynamic from "next/dynamic";
+
+const Rendering = dynamic(() => import("./rendering"), {
+  ssr: false,
+});
 
 const bounds = {
   north: 44,
@@ -19,18 +17,11 @@ const bounds = {
 };
 
 export function SpainDialingCodesGame() {
-  const [highlighted, hints] = useAppStore((s) => [
-    s.spainDialingCodes.highlighted,
-    s.spainDialingCodes.hints,
-  ]);
-
-  const { handleGuess } = useHandleSingleGuess({ store: "spainDialingCodes" });
-
   return (
     <div className="size-full relative">
       <SpainDialingCodesControls />
 
-      <SvgMap
+      <CanvasMap
         bounds={bounds}
         attribution={
           <a
@@ -41,17 +32,8 @@ export function SpainDialingCodesGame() {
           </a>
         }
       >
-        <SelectableRegions
-          regions={spainPhoneCodes}
-          countryPaths={spainPaths}
-          firstAdministrativePaths={spainProvincesPaths}
-          divider={spainDivider}
-          hints={hints}
-          highlighted={highlighted}
-          getCodeGroup={(code) => code.toString().slice(0, 2)}
-          onClick={handleGuess}
-        />
-      </SvgMap>
+        <Rendering />
+      </CanvasMap>
     </div>
   );
 }

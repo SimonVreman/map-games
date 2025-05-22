@@ -144,7 +144,7 @@ export function SelectableRegions({
   useEffect(() => {
     const entry = renderEntry.country;
     const render: Renderer = ({ ctx, scale }) => {
-      ctx.strokeStyle = twColor("neutral-300", "neutral-800");
+      ctx.strokeStyle = twColor("neutral-300", "neutral-600");
       ctx.lineWidth = scale * 2;
       for (const path of country) ctx.stroke(path);
       for (const path of firstAdministrative) ctx.stroke(path);
