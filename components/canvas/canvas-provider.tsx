@@ -23,7 +23,7 @@ type CanvasContext = {
   };
   ctxs: (CanvasRenderingContext2D | null)[];
   viewBox: ViewBox;
-  update: (layer: number, additional?: OrderlessRendererEntry) => void;
+  update: (layer: number) => void;
   updateAll: () => void;
   addRenderer: (r: OrderlessRendererEntry) => void;
   removeRenderer: (r: { layer: number; key: string }) => void;
@@ -66,7 +66,7 @@ export function CanvasProvider({
   }, [viewBox, style]);
 
   const render = useCallback(
-    (layer: number, additional?: OrderlessRendererEntry) => {
+    (layer: number) => {
       const ctx = ctxs[layer];
       if (!ctx) return;
 
@@ -74,16 +74,8 @@ export function CanvasProvider({
 
       const scale = getRenderScale();
       const args = { ctx, scale };
-      const additionalRan = additional == null;
 
-      for (const { order, render } of renderers.get(layer) ?? []) {
-        if (!additionalRan && (additional?.order ?? 0) < order)
-          additional?.render(args);
-
-        render(args);
-      }
-
-      if (!additionalRan) additional?.render(args);
+      for (const { render } of renderers.get(layer) ?? []) render(args);
     },
     [transform, renderers, ctxs, getRenderScale]
   );

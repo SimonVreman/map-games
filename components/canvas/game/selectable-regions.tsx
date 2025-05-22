@@ -64,8 +64,9 @@ function getRegionColor({
 const regionRenderer =
   (paths: Path2D[]): Renderer =>
   ({ ctx, scale }) => {
-    ctx.strokeStyle = twColor("neutral-300", "neutral-800");
+    ctx.strokeStyle = twColor("neutral-300", "neutral-700");
     ctx.lineWidth = scale;
+    ctx.lineJoin = "round";
     for (const path of paths) {
       ctx.fill(path);
       ctx.stroke(path);
@@ -145,6 +146,7 @@ export function SelectableRegions({
     const render: Renderer = ({ ctx, scale }) => {
       ctx.strokeStyle = twColor("neutral-300", "neutral-600");
       ctx.lineWidth = scale * 2;
+      ctx.lineJoin = "round";
       for (const path of country) ctx.stroke(path);
       for (const path of firstAdministrative) ctx.stroke(path);
 

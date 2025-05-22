@@ -123,8 +123,6 @@ function transformLayer({
   viewBox: ViewBox;
   style: RefObject<Style>;
 }) {
-  // console.log("transform called, has base:", !!base.current);
-
   if (!base.current) return;
 
   // Prepare the canvas
@@ -300,8 +298,10 @@ function CanvasGestures() {
         movement: [ms],
         offset: [s],
         memo,
+        ...event
       }) => {
         if (first) {
+          console.log(event);
           const bounding = base.current!.getBoundingClientRect();
           const current = mapToClient({
             bounding,
@@ -323,7 +323,7 @@ function CanvasGestures() {
       target: base,
       drag: {
         filterTaps: true,
-        // TODO bounds at some point
+        // TODO bounds at some point. Look into using the gesture 'transform' option for this
         from: () => {
           const { x, y } = mapToClient({
             bounding: base.current!.getBoundingClientRect(),
@@ -335,6 +335,7 @@ function CanvasGestures() {
         },
       },
       pinch: {
+        modifierKey: null,
         scaleBounds: () => {
           const bounding = base.current!.getBoundingClientRect();
           const aspectRatio = bounding.width / bounding.height;
