@@ -1,5 +1,5 @@
 import { useCanvas } from "@/components/canvas/canvas-provider";
-import { Renderer } from "@/components/canvas/types";
+import { Renderer, RendererKey } from "@/components/canvas/types";
 import { twColor, twFont } from "@/components/canvas/utils";
 import { useEffect } from "react";
 
@@ -49,16 +49,12 @@ function getPlaceableLabels<TItem extends BaseItem>({
 }
 
 export function useLabels<TItem extends BaseItem>({
-  layer: renderLayer,
-  key: renderKey,
-  order: renderOrder,
+  key,
   items,
   isVisible,
   getLabel,
 }: {
-  layer: number;
-  key: string;
-  order: number;
+  key: RendererKey;
   items: TItem[];
   isVisible: (item: TItem) => boolean;
   getLabel: (item: TItem) => string;
@@ -91,16 +87,7 @@ export function useLabels<TItem extends BaseItem>({
       }
     };
 
-    addRenderer(renderLayer, { render, key: renderKey, order: renderOrder });
-    return () => removeRenderer(renderLayer, renderKey);
-  }, [
-    addRenderer,
-    removeRenderer,
-    renderLayer,
-    renderKey,
-    renderOrder,
-    isVisible,
-    getLabel,
-    items,
-  ]);
+    addRenderer({ render, ...key });
+    return () => removeRenderer(key);
+  }, [addRenderer, removeRenderer, key, isVisible, getLabel, items]);
 }

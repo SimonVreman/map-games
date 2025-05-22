@@ -1,4 +1,4 @@
-import { Renderer } from "@/components/canvas/types";
+import { Renderer, RendererKey } from "@/components/canvas/types";
 import { usePathsHovered } from "./use-paths-hovered";
 import { fadeFill } from "@/components/canvas/animation";
 import { useAnimations } from "./use-animations";
@@ -6,22 +6,18 @@ import { useCanvas } from "@/components/canvas/canvas-provider";
 import { useCallback, useEffect } from "react";
 
 export function useDynamicFill({
+  key,
   paths,
-  layer: renderLayer,
-  order: renderOrder,
-  key: renderKey,
   renderer,
   getColor,
 }: {
+  key: RendererKey;
   paths: Path2D[][];
-  layer: number;
-  order: number;
-  key: string;
   renderer: (paths: Path2D[]) => Renderer;
   getColor: (i: number, hovered: boolean) => string;
 }) {
-  const { update, addRenderer, removeRenderer } = useCanvas();
-  const { getActiveAnimations, startAnimation } = useAnimations();
+  const { addRenderer, removeRenderer } = useCanvas();
+  const { getActiveAnimations, startAnimation } = useAnimations(key);
 
   const animateHover = useCallback(
     (i: number, toHovered: boolean) => {
@@ -31,23 +27,9 @@ export function useDynamicFill({
       if (from === to) return;
 
       const render = renderer(paths[i]);
-      return startAnimation({
-        animation: fadeFill({ subject: i, from, to }),
-        render: (...args) => {
-          render(...args);
-          update(renderLayer, renderOrder + 1);
-        },
-      });
+      return startAnimation(fadeFill({ subject: i, from, to, render }));
     },
-    [
-      getColor,
-      paths,
-      renderLayer,
-      renderOrder,
-      renderer,
-      startAnimation,
-      update,
-    ]
+    [getColor, paths, renderer, startAnimation]
   );
 
   const { hovered } = usePathsHovered({
@@ -61,22 +43,22 @@ export function useDynamicFill({
       const active = getActiveAnimations();
 
       for (let i = 0; i < paths.length; i++) {
-        if (active.includes(i)) continue;
+        if (active.includes(i)) {
+          continue;
+        }
         ctx.fillStyle = getColor(i, hovered === i);
         renderer(paths[i])({ ctx, scale });
       }
     };
 
-    addRenderer(renderLayer, { render, key: renderKey, order: renderOrder });
-    return () => removeRenderer(renderLayer, renderKey);
+    addRenderer({ render, ...key });
+    return () => removeRenderer(key);
   }, [
     addRenderer,
     removeRenderer,
     getActiveAnimations,
     hovered,
-    renderLayer,
-    renderKey,
-    renderOrder,
+    key,
     getColor,
     paths,
     renderer,

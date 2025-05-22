@@ -1,117 +1,58 @@
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import {
-  ActiveCanvasAnimation,
   CanvasAnimation,
   Renderer,
+  RendererKey,
 } from "@/components/canvas/types";
-import { formatCss, interpolate } from "culori";
-import { useCallback, useEffect, useRef } from "react";
-import { documentTime, oklchEqual } from "../utils";
+import { formatCss } from "culori";
+import { RefObject, useCallback, useEffect, useRef } from "react";
+import { documentTime } from "../utils";
+import { mergeAnimations } from "@/components/canvas/animation";
 
 function easeinOutSine(t: number) {
   return -(Math.cos(Math.PI * t) - 1) / 2;
 }
 
-const animate =
+const animate = ({
+  t,
+  animation,
+  ...args
+}: { t: number; animation: CanvasAnimation } & Parameters<Renderer>[0]) => {
+  const fill = animation.fill;
+
+  if (fill) args.ctx.fillStyle = formatCss(fill.interpolator(t));
+
+  animation.render(args);
+};
+
+const tick =
   ({
-    animation,
-    render,
-    remove,
-    getRenderScale,
-    ctx,
+    raf,
+    animations,
+    update,
   }: {
-    animation: CanvasAnimation;
-    render: Renderer;
-    remove: (raf: number) => void;
-    getRenderScale: () => number;
-    ctx: CanvasRenderingContext2D;
+    raf: RefObject<number | null>;
+    animations: RefObject<CanvasAnimation[]>;
+    update: () => void;
   }) =>
-  (timestamp: number) => {
-    const { start, end } = animation.timestamp;
-    const t = easeinOutSine(Math.min((timestamp - start) / (end - start), 1));
-    const fill = animation.fill;
+  (t: number) => {
+    animations.current = animations.current.filter((a) => a.timestamp.end > t);
 
-    if (fill) {
-      if (!fill.interpolator)
-        fill.interpolator = interpolate([fill.from, fill.to], "oklch");
+    update();
 
-      const current = fill.interpolator(t);
-      ctx.fillStyle = formatCss(current);
-    }
-
-    render({ ctx, scale: getRenderScale() });
-
-    if (t < 1)
-      animation.raf = requestAnimationFrame(
-        animate({ animation, render, remove, getRenderScale, ctx })
-      );
-    else if (animation.raf) remove(animation.raf);
+    raf.current =
+      animations.current.length > 0
+        ? requestAnimationFrame(tick({ raf, animations, update }))
+        : null;
   };
 
-function mergeAnimations(
-  current: ActiveCanvasAnimation | null,
-  next: CanvasAnimation
-): CanvasAnimation {
-  if (!current) return next;
-
-  const elapsed = documentTime() - current.timestamp.start;
-  const currentDuration = current.timestamp.end - current.timestamp.start;
-  const nextDuration = next.timestamp.end - next.timestamp.start;
-  const progress = Math.min(elapsed / currentDuration, 1);
-
-  if (next.fill && current.fill) {
-    // If reverse, correct progress
-    if (
-      oklchEqual(next.fill.from, current.fill.to) &&
-      oklchEqual(next.fill.to, current.fill.from)
-    )
-      next.timestamp.end = next.timestamp.start + progress * nextDuration;
-
-    // Interpolate the fill color
-    next.fill.from = current.fill.interpolator?.(progress) ?? current.fill.from;
-  }
-
-  cancelAnimationFrame(current.raf);
-
-  return next;
-}
-
-export function useAnimations() {
-  const animations = useRef<ActiveCanvasAnimation[]>([]);
-  const {
-    ctxs: [ctx],
-    getRenderScale,
-  } = useCanvas();
-
-  // Stop animations when unmounting
-  useEffect(
-    () => () => {
-      animations.current.forEach(({ raf }) => {
-        if (raf) cancelAnimationFrame(raf);
-      });
-      animations.current = [];
-    },
-    []
-  );
-
-  const removeByRaf = (raf: number) => {
-    const currentIndex = animations.current.findIndex((a) => a.raf === raf);
-    if (currentIndex !== -1) {
-      cancelAnimationFrame(raf);
-      animations.current.splice(currentIndex, 1);
-    }
-  };
+export function useAnimations(key: RendererKey) {
+  const animations = useRef<CanvasAnimation[]>([]);
+  const raf = useRef<number | null>(null);
+  const { update, addRenderer, removeRenderer } = useCanvas();
 
   const start = useCallback(
-    ({
-      animation,
-      render,
-    }: {
-      animation: CanvasAnimation;
-      render: Renderer;
-    }) => {
-      if (!ctx) return;
-
+    (animation: CanvasAnimation) => {
       const index = animations.current.findIndex(
         (a) => a.subject === animation.subject
       );
@@ -121,21 +62,47 @@ export function useAnimations() {
         animation
       );
 
-      animation.raf = requestAnimationFrame(
-        animate({ animation, render, remove: removeByRaf, getRenderScale, ctx })
-      );
+      if (index !== -1) animations.current[index] = animation;
+      else animations.current.push(animation);
 
-      const started = animation as ActiveCanvasAnimation;
-      if (index !== -1) animations.current[index] = started;
-      else animations.current.push(started);
+      if (raf.current != null) return;
+      raf.current = requestAnimationFrame(
+        tick({ raf, animations, update: () => update(key.layer) })
+      );
     },
-    [ctx, getRenderScale]
+    [update, key.layer]
   );
 
   const getActive = useCallback(
     () => animations.current.map((a) => a.subject),
     []
   );
+
+  useEffect(() => {
+    const animationKey = { ...key, key: key.key + ":animated" };
+    const render: Renderer = ({ ctx, scale }) => {
+      const timestamp = documentTime();
+
+      for (const animation of animations.current) {
+        const { start, end } = animation.timestamp;
+        const progress = Math.min((timestamp - start) / (end - start), 1);
+        const t = easeinOutSine(progress);
+
+        animate({ t, animation, ctx, scale });
+      }
+    };
+
+    addRenderer({ render, ...animationKey });
+    return () => removeRenderer(animationKey);
+  }, [addRenderer, removeRenderer, key]);
+
+  useEffect(() => {
+    if (raf.current == null) return;
+    cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(
+      tick({ raf, animations, update: () => update(key.layer) })
+    );
+  }, [update, key.layer]);
 
   return {
     animations,

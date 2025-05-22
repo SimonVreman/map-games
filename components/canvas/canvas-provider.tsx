@@ -6,16 +6,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Renderer, Style, ViewBox } from "./types";
+import { Renderer, RendererKey, Style, ViewBox } from "./types";
 import { produce, enableMapSet } from "immer";
 import { isMobileWidth } from "@/lib/utils";
 
 enableMapSet();
 
-type RendererEntry = { key: string; order: number; render: Renderer };
-type OrderlessRendererEntry = Omit<RendererEntry, "order"> & {
-  order?: number;
-};
+type OrderlessRendererEntry = RendererKey & { render: Renderer };
+type RendererEntry = OrderlessRendererEntry & { order: number };
 
 type CanvasContext = {
   refs: {
@@ -25,10 +23,10 @@ type CanvasContext = {
   };
   ctxs: (CanvasRenderingContext2D | null)[];
   viewBox: ViewBox;
-  update: (layer: number, from?: number) => void;
+  update: (layer: number, additional?: OrderlessRendererEntry) => void;
   updateAll: () => void;
-  addRenderer: (layer: number, r: OrderlessRendererEntry) => void;
-  removeRenderer: (layer: number, key: string) => void;
+  addRenderer: (r: OrderlessRendererEntry) => void;
+  removeRenderer: (r: { layer: number; key: string }) => void;
   getRenderScale: () => number;
 };
 
@@ -68,18 +66,24 @@ export function CanvasProvider({
   }, [viewBox, style]);
 
   const render = useCallback(
-    (layer: number, from: number = 0) => {
+    (layer: number, additional?: OrderlessRendererEntry) => {
       const ctx = ctxs[layer];
       if (!ctx) return;
 
-      if (from === 0) transform(ctx);
+      transform(ctx);
 
       const scale = getRenderScale();
+      const args = { ctx, scale };
+      const additionalRan = additional == null;
 
       for (const { order, render } of renderers.get(layer) ?? []) {
-        if (order < from) continue;
-        render({ ctx, scale });
+        if (!additionalRan && (additional?.order ?? 0) < order)
+          additional?.render(args);
+
+        render(args);
       }
+
+      if (!additionalRan) additional?.render(args);
     },
     [transform, renderers, ctxs, getRenderScale]
   );
@@ -89,10 +93,10 @@ export function CanvasProvider({
   }, [render, ctxs]);
 
   const addRenderer = useCallback(
-    (layer: number, r: OrderlessRendererEntry) =>
+    (r: OrderlessRendererEntry) =>
       setRenderers(
         produce((m) => {
-          const list = m.get(layer) ?? [];
+          const list = m.get(r.layer) ?? [];
           const item = { order: 0, ...r };
           const index = list.findIndex((e) => e.key === r.key);
 
@@ -100,14 +104,14 @@ export function CanvasProvider({
           else list[index] = item;
 
           list.sort((a, b) => a.order - b.order);
-          m.set(layer, list);
+          m.set(r.layer, list);
         })
       ),
     []
   );
 
   const removeRenderer = useCallback(
-    (layer: number, key: string) =>
+    ({ layer, key }: { layer: number; key: string }) =>
       setRenderers(
         produce((m) => {
           let list = m.get(layer);

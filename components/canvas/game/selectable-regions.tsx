@@ -25,7 +25,7 @@ const colors = [
 ];
 
 const baseKey = "selectable-regions";
-const renderEntry = {
+const renderKeys = {
   regions: { key: baseKey + ":regions", order: 0, layer: 0 },
   country: { key: baseKey + ":country", order: 1, layer: 0 },
   labels: { key: baseKey + ":labels", order: 0, layer: 1 },
@@ -115,7 +115,7 @@ export function SelectableRegions({
   );
 
   useDynamicFill({
-    ...renderEntry.regions,
+    key: renderKeys.regions,
     paths: regionPaths,
     renderer: regionRenderer,
     getColor: currentRegionColor,
@@ -127,7 +127,7 @@ export function SelectableRegions({
   });
 
   useLabels({
-    ...renderEntry.labels,
+    key: renderKeys.labels,
     items: regions,
     getLabel: ({ codes }) => codes.join("/"),
     isVisible: ({ codes }) =>
@@ -142,7 +142,6 @@ export function SelectableRegions({
     Country outlines renderer
   */
   useEffect(() => {
-    const entry = renderEntry.country;
     const render: Renderer = ({ ctx, scale }) => {
       ctx.strokeStyle = twColor("neutral-300", "neutral-600");
       ctx.lineWidth = scale * 2;
@@ -154,8 +153,8 @@ export function SelectableRegions({
       ctx.setLineDash([]);
     };
 
-    addRenderer(entry.layer, { render, ...entry });
-    return () => removeRenderer(entry.layer, entry.key);
+    addRenderer({ render, ...renderKeys.country });
+    return () => removeRenderer(renderKeys.country);
   }, [country, divider, firstAdministrative, addRenderer, removeRenderer]);
 
   return null;

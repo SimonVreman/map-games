@@ -23,6 +23,12 @@ export type ViewBox = {
   height: number;
 };
 
+export type RendererKey = {
+  layer: number;
+  key: string;
+  order?: number;
+};
+
 export type Renderer = ({
   ctx,
 }: {
@@ -33,8 +39,6 @@ export type Renderer = ({
 export type CanvasAnimation = {
   subject: string | number;
   timestamp: { start: number; end: number };
-  fill?: { from: Oklch; to: Oklch; interpolator?: Interpolator };
-  raf?: number;
+  render: Renderer;
+  fill?: { from: Oklch; to: Oklch; interpolator: Interpolator };
 };
-
-export type ActiveCanvasAnimation = CanvasAnimation & { raf: number };
