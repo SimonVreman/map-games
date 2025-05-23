@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Renderer, RendererKey, Style, ViewBox } from "./types";
+import { Bounds, Renderer, RendererKey, Style } from "./types";
 import { produce, enableMapSet } from "immer";
 import { isMobileWidth } from "@/lib/utils";
 
@@ -22,7 +22,7 @@ type CanvasContext = {
     layers: RefObject<HTMLCanvasElement | null>[];
   };
   ctxs: (CanvasRenderingContext2D | null)[];
-  viewBox: ViewBox;
+  bounds: Bounds;
   update: (layer: number) => void;
   updateAll: () => void;
   addRenderer: (r: OrderlessRendererEntry) => void;
@@ -36,14 +36,14 @@ export function CanvasProvider({
   base,
   layers,
   style,
-  viewBox,
+  bounds,
   transform,
   children,
 }: {
   base: RefObject<HTMLDivElement | null>;
   layers: RefObject<HTMLCanvasElement | null>[];
   style: RefObject<Style>;
-  viewBox: ViewBox;
+  bounds: Bounds;
   transform: (ctx: CanvasRenderingContext2D) => void;
   children?: React.ReactNode;
 }) {
@@ -61,9 +61,11 @@ export function CanvasProvider({
 
   const getRenderScale = useCallback(() => {
     const multiplier = isMobileWidth() ? 1.5 : 1;
-    const aspect = viewBox.width / viewBox.height;
+    // const aspect = viewBox.width / viewBox.height;
+    // TODO
+    const aspect = 1;
     return multiplier / (aspect * style.current.scale);
-  }, [viewBox, style]);
+  }, [style]);
 
   const render = useCallback(
     (layer: number) => {
@@ -124,7 +126,11 @@ export function CanvasProvider({
     const listener = () => renderAll();
 
     media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
+    window.addEventListener("resize", renderAll);
+    return () => {
+      media.removeEventListener("change", listener);
+      window.removeEventListener("resize", renderAll);
+    };
   }, [renderAll]);
 
   return (
@@ -132,9 +138,9 @@ export function CanvasProvider({
       value={{
         refs: { base, style, layers },
         ctxs,
-        viewBox,
         update: render,
         updateAll: renderAll,
+        bounds,
         addRenderer,
         removeRenderer,
         getRenderScale,
