@@ -1,13 +1,6 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
-import {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import { twColor } from "./utils";
 import { CanvasProvider, useCanvas } from "./canvas-provider";
 import { Bounds, LatLngBounds, Style } from "./types";
@@ -67,16 +60,15 @@ function minimumScale({ top, bottom, left, right }: Bounds): number {
 function transformLayer({
   base,
   ctx,
-  style: styleRef,
+  style,
 }: {
   base: RefObject<HTMLDivElement | null>;
   ctx: CanvasRenderingContext2D;
-  style: RefObject<Style>;
+  style: Style;
 }) {
   if (!base.current) return;
 
   // Prepare the canvas
-  const style = styleRef.current;
   const bounding = base.current.getBoundingClientRect();
   const width = Math.ceil(bounding.width);
   const height = Math.ceil(bounding.height);
@@ -112,6 +104,19 @@ function transformLayer({
     offsetX + centerX,
     offsetY + centerY
   );
+
+  if (ctx.getContextAttributes().alpha === false) {
+    // Render grid
+    ctx.strokeStyle = twColor("neutral-200", "neutral-700");
+    ctx.lineWidth = 1 / scale;
+    const domain = mercatorConstants.domain;
+    const count = 100;
+    const offset = domain / count;
+    for (let i = 0; i <= count; i++) {
+      ctx.stroke(new Path2D(`M ${i * offset} 0 L ${i * offset} ${domain}`));
+      ctx.stroke(new Path2D(`M 0 ${i * offset} L ${domain} ${i * offset}`));
+    }
+  }
 
   ctx.canvas.style.width = `${width}px`;
   ctx.canvas.style.height = `${height}px`;
@@ -164,9 +169,9 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
     [latLngBounds]
   );
 
-  const style = useRef(calculateStyle(bounds));
   const [initialized, setInitialized] = useState(false);
   const layers = useMemo(() => [layer0, layer1], []);
+  const defaultStyle = useMemo(() => calculateStyle(bounds), [bounds]);
 
   useEffect(() => {
     setTimeout(() => setInitialized(true), 150);
@@ -176,9 +181,9 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
     <CanvasProvider
       base={base}
       layers={layers}
-      style={style}
       bounds={bounds}
-      transform={(ctx) => transformLayer({ base, ctx, style })}
+      defaultStyle={defaultStyle}
+      transform={(ctx, style) => transformLayer({ base, ctx, style })}
     >
       <div
         ref={base}
@@ -189,10 +194,6 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
       >
         <canvas ref={layer0} className="absolute top-0 left-0" />
         <canvas ref={layer1} className="absolute top-0 left-0" />
-
-        <div className="absolute size-full touch-none flex items-center justify-center">
-          <div className="size-1 bg-red-500 rounded-full" />
-        </div>
       </div>
       <CanvasGestures />
       {children}
@@ -203,21 +204,9 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
 function CanvasGestures() {
   const {
     refs: { base, style },
-    updateAll,
     bounds,
+    updateAll,
   } = useCanvas();
-
-  const updateStyle = useCallback(
-    (newStyle: Partial<Style>) => {
-      const client = base.current?.parentElement?.getBoundingClientRect();
-      if (!client) return;
-
-      const oldStyle = JSON.stringify(style.current);
-      style.current = { ...style.current, ...newStyle };
-      if (oldStyle !== JSON.stringify(style.current)) updateAll();
-    },
-    [base, style, updateAll]
-  );
 
   useEffect(() => {
     const gesture = (e: Event) => e.preventDefault();
@@ -242,7 +231,8 @@ function CanvasGestures() {
         if (first) base.current!.style.cursor = "move";
         if (last) base.current!.style.cursor = "auto";
 
-        updateStyle({ x, y });
+        style.current = { ...style.current, x, y };
+        updateAll();
       },
       onPinch: ({
         origin: [ox, oy],
@@ -265,7 +255,8 @@ function CanvasGestures() {
         const x = memo[0] - ((ms - 1) * memo[2]) / ms;
         const y = memo[1] - ((ms - 1) * memo[3]) / ms;
 
-        updateStyle({ x, y, scale: s });
+        style.current = { x, y, scale: s };
+        updateAll();
 
         return memo;
       },

@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { Bounds, Renderer, RendererKey, Style } from "./types";
@@ -17,8 +18,8 @@ type RendererEntry = OrderlessRendererEntry & { order: number };
 
 type CanvasContext = {
   refs: {
-    base: RefObject<HTMLDivElement | null>;
     style: RefObject<Style>;
+    base: RefObject<HTMLDivElement | null>;
     layers: RefObject<HTMLCanvasElement | null>[];
   };
   ctxs: (CanvasRenderingContext2D | null)[];
@@ -30,60 +31,64 @@ type CanvasContext = {
   getRenderScale: () => number;
 };
 
+const layerCtx = (l: RefObject<HTMLCanvasElement | null>, i: number) =>
+  l.current?.getContext("2d", { alpha: i > 0 }) ?? null;
+
 const CanvasContext = createContext<CanvasContext>({} as CanvasContext);
 
 export function CanvasProvider({
   base,
   layers,
-  style,
   bounds,
+  defaultStyle,
   transform,
   children,
 }: {
   base: RefObject<HTMLDivElement | null>;
   layers: RefObject<HTMLCanvasElement | null>[];
-  style: RefObject<Style>;
   bounds: Bounds;
-  transform: (ctx: CanvasRenderingContext2D) => void;
+  defaultStyle: Style;
+  transform: (ctx: CanvasRenderingContext2D, style: Style) => void;
   children?: React.ReactNode;
 }) {
+  const style = useRef<Style>(defaultStyle);
+  const raf = useRef<number | null>(null);
   const [ctxs, setCtxs] = useState<(CanvasRenderingContext2D | null)[]>([]);
   const [renderers, setRenderers] = useState(
     new Map<number, RendererEntry[]>()
   );
 
   const updateCtxs = useCallback(() => {
-    const newCtxs = layers.map(
-      (layer, i) => layer.current?.getContext("2d", { alpha: i > 0 }) ?? null
-    );
+    const newCtxs = layers.map(layerCtx);
     setCtxs(newCtxs);
   }, [layers]);
 
   const getRenderScale = useCallback(() => {
     const multiplier = isMobileWidth() ? 1.5 : 1;
-    // const aspect = viewBox.width / viewBox.height;
-    // TODO
-    const aspect = 1;
-    return multiplier / (aspect * style.current.scale);
+    return multiplier / style.current.scale;
   }, [style]);
 
   const render = useCallback(
     (layer: number) => {
-      const ctx = ctxs[layer];
+      const ctx = layerCtx(layers[layer], layer);
       if (!ctx) return;
 
-      transform(ctx);
+      transform(ctx, style.current);
 
       const scale = getRenderScale();
       const args = { ctx, scale };
 
       for (const { render } of renderers.get(layer) ?? []) render(args);
     },
-    [transform, renderers, ctxs, getRenderScale]
+    [transform, renderers, layers, getRenderScale]
   );
 
   const renderAll = useCallback(() => {
-    for (let i = 0; i < ctxs.length; i++) render(i);
+    if (raf.current != null) return;
+    raf.current = requestAnimationFrame(() => {
+      for (let i = 0; i < ctxs.length; i++) render(i);
+      raf.current = null;
+    });
   }, [render, ctxs]);
 
   const addRenderer = useCallback(
@@ -136,7 +141,7 @@ export function CanvasProvider({
   return (
     <CanvasContext.Provider
       value={{
-        refs: { base, style, layers },
+        refs: { base, layers, style },
         ctxs,
         update: render,
         updateAll: renderAll,

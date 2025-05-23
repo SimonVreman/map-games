@@ -154,22 +154,6 @@ export function SelectableRegions({
       ctx.setLineDash([scale * 5, scale * 5]);
       for (const path of divider) ctx.stroke(path);
       ctx.setLineDash([]);
-
-      // TODO debugging code
-      for (let i = 0; i <= 100; i++) {
-        ctx.stroke(new Path2D(`M ${i * 10} 0 L ${i * 10} 1000`));
-        ctx.stroke(new Path2D(`M 0 ${i * 10} L 1000 ${i * 10}`));
-      }
-
-      for (let i = 0; i <= 10; i++) {
-        for (let j = 0; j <= 10; j++) {
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.font = `10px sans`;
-          ctx.fillStyle = "black";
-          ctx.fillText(`${i * 100 - 500},${j * 100 - 500}`, i * 100, j * 100);
-        }
-      }
     };
 
     addRenderer({ render, ...renderKeys.country });
