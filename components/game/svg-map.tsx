@@ -2,8 +2,6 @@ import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { cn } from "@/lib/utils";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import { useEffect, useRef } from "react";
-import { a, to } from "@react-spring/web";
-import { MapProvider, useMap } from "@/lib/context/map";
 
 type Bounds = {
   north: number;

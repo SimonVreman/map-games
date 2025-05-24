@@ -2,12 +2,12 @@ import { useCanvas } from "@/components/canvas/canvas-provider";
 import { pathsHovered } from "@/components/canvas/utils";
 import { useEffect, useRef } from "react";
 
-export function usePathsHovered({
-  paths,
+export function usePathsHovered<TItem extends { paths: Path2D[] }>({
+  items,
   onEnter,
   onLeave,
 }: {
-  paths: Path2D[][];
+  items: TItem[];
   onEnter: (index: number) => void;
   onLeave: (index: number) => void;
 }) {
@@ -22,8 +22,8 @@ export function usePathsHovered({
       if (!ctx || e.pointerType !== "mouse") return;
       const { clientX, clientY } = e;
 
-      const newHovered = paths.findIndex((subpaths) =>
-        pathsHovered({ paths: subpaths, ctx, clientX, clientY })
+      const newHovered = items.findIndex(({ paths }) =>
+        pathsHovered({ paths, ctx, clientX, clientY })
       );
 
       if (hovered.current === newHovered) return;
@@ -38,7 +38,7 @@ export function usePathsHovered({
 
     current?.addEventListener("pointermove", handle);
     return () => current?.removeEventListener("pointermove", handle);
-  }, [ctx, paths, onEnter, base, onLeave]);
+  }, [ctx, items, onEnter, base, onLeave]);
 
   return { hovered };
 }

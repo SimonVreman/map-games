@@ -1,12 +1,12 @@
 "use client";
 
-import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
-import { SvgMap } from "../svg-map";
 import { EuropeanBollardsControls } from "./controls";
-import { useAppStore } from "@/lib/store/provider";
-import { svgBollardPatterns } from "./bollard-patterns";
-import { SelectableCountries } from "../selectable-countries";
-import { useHandleGroupGuess } from "../group-pin/guess";
+import { CanvasMap } from "@/components/canvas/canvas-map";
+import dynamic from "next/dynamic";
+
+const Rendering = dynamic(() => import("./rendering"), {
+  ssr: false,
+});
 
 const bounds = {
   north: 71,
@@ -17,22 +17,11 @@ const bounds = {
 };
 
 export function EuropeanBollardsGame() {
-  const [highlighted, hints] = useAppStore((s) => [
-    s.europeanBollards.highlighted,
-    s.europeanBollards.hints,
-  ]);
-
-  const { handleGuess } = useHandleGroupGuess({
-    store: "europeanBollards",
-    targets: europeanBollards,
-  });
-
   return (
     <div className="size-full relative">
       <EuropeanBollardsControls />
 
-      <SvgMap
-        fontSize={2}
+      <CanvasMap
         bounds={bounds}
         attribution={
           <>
@@ -44,13 +33,9 @@ export function EuropeanBollardsGame() {
           </>
         }
       >
-        <defs>{svgBollardPatterns}</defs>
-        <SelectableCountries
-          items={europeanBollards}
-          isHighlighted={(name) => highlighted.includes(name) || hints}
-          onClick={handleGuess}
-        />
-      </SvgMap>
+        {/* <defs>{svgBollardPatterns}</defs> */}
+        <Rendering />
+      </CanvasMap>
     </div>
   );
 }

@@ -2,12 +2,12 @@ import { useCanvas } from "@/components/canvas/canvas-provider";
 import { pathsHovered } from "@/components/canvas/utils";
 import { useEffect } from "react";
 
-export function usePathsClicked({
-  paths,
+export function usePathsClicked<TItem extends { paths: Path2D[] }>({
+  items,
   onClick,
 }: {
-  paths: Path2D[][];
-  onClick: (index: number) => void;
+  items: TItem[];
+  onClick: (item: TItem) => void;
 }) {
   const {
     ctxs: [ctx],
@@ -19,11 +19,11 @@ export function usePathsClicked({
       const { clientX, clientY } = e;
       if (!ctx) return;
 
-      const clicked = paths.findIndex((subpaths) =>
-        pathsHovered({ paths: subpaths, ctx, clientX, clientY })
+      const clicked = items.find(({ paths }) =>
+        pathsHovered({ paths, ctx, clientX, clientY })
       );
 
-      if (clicked !== -1) onClick(clicked);
+      if (clicked) onClick(clicked);
     };
 
     const current = base.current;
@@ -32,5 +32,5 @@ export function usePathsClicked({
     return () => {
       current?.removeEventListener("click", handleClick);
     };
-  }, [ctx, onClick, base, paths]);
+  }, [ctx, onClick, base, items]);
 }

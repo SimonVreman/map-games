@@ -1,7 +1,5 @@
-import { useMap } from "@/lib/context/map";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
-import { a } from "@react-spring/web";
 
 const minTapSize = 1.5;
 

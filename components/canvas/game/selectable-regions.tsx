@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
 import { twColor } from "../utils";
@@ -7,9 +7,12 @@ import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useLabels } from "@/lib/hooks/use-labels";
 
-// trigger tailwind to generate the colors
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _colors = ["fill-neutral-600"];
+type Region = {
+  codes: number[];
+  area: number;
+  center: number[];
+  paths: Path2D[];
+};
 
 const colors = [
   "chart-1",
@@ -62,12 +65,12 @@ function getRegionColor({
 }
 
 const regionRenderer =
-  (paths: Path2D[]): Renderer =>
+  (region: Region): Renderer =>
   ({ ctx, scale }) => {
     ctx.strokeStyle = twColor("neutral-300", "neutral-700");
     ctx.lineWidth = scale;
     ctx.lineJoin = "round";
-    for (const path of paths) {
+    for (const path of region.paths) {
       ctx.fill(path);
       ctx.stroke(path);
     }
@@ -83,12 +86,7 @@ export function SelectableRegions({
   hints,
   getCodeGroup,
 }: {
-  regions: {
-    codes: number[];
-    area: number;
-    center: number[];
-    paths: Path2D[];
-  }[];
+  regions: Region[];
   firstAdministrative?: Path2D[];
   country?: Path2D[];
   divider?: Path2D[];
@@ -97,11 +95,9 @@ export function SelectableRegions({
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
   const { addRenderer, removeRenderer } = useCanvas();
 
-  const regionPaths = useMemo(() => regions.map((r) => r.paths), [regions]);
-
   const currentRegionColor = useCallback(
-    (i: number, hovered: boolean) => {
-      const codes = regions[i].codes;
+    (region: Region, hovered: boolean) => {
+      const codes = region.codes;
       const { correctCode, incorrectKey } = highlighted;
 
       return getRegionColor({
@@ -112,19 +108,19 @@ export function SelectableRegions({
         hints,
       });
     },
-    [highlighted, hints, getCodeGroup, regions]
+    [highlighted, hints, getCodeGroup]
   );
 
   useDynamicFill({
     key: renderKeys.regions,
-    paths: regionPaths,
+    items: regions,
     renderer: regionRenderer,
     getColor: currentRegionColor,
   });
 
   usePathsClicked({
-    paths: regionPaths,
-    onClick: (i) => onClick(regions[i].codes),
+    items: regions,
+    onClick: (r) => onClick(r.codes),
   });
 
   useLabels({
