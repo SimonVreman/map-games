@@ -1,7 +1,5 @@
 import { useAppStore } from "@/lib/store/provider";
-
 import { GroupPinControls } from "../group-pin/controls";
-import { svgBollardPatterns } from "./bollard-patterns";
 
 export function EuropeanBollardsControls() {
   const pattern = useAppStore((s) => s.europeanBollards.subject);
@@ -15,7 +13,7 @@ export function EuropeanBollardsControls() {
           className="w-32 bg-secondary"
           preserveAspectRatio="xMidYMid slice"
         >
-          <defs>{svgBollardPatterns}</defs>
+          {/* <defs>{svgBollardPatterns}</defs> */}
           <rect
             width="400"
             height="500"

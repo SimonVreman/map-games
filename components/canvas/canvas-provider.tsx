@@ -48,7 +48,11 @@ export function CanvasProvider({
   layers: RefObject<HTMLCanvasElement | null>[];
   bounds: Bounds;
   defaultStyle: Style;
-  transform: (ctx: CanvasRenderingContext2D, style: Style) => void;
+  transform: (
+    ctx: CanvasRenderingContext2D,
+    style: Style,
+    background?: boolean
+  ) => void;
   children?: React.ReactNode;
 }) {
   const style = useRef<Style>(defaultStyle);
@@ -73,7 +77,7 @@ export function CanvasProvider({
       const ctx = layerCtx(layers[layer], layer);
       if (!ctx) return;
 
-      transform(ctx, style.current);
+      transform(ctx, style.current, layer === 0);
 
       const scale = getRenderScale();
       const args = { ctx, scale };

@@ -61,10 +61,12 @@ function transformLayer({
   base,
   ctx,
   style,
+  background = false,
 }: {
   base: RefObject<HTMLDivElement | null>;
   ctx: CanvasRenderingContext2D;
   style: Style;
+  background?: boolean;
 }) {
   if (!base.current) return;
 
@@ -83,7 +85,7 @@ function transformLayer({
   ctx.canvas.width = width * dpr;
   ctx.canvas.height = height * dpr;
 
-  if (ctx.getContextAttributes().alpha === false) {
+  if (background) {
     // Set a background
     ctx.fillStyle = twColor("neutral-100", "neutral-800");
     ctx.fillRect(0, 0, width * dpr, height * dpr);
@@ -105,7 +107,7 @@ function transformLayer({
     offsetY + centerY
   );
 
-  if (ctx.getContextAttributes().alpha === false) {
+  if (background) {
     // Render grid
     ctx.strokeStyle = twColor("neutral-200", "neutral-700");
     ctx.lineWidth = 1 / scale;
@@ -183,7 +185,9 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
       layers={layers}
       bounds={bounds}
       defaultStyle={defaultStyle}
-      transform={(ctx, style) => transformLayer({ base, ctx, style })}
+      transform={(ctx, style, background) =>
+        transformLayer({ base, ctx, style, background })
+      }
     >
       <div
         ref={base}
@@ -252,8 +256,17 @@ function CanvasGestures() {
           memo = [style.current.x, style.current.y, tx, ty];
         }
 
-        const x = memo[0] - ((ms - 1) * memo[2]) / ms;
-        const y = memo[1] - ((ms - 1) * memo[3]) / ms;
+        const rawX = memo[0] - ((ms - 1) * memo[2]) / ms;
+        const rawY = memo[1] - ((ms - 1) * memo[3]) / ms;
+
+        const x = Math.min(
+          Math.max(rawX, mercatorConstants.domain / 2 - bounds.right),
+          mercatorConstants.domain / 2 - bounds.left
+        );
+        const y = Math.min(
+          Math.max(rawY, mercatorConstants.domain / 2 - bounds.bottom),
+          mercatorConstants.domain / 2 - bounds.top
+        );
 
         style.current = { x, y, scale: s };
         updateAll();

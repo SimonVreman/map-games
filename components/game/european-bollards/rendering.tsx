@@ -1,7 +1,7 @@
 import { useAppStore } from "@/lib/store/provider";
 import { useHandleGroupGuess } from "../group-pin/guess";
 import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
-import { SelectableCountries } from "@/components/canvas/game/selectable-countries";
+import { SelectablePatterns } from "@/components/canvas/game/selectable-patterns";
 
 export default function EuropeanBollardsRendering() {
   const [highlighted, hints] = useAppStore((s) => [
@@ -11,12 +11,12 @@ export default function EuropeanBollardsRendering() {
 
   const { handleGuess } = useHandleGroupGuess({
     store: "europeanBollards",
-    targets: europeanBollards,
+    targets: europeanBollards.entries,
   });
 
   return (
-    <SelectableCountries
-      countries={europeanBollards}
+    <SelectablePatterns
+      {...europeanBollards}
       isHighlighted={(name) => highlighted.includes(name) || hints}
       onClick={handleGuess}
     />
