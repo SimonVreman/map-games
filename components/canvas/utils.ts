@@ -1,3 +1,5 @@
+import { cachedPath } from "@/lib/mapping/cache";
+
 export const twColor = (name: string, dark?: string) =>
   getComputedStyle(document.body).getPropertyValue(
     "--color-" +
@@ -17,12 +19,12 @@ export function pathsHovered({
   clientX,
   clientY,
 }: {
-  paths: Path2D[];
+  paths: string[];
   ctx: CanvasRenderingContext2D;
   clientX: number;
   clientY: number;
 }): boolean {
   const x = clientX * window.devicePixelRatio;
   const y = clientY * window.devicePixelRatio;
-  return paths.some((p) => ctx.isPointInPath(p, x, y, "evenodd"));
+  return paths.some((p) => ctx.isPointInPath(cachedPath(p), x, y, "evenodd"));
 }

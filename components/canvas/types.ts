@@ -1,3 +1,4 @@
+import { Pattern, PatternEntry } from "@/types/registry";
 import { Oklch, interpolate } from "culori";
 
 type Interpolator = ReturnType<typeof interpolate<"oklch">>;
@@ -48,4 +49,32 @@ export type CanvasAnimation = {
   timestamp: { start: number; end: number };
   render: Renderer;
   fill?: { from: Oklch; to: Oklch; interpolator: Interpolator };
+};
+
+export enum TileState {
+  loading = "loading",
+  done = "done",
+  error = "error",
+}
+
+export type TileInitMessage = {
+  type: "init";
+  patterns: Record<string, Pattern>;
+  colors: string[];
+};
+
+export type TileRenderMessage = {
+  type: "render";
+  key: string;
+  x: number;
+  y: number;
+  entry: PatternEntry;
+  scale: number;
+};
+
+export type TileProcessedMessage = {
+  type: "ready";
+  key: string;
+  state: TileState;
+  bitmap?: ImageBitmap;
 };

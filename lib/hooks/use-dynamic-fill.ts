@@ -5,7 +5,7 @@ import { useAnimations } from "./use-animations";
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import { useCallback, useEffect, useRef } from "react";
 
-export function useDynamicFill<TItem extends { paths: Path2D[] }>({
+export function useDynamicFill<TItem extends { paths: string[] }>({
   key,
   items,
   renderer,

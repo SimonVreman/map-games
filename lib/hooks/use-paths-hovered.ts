@@ -2,7 +2,7 @@ import { useCanvas } from "@/components/canvas/canvas-provider";
 import { pathsHovered } from "@/components/canvas/utils";
 import { useEffect, useRef } from "react";
 
-export function usePathsHovered<TItem extends { paths: Path2D[] }>({
+export function usePathsHovered<TItem extends { paths: string[] }>({
   items,
   onEnter,
   onLeave,

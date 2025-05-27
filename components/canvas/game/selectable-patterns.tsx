@@ -1,13 +1,20 @@
-import { twColor } from "../utils";
-import { Renderer } from "../types";
+import {
+  Renderer,
+  TileInitMessage,
+  TileProcessedMessage,
+  TileRenderMessage,
+  TileState,
+} from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Pattern, PatternEntry } from "@/types/registry";
 import { useWindowBounding } from "@/lib/hooks/use-window-bounding";
+import { cachedPath } from "@/lib/mapping/cache";
+import { useCanvas } from "../canvas-provider";
+import { useTwTheme } from "@/lib/hooks/use-tw-theme";
 
 const tileSize = 500;
-const tileMargin = 10;
 
 const colors = [
   "chart-1",
@@ -27,126 +34,54 @@ const renderKeys = {
   entries: { key: baseKey + ":entries", order: 0, layer: 0 },
 } as const;
 
-const patternCache = new Map<string, HTMLCanvasElement>();
-const entryCache = new Map<string, HTMLCanvasElement | null>();
-const pathCache = new WeakMap<Path2D[], Path2D>();
+const tileCache = new Map<string, ImageBitmap | null>();
+const tileState = new Map<string, TileState>();
 
-const patternKey = (n: string, s: number) => `${n}:${s}`;
 const entryKey = (n: string, s: number, x: number, y: number) =>
   `${n}:${s}:${x}:${y}`;
 
-function mergedPath(paths: Path2D[]): Path2D {
-  let mergedPath = pathCache.get(paths);
-
-  if (!mergedPath) {
-    mergedPath = paths.reduce((acc, path) => {
-      acc.addPath(path);
-      return acc;
-    }, new Path2D());
-    pathCache.set(paths, mergedPath);
-  }
-
-  return mergedPath;
-}
-
-function cachedPattern({
-  subject,
+function cachedEntry({
+  worker,
+  entry,
   scale,
-  drawPattern,
-}: {
-  subject: string;
-  scale: number;
-  drawPattern: (args: {
-    subject: string;
-    ctx: CanvasRenderingContext2D;
-  }) => void;
-}) {
-  const key = patternKey(subject, scale);
-  if (patternCache.has(key)) return patternCache.get(key)!;
-
-  const offscreen = document.createElement("canvas");
-  offscreen.width = 400 * scale + 20;
-  offscreen.height = 500 * scale + 20;
-  const ctx = offscreen.getContext("2d", { alpha: false })!;
-
-  ctx.fillStyle = twColor(colors[subject.charCodeAt(0) % colors.length]);
-  ctx.fillRect(0, 0, offscreen.width, offscreen.height);
-
-  ctx.scale(scale, scale);
-  drawPattern({ subject, ctx });
-
-  patternCache.set(key, offscreen);
-  return offscreen;
-}
-
-function cachedEntry<TMap extends Record<string, Pattern>>({
-  entry: { name, paths, meta, transform: baseTransform, subjects },
-  scale,
-  drawPattern,
   x,
   y,
 }: {
-  entry: PatternEntry<TMap>;
+  worker: Worker;
+  entry: PatternEntry;
   scale: number;
-  drawPattern: (args: {
-    subject: string;
-    ctx: CanvasRenderingContext2D;
-  }) => void;
   x: number;
   y: number;
 }) {
+  const { name, meta } = entry;
   const key = entryKey(name, scale, x, y);
-  if (entryCache.has(key)) return entryCache.get(key)!;
+  if (tileState.get(key) === TileState.loading) return null;
+  if (tileCache.has(key)) return tileCache.get(key) ?? null;
 
-  const offscreen = document.createElement("canvas");
-  offscreen.width = tileSize + tileMargin;
-  offscreen.height = tileSize + tileMargin;
-  const ctx = offscreen.getContext("2d")!;
-
+  // Just set empty tiles to null
   if (
     x + tileSize < meta.west * scale ||
     x > meta.east * scale ||
     y + tileSize < meta.north * scale ||
     y > meta.south * scale
   ) {
-    entryCache.set(key, null);
+    tileCache.set(key, null);
+    tileState.set(key, TileState.done);
     return null;
   }
 
-  ctx.transform(scale, 0, 0, scale, -x, -y);
-  ctx.clip(mergedPath(paths));
+  tileState.set(key, TileState.loading);
 
-  const rasterScale = baseTransform[0] * 2 * scale;
-  const transform: typeof baseTransform = [...baseTransform];
-  transform[0] /= rasterScale;
-  transform[3] /= rasterScale;
-  ctx.transform(...transform);
+  worker.postMessage({
+    type: "render",
+    key,
+    x,
+    y,
+    scale,
+    entry,
+  } satisfies TileRenderMessage);
 
-  const height = 500 * rasterScale;
-  const maxYOffset = (meta.south - meta.north) / transform[3] + height;
-
-  let i = 0;
-  const subjectCache: HTMLCanvasElement[] = [];
-
-  for (let yOffset = 0; yOffset < maxYOffset; yOffset += height) {
-    const width = 400 * rasterScale;
-    const maxXOffset = (meta.east - meta.west) / transform[0] + width;
-    const subject = subjects[i] as string;
-
-    for (let xOffset = 0; xOffset < maxXOffset; xOffset += width) {
-      subjectCache[i] ??= cachedPattern({
-        subject,
-        scale: rasterScale,
-        drawPattern,
-      });
-
-      ctx.drawImage(subjectCache[i], xOffset, yOffset);
-    }
-
-    i = (i + 1) % subjects.length;
-  }
-
-  entryCache.set(key, offscreen);
+  return null;
 }
 
 export function SelectablePatterns<
@@ -163,34 +98,54 @@ export function SelectablePatterns<
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
+  const { twColor } = useTwTheme();
+  const { updateAll } = useCanvas();
   const bounding = useWindowBounding();
+  const worker = useRef<Worker>(null);
 
-  const currentCountryColor = useCallback(
+  useEffect(() => {
+    worker.current = new Worker(new URL("./tile.worker.ts", import.meta.url));
+    return () => worker.current?.terminate();
+  }, []);
+
+  useEffect(() => {
+    tileCache.clear();
+    tileState.clear();
+    worker.current?.postMessage({
+      type: "init",
+      patterns,
+      colors: colors.map((c) => twColor(c)),
+    } satisfies TileInitMessage);
+  }, [patterns, twColor]);
+
+  useEffect(() => {
+    const listener = (event: MessageEvent<TileProcessedMessage>) => {
+      const { key, state, bitmap } = event.data;
+      tileState.set(key, state);
+
+      if (state !== TileState.done) return;
+
+      tileCache.set(key, bitmap ?? null);
+      updateAll();
+    };
+
+    worker.current?.addEventListener("message", listener);
+
+    return () => worker.current?.removeEventListener("message", listener);
+  }, [updateAll]);
+
+  const currentEntryColor = useCallback(
     (entry: TEntry, hovered: boolean) => {
       if (isHighlighted(entry.name)) {
         const base = twColor("white", "neutral-900");
-        return base.slice(0, -1) + " / 0)";
+        return `${base.slice(0, -1)} / ${hovered ? "0.3" : "0"})`;
       }
 
       return hovered
         ? twColor("neutral-600", "neutral-400")
         : twColor("white", "neutral-900");
     },
-    [isHighlighted]
-  );
-
-  const drawPattern = useCallback(
-    ({ subject, ctx }: { subject: string; ctx: CanvasRenderingContext2D }) => {
-      const pattern = patterns[subject];
-
-      for (const { path: p, fill } of pattern) {
-        if (!fill) continue;
-
-        ctx.fillStyle = fill;
-        ctx.fill(p);
-      }
-    },
-    [patterns]
+    [isHighlighted, twColor]
   );
 
   const entryRenderer = useCallback(
@@ -201,7 +156,7 @@ export function SelectablePatterns<
 
         const highlighted = isHighlighted(entry.name);
 
-        if (highlighted) {
+        if (highlighted && worker.current) {
           const rasterScale = 2 ** Math.round(Math.log2(1 / scale));
           ctx.scale(1 / rasterScale, 1 / rasterScale);
 
@@ -223,9 +178,9 @@ export function SelectablePatterns<
           for (let x = minX; x < bottomRight.x; x += tileSize) {
             for (let y = minY; y < bottomRight.y; y += tileSize) {
               const cached = cachedEntry({
-                entry,
+                worker: worker.current,
+                entry: entry as PatternEntry,
                 scale: rasterScale,
-                drawPattern,
                 x,
                 y,
               });
@@ -239,18 +194,19 @@ export function SelectablePatterns<
 
         ctx.strokeStyle = twColor("neutral-300", "neutral-700");
         for (const path of entry.paths) {
-          ctx.fill(path);
-          ctx.stroke(path);
+          const path2d = cachedPath(path);
+          ctx.fill(path2d);
+          ctx.stroke(path2d);
         }
       },
-    [isHighlighted, drawPattern, bounding]
+    [isHighlighted, bounding, twColor]
   );
 
   useDynamicFill({
     key: renderKeys.entries,
     items: entries,
     renderer: entryRenderer,
-    getColor: currentCountryColor,
+    getColor: currentEntryColor,
   });
 
   usePathsClicked({

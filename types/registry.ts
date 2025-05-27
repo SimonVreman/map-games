@@ -2,7 +2,7 @@ export type PatternEntry<
   TPatterns extends Record<string, unknown> = Record<string, unknown>
 > = {
   name: string;
-  paths: Path2D[];
+  paths: string[];
   meta: {
     north: number;
     south: number;
@@ -16,6 +16,6 @@ export type PatternEntry<
 };
 
 export type Pattern = {
-  path: Path2D;
+  path: string;
   fill?: string;
 }[];
