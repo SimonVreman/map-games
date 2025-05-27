@@ -89,11 +89,13 @@ export function SelectablePatterns<
   TEntry extends PatternEntry<TMap>
 >({
   patterns,
+  size,
   entries,
   isHighlighted,
   onClick,
 }: {
   patterns: TMap;
+  size: { width: number; height: number };
   entries: TEntry[];
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
@@ -115,8 +117,10 @@ export function SelectablePatterns<
       type: "init",
       patterns,
       colors: colors.map((c) => twColor(c)),
+      tileSize,
+      patternSize: size,
     } satisfies TileInitMessage);
-  }, [patterns, twColor]);
+  }, [patterns, twColor, size]);
 
   useEffect(() => {
     const listener = (event: MessageEvent<TileProcessedMessage>) => {

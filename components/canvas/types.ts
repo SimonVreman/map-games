@@ -61,6 +61,8 @@ export type TileInitMessage = {
   type: "init";
   patterns: Record<string, Pattern>;
   colors: string[];
+  tileSize: number;
+  patternSize: { width: number; height: number };
 };
 
 export type TileRenderMessage = {

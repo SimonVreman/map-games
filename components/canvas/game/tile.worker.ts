@@ -7,7 +7,6 @@ import {
 } from "../types";
 import { cachedPath } from "@/lib/mapping/cache";
 
-const tileSize = 500;
 const tileMargin = 10;
 
 const pathCache = new WeakMap<string[], Path2D>();
@@ -17,6 +16,9 @@ const patternKey = (n: string, s: number) => `${n}:${s}`;
 let patterns: Record<string, Pattern> = {};
 let colors: string[] = [];
 let isReady = false;
+let tileSize = 0;
+let patternWidth = 0;
+let patternHeight = 0;
 
 function mergedPath(paths: string[]): Path2D {
   let mergedPath = pathCache.get(paths);
@@ -36,7 +38,11 @@ function cachedPattern({ subject, scale }: { subject: string; scale: number }) {
   const key = patternKey(subject, scale);
   if (patternCache.has(key)) return patternCache.get(key)!;
 
-  const offscreen = new OffscreenCanvas(400 * scale + 20, 500 * scale + 20);
+  const offscreen = new OffscreenCanvas(
+    patternWidth * scale + tileMargin,
+    patternHeight * scale + tileMargin
+  );
+
   const ctx = offscreen.getContext("2d", { alpha: false })!;
 
   ctx.fillStyle = colors[subject.charCodeAt(0) % colors.length];
@@ -80,14 +86,14 @@ function renderTile({
   transform[3] /= rasterScale;
   ctx.transform(...transform);
 
-  const height = 500 * rasterScale;
+  const height = patternHeight * rasterScale;
   const maxYOffset = (meta.south - meta.north) / transform[3] + height;
 
   let i = 0;
   const subjectCache: OffscreenCanvas[] = [];
 
   for (let yOffset = 0; yOffset < maxYOffset; yOffset += height) {
-    const width = 400 * rasterScale;
+    const width = patternWidth * rasterScale;
     const maxXOffset = (meta.east - meta.west) / transform[0] + width;
     const subject = subjects[i] as string;
 
@@ -109,6 +115,10 @@ function renderTile({
 function handleInit(e: MessageEvent<TileInitMessage>) {
   patterns = e.data.patterns;
   colors = e.data.colors;
+  tileSize = e.data.tileSize;
+  patternWidth = e.data.patternSize.width;
+  patternHeight = e.data.patternSize.height;
+
   patternCache.clear();
   isReady = true;
 }

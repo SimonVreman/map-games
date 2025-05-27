@@ -47,6 +47,10 @@ import { switzerlandPaths, switzerlandMeta } from "../paths/switzerland";
 import { turkeyPaths, turkeyMeta } from "../paths/turkey";
 import { ukrainePaths, ukraineMeta } from "../paths/ukraine";
 import { unitedKingdomPaths, unitedKingdomMeta } from "../paths/united-kingdom";
+import { createTranslate } from "./pattern";
+
+const size = { width: 400, height: 500 };
+const t = createTranslate(size);
 
 const patterns: Record<string, Pattern> = {
   albaniaItalyMaltaSanMarino: [
@@ -1371,27 +1375,6 @@ const patterns: Record<string, Pattern> = {
   ],
 };
 
-const size = {
-  width: 500,
-  height: 500,
-};
-
-const t = (
-  m: PatternEntry["meta"],
-  v: { scale?: number; ox?: number; oy?: number } = {}
-): [number, number, number, number, number, number] => {
-  const scale = ((m.east - m.west) * (v.scale ?? 1)) / (3 * size.width);
-
-  return [
-    scale,
-    0,
-    0,
-    scale,
-    m.west + (-1 + (v.ox ?? 1)) * size.width * scale,
-    m.north + (-1 + (v.oy ?? 1)) * size.height * scale,
-  ];
-};
-
 const entries: PatternEntry<typeof patterns>[] = [
   {
     name: "Albania",
@@ -1465,7 +1448,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: denmarkPaths,
     meta: denmarkMeta,
     subjects: ["denmark"],
-    transform: t(denmarkMeta),
+    transform: t(denmarkMeta, { oy: 0.5 }),
   },
   {
     name: "Estonia",
@@ -1500,7 +1483,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: greecePaths,
     meta: greeceMeta,
     subjects: ["greece"],
-    transform: t(greeceMeta),
+    transform: t(greeceMeta, { ox: 0.25, oy: 0.2 }),
   },
   {
     name: "Hungary",
@@ -1514,7 +1497,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: icelandPaths,
     meta: icelandMeta,
     subjects: ["iceland"],
-    transform: t(icelandMeta),
+    transform: t(icelandMeta, { oy: 0.3 }),
   },
   {
     name: "Ireland",
@@ -1528,7 +1511,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: italyPaths,
     meta: italyMeta,
     subjects: ["albaniaItalyMaltaSanMarino"],
-    transform: t(italyMeta),
+    transform: t(italyMeta, { ox: 0.65, oy: 0.1 }),
   },
   {
     name: "Kosovo",
@@ -1542,7 +1525,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: latviaPaths,
     meta: latviaMeta,
     subjects: ["latvia", "finlandLatvia"],
-    transform: t(latviaMeta),
+    transform: t(latviaMeta, { ox: 0.2 }),
   },
   {
     name: "Liechtenstein",
@@ -1556,7 +1539,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: lithuaniaPaths,
     meta: lithuaniaMeta,
     subjects: ["lithuania"],
-    transform: t(lithuaniaMeta),
+    transform: t(lithuaniaMeta, { oy: 0.3 }),
   },
   {
     name: "Luxembourg",
@@ -1590,7 +1573,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: netherlandsPaths,
     meta: netherlandsMeta,
     subjects: ["netherlands", "netherlands2"],
-    transform: t(netherlandsMeta, { scale: 0.1 }),
+    transform: t(netherlandsMeta, { scale: 0.05, oy: 0.01 }),
   },
   {
     name: "North Macedonia",
@@ -1604,7 +1587,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: norwayPaths,
     meta: norwayMeta,
     subjects: ["norway"],
-    transform: t(norwayMeta),
+    transform: t(norwayMeta, { scale: 0.4, ox: 0.7, oy: 0.8 }),
   },
   // {
   //   name: "Moldova",
@@ -1666,14 +1649,14 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: sloveniaPaths,
     meta: sloveniaMeta,
     subjects: ["montenegroSlovenia"],
-    transform: t(sloveniaMeta),
+    transform: t(sloveniaMeta, { oy: 0.3 }),
   },
   {
     name: "Spain",
     paths: spainPaths,
     meta: spainMeta,
     subjects: ["spain", "andorraSpain"],
-    transform: t(spainMeta),
+    transform: t(spainMeta, { scale: 0.5 }),
   },
   {
     name: "Sweden",
@@ -1694,7 +1677,7 @@ const entries: PatternEntry<typeof patterns>[] = [
       "swedenGermanyLuxembourgSwitzerland",
       "liechtensteinSwitzerland",
     ],
-    transform: t(switzerlandMeta),
+    transform: t(switzerlandMeta, { scale: 0.7, oy: 0.1 }),
   },
   {
     name: "Turkey",
@@ -1723,4 +1706,4 @@ const subjects = Object.keys(patterns).map((name) => ({ name })) as {
   name: keyof typeof patterns;
 }[];
 
-export const europeanBollards = { patterns, entries, subjects };
+export const europeanBollards = { patterns, entries, subjects, size };
