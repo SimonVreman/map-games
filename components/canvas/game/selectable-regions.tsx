@@ -140,7 +140,7 @@ export function SelectableRegions({
   */
   useEffect(() => {
     const render: Renderer = ({ ctx, scale }) => {
-      ctx.strokeStyle = twColor("neutral-300", "neutral-600");
+      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
       ctx.lineWidth = scale * 2;
       ctx.lineJoin = "round";
 

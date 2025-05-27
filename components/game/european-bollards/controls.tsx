@@ -1,5 +1,7 @@
 import { useAppStore } from "@/lib/store/provider";
 import { GroupPinControls } from "../group-pin/controls";
+import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
+import { PatternPreview } from "@/components/canvas/game/pattern-preview";
 
 export function EuropeanBollardsControls() {
   const pattern = useAppStore((s) => s.europeanBollards.subject);
@@ -7,21 +9,7 @@ export function EuropeanBollardsControls() {
   return (
     <GroupPinControls
       store="europeanBollards"
-      graphic={
-        <svg
-          viewBox="0 0 400 500"
-          className="w-32 bg-secondary"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          {/* <defs>{svgBollardPatterns}</defs> */}
-          <rect
-            width="400"
-            height="500"
-            strokeWidth={0}
-            fill={`url(#${pattern?.name}-base)`}
-          />
-        </svg>
-      }
+      graphic={<PatternPreview {...europeanBollards} pattern={pattern?.name} />}
     >
       <p className="text-base">Where is it seen?</p>
     </GroupPinControls>

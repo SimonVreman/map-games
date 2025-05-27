@@ -1607,7 +1607,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: portugalPaths,
     meta: portugalMeta,
     subjects: ["portugal"],
-    transform: t(portugalMeta),
+    transform: t(portugalMeta, { scale: 0.3, ox: 0.8, oy: 0.1 }),
   },
   {
     name: "Serbia",
@@ -1691,7 +1691,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: ukrainePaths,
     meta: ukraineMeta,
     subjects: ["russiaUkraine", "ukraine"],
-    transform: t(ukraineMeta),
+    transform: t(ukraineMeta, { oy: 0, scale: 0.7 }),
   },
   {
     name: "United Kingdom",

@@ -21,12 +21,12 @@ const colors = [
   "chart-2",
   "chart-3",
   "chart-4",
-  "chart-5",
-  "chart-6",
-  "chart-7",
-  "chart-8",
-  "chart-9",
-  "chart-10",
+  // "chart-5",
+  // "chart-6",
+  // "chart-7",
+  // "chart-8",
+  // "chart-9",
+  // "chart-10",
 ];
 
 const baseKey = "selectable-patterns";
@@ -40,23 +40,75 @@ const tileState = new Map<string, TileState>();
 const entryKey = (n: string, s: number, x: number, y: number) =>
   `${n}:${s}:${x}:${y}`;
 
+function firstRendered({
+  name,
+  x,
+  y,
+  scale,
+  isMinX,
+  isMinY,
+}: {
+  name: string;
+  x: number;
+  y: number;
+  scale: number;
+  isMinX: boolean;
+  isMinY: boolean;
+}) {
+  let lowerScale = scale / 2;
+  let lowerX = x / 2;
+  let lowerY = y / 2;
+
+  while (lowerScale >= 1) {
+    const halfTileX = lowerX % tileSize !== 0;
+    const halfTileY = lowerY % tileSize !== 0;
+
+    // if ((halfTileX && !isMinX) || (halfTileY && !isMinY)) return null;
+    if (halfTileX && isMinX) lowerX -= tileSize / 2;
+    if (halfTileY && isMinY) lowerY -= tileSize / 2;
+
+    const key = entryKey(name, lowerScale, lowerX, lowerY);
+
+    if (tileCache.has(key))
+      return {
+        tile: tileCache.get(key),
+        scale: lowerScale,
+        x: lowerX,
+        y: lowerY,
+      };
+
+    lowerScale /= 2;
+    lowerX /= 2;
+    lowerY /= 2;
+  }
+
+  return null;
+}
+
 function cachedEntry({
   worker,
   entry,
   scale,
   x,
   y,
+  isMinX,
+  isMinY,
 }: {
   worker: Worker;
   entry: PatternEntry;
   scale: number;
   x: number;
   y: number;
+  isMinX: boolean;
+  isMinY: boolean;
 }) {
   const { name, meta } = entry;
   const key = entryKey(name, scale, x, y);
-  if (tileState.get(key) === TileState.loading) return null;
-  if (tileCache.has(key)) return tileCache.get(key) ?? null;
+
+  if (tileState.get(key) === TileState.loading)
+    return firstRendered({ name, x, y, scale, isMinX, isMinY });
+
+  if (tileCache.has(key)) return { tile: tileCache.get(key)!, scale, x, y };
 
   // Just set empty tiles to null
   if (
@@ -81,7 +133,7 @@ function cachedEntry({
     entry,
   } satisfies TileRenderMessage);
 
-  return null;
+  return firstRendered({ name, x, y, scale, isMinX, isMinY });
 }
 
 export function SelectablePatterns<
@@ -179,6 +231,8 @@ export function SelectablePatterns<
           const minX = topLeft.x - (topLeft.x % tileSize);
           const minY = topLeft.y - (topLeft.y % tileSize);
 
+          let lastScale = rasterScale;
+
           for (let x = minX; x < bottomRight.x; x += tileSize) {
             for (let y = minY; y < bottomRight.y; y += tileSize) {
               const cached = cachedEntry({
@@ -187,13 +241,22 @@ export function SelectablePatterns<
                 scale: rasterScale,
                 x,
                 y,
+                isMinX: x === minX,
+                isMinY: y === minY,
               });
 
-              if (cached) ctx.drawImage(cached, x, y);
+              if (!cached?.tile) continue;
+
+              if (lastScale !== cached.scale) {
+                ctx.scale(lastScale / cached.scale, lastScale / cached.scale);
+                lastScale = cached.scale;
+              }
+
+              ctx.drawImage(cached.tile, cached.x, cached.y);
             }
           }
 
-          ctx.scale(rasterScale, rasterScale);
+          ctx.scale(lastScale, lastScale);
         }
 
         ctx.strokeStyle = twColor("neutral-300", "neutral-700");
