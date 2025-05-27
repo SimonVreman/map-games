@@ -2,8 +2,9 @@ import { twColor } from "../utils";
 import { Renderer } from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { Pattern, PatternEntry } from "@/types/registry";
+import { useWindowBounding } from "@/lib/hooks/use-window-bounding";
 
 const colors = [
   "chart-1",
@@ -58,6 +59,19 @@ function cachedPattern({
   return offscreen;
 }
 
+function cachedMergedPath(paths: Path2D[]) {
+  let mergedPath = pathsCache.get(paths);
+  if (mergedPath) return mergedPath;
+
+  mergedPath = paths.reduce((acc, path) => {
+    acc.addPath(path);
+    return acc;
+  }, new Path2D());
+
+  pathsCache.set(paths, mergedPath);
+  return mergedPath;
+}
+
 export function SelectablePatterns<
   TMap extends Record<string, Pattern>,
   TEntry extends PatternEntry<TMap>
@@ -72,14 +86,7 @@ export function SelectablePatterns<
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
-  const bounding = useRef<DOMRect>(document.body.getBoundingClientRect());
-
-  useEffect(() => {
-    const listener = () =>
-      (bounding.current = document.body.getBoundingClientRect());
-    window.addEventListener("resize", listener);
-    return () => window.removeEventListener("resize", listener);
-  }, []);
+  const bounding = useWindowBounding();
 
   const currentCountryColor = useCallback(
     (entry: TEntry, hovered: boolean) => {
@@ -126,24 +133,15 @@ export function SelectablePatterns<
 
         if (highlighted) {
           const transform: typeof baseTransform = [...baseTransform];
-          const rasterScale = Math.max(
-            0.5,
-            Math.round((2 * baseTransform[0]) / scale) / 2
-          );
+          const rasterScale =
+            2 * 2 ** Math.round(Math.log2(baseTransform[0] / scale));
 
           transform[0] /= rasterScale;
           transform[3] /= rasterScale;
 
           ctx.save();
 
-          let mergedPath = pathsCache.get(paths);
-          if (!mergedPath) {
-            mergedPath = paths.reduce((acc, path) => {
-              acc.addPath(path);
-              return acc;
-            }, new Path2D());
-            pathsCache.set(paths, mergedPath);
-          }
+          const mergedPath = cachedMergedPath(paths);
 
           ctx.clip(mergedPath);
           ctx.transform(...transform);
@@ -163,11 +161,12 @@ export function SelectablePatterns<
           const maxYOffset = (meta.south - meta.north) / transform[3] + height;
 
           let i = 0;
+          const cached: HTMLCanvasElement[] = [];
 
           for (let yOffset = 0; yOffset < maxYOffset; yOffset += height) {
             const width = 400 * rasterScale;
             const maxXOffset = (meta.east - meta.west) / transform[0] + width;
-            const subject = subjects[i % subjects.length] as string;
+            const subject = subjects[i] as string;
 
             for (let xOffset = 0; xOffset < maxXOffset; xOffset += width) {
               if (
@@ -178,16 +177,16 @@ export function SelectablePatterns<
               )
                 continue;
 
-              const cached = cachedPattern({
+              cached[i] ??= cachedPattern({
                 subject,
                 scale: rasterScale,
                 drawPattern,
               });
 
-              if (cached) ctx.drawImage(cached, xOffset, yOffset);
+              ctx.drawImage(cached[i], xOffset, yOffset);
             }
 
-            i++;
+            i = (i + 1) % subjects.length;
           }
           ctx.restore();
         }
@@ -197,7 +196,7 @@ export function SelectablePatterns<
           ctx.stroke(path);
         }
       },
-    [isHighlighted, drawPattern]
+    [isHighlighted, drawPattern, bounding]
   );
 
   useDynamicFill({

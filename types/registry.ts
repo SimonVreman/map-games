@@ -1,5 +1,5 @@
 export type PatternEntry<
-  TPatterns extends Record<string, unknown> = Record<string, never>
+  TPatterns extends Record<string, unknown> = Record<string, unknown>
 > = {
   name: string;
   paths: Path2D[];
