@@ -6,6 +6,9 @@ import { useCallback } from "react";
 import { Pattern, PatternEntry } from "@/types/registry";
 import { useWindowBounding } from "@/lib/hooks/use-window-bounding";
 
+const tileSize = 500;
+const tileMargin = 10;
+
 const colors = [
   "chart-1",
   "chart-2",
@@ -25,11 +28,26 @@ const renderKeys = {
 } as const;
 
 const patternCache = new Map<string, HTMLCanvasElement>();
-const entryCache = new Map<string, HTMLCanvasElement>();
+const entryCache = new Map<string, HTMLCanvasElement | null>();
 const pathCache = new WeakMap<Path2D[], Path2D>();
 
 const patternKey = (n: string, s: number) => `${n}:${s}`;
-const entryKey = (n: string, s: number) => `${n}:${s}`;
+const entryKey = (n: string, s: number, x: number, y: number) =>
+  `${n}:${s}:${x}:${y}`;
+
+function mergedPath(paths: Path2D[]): Path2D {
+  let mergedPath = pathCache.get(paths);
+
+  if (!mergedPath) {
+    mergedPath = paths.reduce((acc, path) => {
+      acc.addPath(path);
+      return acc;
+    }, new Path2D());
+    pathCache.set(paths, mergedPath);
+  }
+
+  return mergedPath;
+}
 
 function cachedPattern({
   subject,
@@ -45,8 +63,6 @@ function cachedPattern({
 }) {
   const key = patternKey(subject, scale);
   if (patternCache.has(key)) return patternCache.get(key)!;
-
-  // console.log(`Rendering pattern: ${subject} at scale: ${scale}`);
 
   const offscreen = document.createElement("canvas");
   offscreen.width = 400 * scale + 20;
@@ -67,6 +83,8 @@ function cachedEntry<TMap extends Record<string, Pattern>>({
   entry: { name, paths, meta, transform: baseTransform, subjects },
   scale,
   drawPattern,
+  x,
+  y,
 }: {
   entry: PatternEntry<TMap>;
   scale: number;
@@ -74,32 +92,29 @@ function cachedEntry<TMap extends Record<string, Pattern>>({
     subject: string;
     ctx: CanvasRenderingContext2D;
   }) => void;
+  x: number;
+  y: number;
 }) {
-  const key = entryKey(name, scale);
+  const key = entryKey(name, scale, x, y);
   if (entryCache.has(key)) return entryCache.get(key)!;
 
-  let mergedPath = pathCache.get(paths);
-  if (!mergedPath) {
-    mergedPath = paths.reduce((acc, path) => {
-      acc.addPath(path);
-      return acc;
-    }, new Path2D());
-    pathCache.set(paths, mergedPath);
-  }
-
   const offscreen = document.createElement("canvas");
-
-  offscreen.width = Math.ceil((meta.east - meta.west) * scale);
-  offscreen.height = Math.ceil((meta.south - meta.north) * scale);
-
-  // console.log(
-  //   `Rendering entry: ${name} at scale: ${scale}, width: ${offscreen.width}, height: ${offscreen.height}`
-  // );
-
+  offscreen.width = tileSize + tileMargin;
+  offscreen.height = tileSize + tileMargin;
   const ctx = offscreen.getContext("2d")!;
 
-  ctx.transform(scale, 0, 0, scale, -meta.west * scale, -meta.north * scale);
-  ctx.clip(mergedPath);
+  if (
+    x + tileSize < meta.west * scale ||
+    x > meta.east * scale ||
+    y + tileSize < meta.north * scale ||
+    y > meta.south * scale
+  ) {
+    entryCache.set(key, null);
+    return null;
+  }
+
+  ctx.transform(scale, 0, 0, scale, -x, -y);
+  ctx.clip(mergedPath(paths));
 
   const rasterScale = baseTransform[0] * 2 * scale;
   const transform: typeof baseTransform = [...baseTransform];
@@ -111,46 +126,27 @@ function cachedEntry<TMap extends Record<string, Pattern>>({
   const maxYOffset = (meta.south - meta.north) / transform[3] + height;
 
   let i = 0;
+  const subjectCache: HTMLCanvasElement[] = [];
 
   for (let yOffset = 0; yOffset < maxYOffset; yOffset += height) {
     const width = 400 * rasterScale;
     const maxXOffset = (meta.east - meta.west) / transform[0] + width;
-    const subject = subjects[i % subjects.length] as string;
+    const subject = subjects[i] as string;
 
     for (let xOffset = 0; xOffset < maxXOffset; xOffset += width) {
-      // if (
-      //   xOffset + width < topLeft.x ||
-      //   xOffset > bottomRight.x ||
-      //   yOffset + height < topLeft.y ||
-      //   yOffset > bottomRight.y
-      // )
-      //   continue;
-
-      const cached = cachedPattern({
+      subjectCache[i] ??= cachedPattern({
         subject,
         scale: rasterScale,
         drawPattern,
       });
 
-      if (cached) ctx.drawImage(cached, xOffset, yOffset);
+      ctx.drawImage(subjectCache[i], xOffset, yOffset);
     }
 
-    i++;
+    i = (i + 1) % subjects.length;
   }
 
   entryCache.set(key, offscreen);
-  // ctx.transform(...transform);
-
-  // const dpr = window.devicePixelRatio;
-  // const rawTopLeft = bounding.current;
-  // const rawBottomRight = {
-  //   x: bounding.current.width * dpr,
-  //   y: bounding.current.height * dpr,
-  // };
-
-  // const tMatrix = ctx.getTransform().inverse();
-  // const topLeft = tMatrix.transformPoint(rawTopLeft);
-  // const bottomRight = tMatrix.transformPoint(rawBottomRight);
 }
 
 export function SelectablePatterns<
@@ -200,41 +196,54 @@ export function SelectablePatterns<
   const entryRenderer = useCallback(
     (entry: TEntry): Renderer =>
       ({ ctx, scale }) => {
-        ctx.strokeStyle = twColor("neutral-300", "neutral-700");
         ctx.lineWidth = scale;
         ctx.lineJoin = "round";
 
         const highlighted = isHighlighted(entry.name);
 
-        if (["Russia", "France"].includes(entry.name)) return;
-
         if (highlighted) {
           const rasterScale = 2 ** Math.round(Math.log2(1 / scale));
-
           ctx.scale(1 / rasterScale, 1 / rasterScale);
 
-          const cached = cachedEntry({
-            entry,
-            scale: rasterScale,
-            drawPattern,
+          const t = ctx.getTransform().inverse();
+          const dpr = window.devicePixelRatio;
+
+          const topLeft = t.transformPoint({
+            x: bounding.current.x * dpr,
+            y: bounding.current.y * dpr,
+          });
+          const bottomRight = t.transformPoint({
+            x: bounding.current.width * dpr,
+            y: bounding.current.height * dpr,
           });
 
-          if (cached)
-            ctx.drawImage(
-              cached,
-              entry.meta.west * rasterScale,
-              entry.meta.north * rasterScale
-            );
+          const minX = topLeft.x - (topLeft.x % tileSize);
+          const minY = topLeft.y - (topLeft.y % tileSize);
+
+          for (let x = minX; x < bottomRight.x; x += tileSize) {
+            for (let y = minY; y < bottomRight.y; y += tileSize) {
+              const cached = cachedEntry({
+                entry,
+                scale: rasterScale,
+                drawPattern,
+                x,
+                y,
+              });
+
+              if (cached) ctx.drawImage(cached, x, y);
+            }
+          }
 
           ctx.scale(rasterScale, rasterScale);
         }
 
+        ctx.strokeStyle = twColor("neutral-300", "neutral-700");
         for (const path of entry.paths) {
           ctx.fill(path);
           ctx.stroke(path);
         }
       },
-    [isHighlighted, drawPattern]
+    [isHighlighted, drawPattern, bounding]
   );
 
   useDynamicFill({
