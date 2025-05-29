@@ -1,7 +1,7 @@
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import { Renderer, RendererKey } from "@/components/canvas/types";
-import { twColor, twFont } from "@/components/canvas/utils";
 import { useEffect } from "react";
+import { useTwTheme } from "./use-tw-theme";
 
 type BaseItem = { area: number; center: number[] };
 type Label = {
@@ -60,6 +60,7 @@ export function useLabels<TItem extends BaseItem>({
   getLabel: (item: TItem) => string;
 }) {
   const { addRenderer, removeRenderer } = useCanvas();
+  const { twColor, twFont } = useTwTheme();
 
   useEffect(() => {
     const render: Renderer = ({ ctx, scale }) => {
@@ -89,5 +90,14 @@ export function useLabels<TItem extends BaseItem>({
 
     addRenderer({ render, ...key });
     return () => removeRenderer(key);
-  }, [addRenderer, removeRenderer, key, isVisible, getLabel, items]);
+  }, [
+    addRenderer,
+    removeRenderer,
+    key,
+    isVisible,
+    getLabel,
+    items,
+    twColor,
+    twFont,
+  ]);
 }

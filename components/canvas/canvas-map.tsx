@@ -1,10 +1,10 @@
 import { mercatorConstants, projectMercator } from "@/lib/mapping/mercator";
 import { createUseGesture, dragAction, pinchAction } from "@use-gesture/react";
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
-import { twColor } from "./utils";
 import { CanvasProvider, useCanvas } from "./canvas-provider";
 import { Bounds, LatLngBounds, Style } from "./types";
 import { cn } from "@/lib/utils";
+import { TwColor, useTwTheme } from "@/lib/hooks/use-tw-theme";
 
 type MapProps = {
   bounds: LatLngBounds;
@@ -62,11 +62,13 @@ function transformLayer({
   ctx,
   style,
   background = false,
+  twColor,
 }: {
   base: RefObject<HTMLDivElement | null>;
   ctx: CanvasRenderingContext2D;
   style: Style;
   background?: boolean;
+  twColor: TwColor;
 }) {
   if (!base.current) return;
 
@@ -162,6 +164,7 @@ export function CanvasMap({
 }
 
 function Canvas({ bounds: latLngBounds, children }: MapProps) {
+  const { twColor } = useTwTheme();
   const base = useRef<HTMLDivElement>(null);
   const layer0 = useRef<HTMLCanvasElement>(null);
   const layer1 = useRef<HTMLCanvasElement>(null);
@@ -186,7 +189,7 @@ function Canvas({ bounds: latLngBounds, children }: MapProps) {
       bounds={bounds}
       defaultStyle={defaultStyle}
       transform={(ctx, style, background) =>
-        transformLayer({ base, ctx, style, background })
+        transformLayer({ base, ctx, style, background, twColor })
       }
     >
       <div

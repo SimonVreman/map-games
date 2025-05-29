@@ -3,9 +3,15 @@ import { useCallback, useEffect, useState } from "react";
 const darkCache = new Map<string, string>();
 const lightCache = new Map<string, string>();
 
+type TwTheme = ReturnType<typeof useTwTheme>;
+export type TwColor = TwTheme["twColor"];
+
 export function useTwTheme() {
   const [theme, setTheme] = useState<"dark" | "light">(
-    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light"
   );
 
   useEffect(() => {
@@ -41,5 +47,13 @@ export function useTwTheme() {
     [theme]
   );
 
-  return { theme, twColor };
+  const twFont = useCallback(
+    (type: "sans" | "mono") =>
+      getComputedStyle(document.body).getPropertyValue(
+        type === "sans" ? "--font-figtree" : "--font-geist-mono"
+      ),
+    []
+  );
+
+  return { theme, twColor, twFont };
 }

@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
-import { twColor } from "../utils";
 import { Renderer } from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useLabels } from "@/lib/hooks/use-labels";
 import { cachedPath } from "@/lib/mapping/cache";
+import { TwColor, useTwTheme } from "@/lib/hooks/use-tw-theme";
 
 type Region = {
   codes: number[];
@@ -41,12 +41,14 @@ function getRegionColor({
   hovered,
   group,
   hints,
+  twColor,
 }: {
   positive: boolean;
   negative: boolean;
   hovered: boolean;
   hints: boolean;
   group: number;
+  twColor: TwColor;
 }) {
   if (hints) {
     return twColor(colors[group % colors.length]);
@@ -65,24 +67,8 @@ function getRegionColor({
     : twColor("white", "neutral-900");
 }
 
-const regionRenderer =
-  (region: Region): Renderer =>
-  ({ ctx, scale }) => {
-    ctx.strokeStyle = twColor("neutral-300", "neutral-700");
-    ctx.lineWidth = scale;
-    ctx.lineJoin = "round";
-
-    for (const path of region.paths) {
-      const path2d = cachedPath(path);
-      ctx.fill(path2d);
-      ctx.stroke(path2d);
-    }
-  };
-
 export function SelectableRegions({
   regions,
-  firstAdministrative = [],
-  country = [],
   divider = [],
   onClick,
   highlighted,
@@ -90,12 +76,11 @@ export function SelectableRegions({
   getCodeGroup,
 }: {
   regions: Region[];
-  firstAdministrative?: Path2D[];
-  country?: Path2D[];
   divider?: Path2D[];
   getCodeGroup: (codes: number[]) => number;
   onClick: (codes: number[]) => void;
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
+  const { twColor } = useTwTheme();
   const { addRenderer, removeRenderer } = useCanvas();
 
   const currentRegionColor = useCallback(
@@ -109,9 +94,26 @@ export function SelectableRegions({
         group: getCodeGroup(codes),
         hovered,
         hints,
+        twColor,
       });
     },
-    [highlighted, hints, getCodeGroup]
+    [highlighted, hints, getCodeGroup, twColor]
+  );
+
+  const regionRenderer = useCallback(
+    (region: Region): Renderer =>
+      ({ ctx, scale }) => {
+        ctx.strokeStyle = twColor("neutral-300", "neutral-700");
+        ctx.lineWidth = scale;
+        ctx.lineJoin = "round";
+
+        for (const path of region.paths) {
+          const path2d = cachedPath(path);
+          ctx.fill(path2d);
+          ctx.stroke(path2d);
+        }
+      },
+    [twColor]
   );
 
   useDynamicFill({
@@ -147,9 +149,6 @@ export function SelectableRegions({
       ctx.lineWidth = scale * 2;
       ctx.lineJoin = "round";
 
-      for (const path of country) ctx.stroke(path);
-      for (const path of firstAdministrative) ctx.stroke(path);
-
       ctx.setLineDash([scale * 5, scale * 5]);
       for (const path of divider) ctx.stroke(path);
       ctx.setLineDash([]);
@@ -157,7 +156,7 @@ export function SelectableRegions({
 
     addRenderer({ render, ...renderKeys.country });
     return () => removeRenderer(renderKeys.country);
-  }, [country, divider, firstAdministrative, addRenderer, removeRenderer]);
+  }, [divider, addRenderer, removeRenderer, twColor]);
 
   return null;
 }

@@ -1,18 +1,5 @@
 import { cachedPath } from "@/lib/mapping/cache";
 
-export const twColor = (name: string, dark?: string) =>
-  getComputedStyle(document.body).getPropertyValue(
-    "--color-" +
-      (dark != null && window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? dark
-        : name)
-  );
-
-export const twFont = (type: "sans" | "mono") =>
-  getComputedStyle(document.body).getPropertyValue(
-    type === "sans" ? "--font-figtree" : "--font-geist-mono"
-  );
-
 export function pathsHovered({
   paths,
   ctx,
