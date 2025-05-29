@@ -13,6 +13,7 @@ export type PatternEntry<
   };
   subjects: (keyof TPatterns)[];
   transform: [number, number, number, number, number, number];
+  tiny?: boolean;
 };
 
 export type Pattern = {

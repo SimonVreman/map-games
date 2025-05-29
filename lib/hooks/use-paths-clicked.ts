@@ -19,7 +19,7 @@ export function usePathsClicked<TItem extends { paths: string[] }>({
       const { clientX, clientY } = e;
       if (!ctx) return;
 
-      const clicked = items.find(({ paths }) =>
+      const clicked = items.findLast(({ paths }) =>
         pathsHovered({ paths, ctx, clientX, clientY })
       );
 

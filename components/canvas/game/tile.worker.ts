@@ -15,6 +15,7 @@ const patternKey = (n: string, s: number) => `${n}:${s}`;
 
 let patterns: Record<string, Pattern> = {};
 let colors: string[] = [];
+let entries: PatternEntry<Record<string, Pattern>>[] = [];
 let isReady = false;
 let tileSize = 0;
 let patternWidth = 0;
@@ -62,22 +63,16 @@ function cachedPattern({ subject, scale }: { subject: string; scale: number }) {
   return offscreen;
 }
 
-function renderTile({
-  x,
-  y,
+function renderTileEntry({
+  entry: { paths, meta, subjects, transform: baseTransform },
   scale,
-  entry: { meta, subjects, transform: baseTransform, paths },
+  ctx,
 }: {
+  entry: (typeof entries)[number];
   scale: number;
-  x: number;
-  y: number;
-  entry: PatternEntry;
+  ctx: OffscreenCanvasRenderingContext2D;
 }) {
-  const size = tileSize + tileMargin;
-  const offscreen = new OffscreenCanvas(size, size);
-  const ctx = offscreen.getContext("2d")!;
-
-  ctx.transform(scale, 0, 0, scale, -x, -y);
+  ctx.save();
   ctx.clip(mergedPath(paths));
 
   const rasterScale = baseTransform[0] * 2 * scale;
@@ -109,12 +104,27 @@ function renderTile({
     i = (i + 1) % subjects.length;
   }
 
+  ctx.restore();
+}
+
+function renderTile({ x, y, scale }: { scale: number; x: number; y: number }) {
+  const size = tileSize + tileMargin;
+  const offscreen = new OffscreenCanvas(size, size);
+  const ctx = offscreen.getContext("2d")!;
+
+  ctx.transform(scale, 0, 0, scale, -x, -y);
+
+  for (const entry of entries) {
+    renderTileEntry({ entry, scale, ctx });
+  }
+
   return offscreen.transferToImageBitmap();
 }
 
 function handleInit(e: MessageEvent<TileInitMessage>) {
   patterns = e.data.patterns;
   colors = e.data.colors;
+  entries = e.data.entries;
   tileSize = e.data.tileSize;
   patternWidth = e.data.patternSize.width;
   patternHeight = e.data.patternSize.height;

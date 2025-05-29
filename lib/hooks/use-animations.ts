@@ -79,7 +79,11 @@ export function useAnimations(key: RendererKey) {
   );
 
   useEffect(() => {
-    const animationKey = { ...key, key: key.key + ":animated" };
+    const animationKey = {
+      key: key.key + ":animated",
+      layer: key.layer,
+      order: (key.order ?? 0) + 1,
+    };
     const render: Renderer = ({ ctx, scale }) => {
       const timestamp = documentTime();
 

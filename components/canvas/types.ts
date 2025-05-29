@@ -57,12 +57,15 @@ export enum TileState {
   error = "error",
 }
 
-export type TileInitMessage = {
+export type TileInitMessage<
+  TMap extends Record<string, Pattern> = Record<string, Pattern>
+> = {
   type: "init";
-  patterns: Record<string, Pattern>;
+  patterns: TMap;
   colors: string[];
   tileSize: number;
   patternSize: { width: number; height: number };
+  entries: PatternEntry<TMap>[];
 };
 
 export type TileRenderMessage = {
@@ -70,7 +73,6 @@ export type TileRenderMessage = {
   key: string;
   x: number;
   y: number;
-  entry: PatternEntry;
   scale: number;
 };
 

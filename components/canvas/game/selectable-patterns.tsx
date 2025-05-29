@@ -31,29 +31,23 @@ const colors = [
 
 const baseKey = "selectable-patterns";
 const renderKeys = {
-  entries: { key: baseKey + ":entries", order: 0, layer: 0 },
+  patterns: { key: baseKey + ":patterns", order: 0, layer: 0 },
+  entries: { key: baseKey + ":entries", order: 1, layer: 0 },
 } as const;
 
 const tileCache = new Map<string, ImageBitmap | null>();
 const tileState = new Map<string, TileState>();
 
-const entryKey = (n: string, s: number, x: number, y: number) =>
-  `${n}:${s}:${x}:${y}`;
+const entryKey = (s: number, x: number, y: number) => `${s}:${x}:${y}`;
 
 function firstRendered({
-  name,
   x,
   y,
   scale,
-  isMinX,
-  isMinY,
 }: {
-  name: string;
   x: number;
   y: number;
   scale: number;
-  isMinX: boolean;
-  isMinY: boolean;
 }) {
   let lowerScale = scale / 2;
   let lowerX = x / 2;
@@ -63,11 +57,14 @@ function firstRendered({
     const halfTileX = lowerX % tileSize !== 0;
     const halfTileY = lowerY % tileSize !== 0;
 
+    // TODO: this is doing some double rendering. If we only do it for the minX and minY tiles, we can avoid this.
+    // But then, we get flashing because the tile we are depending on might be available at higher quality and thus
+    // not render for us.
     // if ((halfTileX && !isMinX) || (halfTileY && !isMinY)) return null;
-    if (halfTileX && isMinX) lowerX -= tileSize / 2;
-    if (halfTileY && isMinY) lowerY -= tileSize / 2;
+    if (halfTileX) lowerX -= tileSize / 2;
+    if (halfTileY) lowerY -= tileSize / 2;
 
-    const key = entryKey(name, lowerScale, lowerX, lowerY);
+    const key = entryKey(lowerScale, lowerX, lowerY);
 
     if (tileCache.has(key))
       return {
@@ -87,40 +84,33 @@ function firstRendered({
 
 function cachedEntry({
   worker,
-  entry,
   scale,
   x,
   y,
-  isMinX,
-  isMinY,
 }: {
   worker: Worker;
-  entry: PatternEntry;
   scale: number;
   x: number;
   y: number;
-  isMinX: boolean;
-  isMinY: boolean;
 }) {
-  const { name, meta } = entry;
-  const key = entryKey(name, scale, x, y);
+  const key = entryKey(scale, x, y);
 
   if (tileState.get(key) === TileState.loading)
-    return firstRendered({ name, x, y, scale, isMinX, isMinY });
+    return firstRendered({ x, y, scale });
 
   if (tileCache.has(key)) return { tile: tileCache.get(key)!, scale, x, y };
 
-  // Just set empty tiles to null
-  if (
-    x + tileSize < meta.west * scale ||
-    x > meta.east * scale ||
-    y + tileSize < meta.north * scale ||
-    y > meta.south * scale
-  ) {
-    tileCache.set(key, null);
-    tileState.set(key, TileState.done);
-    return null;
-  }
+  // TODO handle: Just set empty tiles to null
+  // if (
+  //   x + tileSize < meta.west * scale ||
+  //   x > meta.east * scale ||
+  //   y + tileSize < meta.north * scale ||
+  //   y > meta.south * scale
+  // ) {
+  //   tileCache.set(key, null);
+  //   tileState.set(key, TileState.done);
+  //   return null;
+  // }
 
   tileState.set(key, TileState.loading);
 
@@ -130,10 +120,9 @@ function cachedEntry({
     x,
     y,
     scale,
-    entry,
   } satisfies TileRenderMessage);
 
-  return firstRendered({ name, x, y, scale, isMinX, isMinY });
+  return firstRendered({ x, y, scale });
 }
 
 export function SelectablePatterns<
@@ -153,7 +142,7 @@ export function SelectablePatterns<
   onClick: (name: string) => void;
 }) {
   const { twColor } = useTwTheme();
-  const { updateAll } = useCanvas();
+  const { updateAll, addRenderer, removeRenderer } = useCanvas();
   const bounding = useWindowBounding();
   const worker = useRef<Worker>(null);
 
@@ -171,8 +160,9 @@ export function SelectablePatterns<
       colors: colors.map((c) => twColor(c)),
       tileSize,
       patternSize: size,
-    } satisfies TileInitMessage);
-  }, [patterns, twColor, size]);
+      entries,
+    } satisfies TileInitMessage<TMap>);
+  }, [patterns, entries, twColor, size]);
 
   useEffect(() => {
     const listener = (event: MessageEvent<TileProcessedMessage>) => {
@@ -209,65 +199,67 @@ export function SelectablePatterns<
       ({ ctx, scale }) => {
         ctx.lineWidth = scale;
         ctx.lineJoin = "round";
-
-        const highlighted = isHighlighted(entry.name);
-
-        if (highlighted && worker.current) {
-          const rasterScale = 2 ** Math.round(Math.log2(1 / scale));
-          ctx.scale(1 / rasterScale, 1 / rasterScale);
-
-          const t = ctx.getTransform().inverse();
-          const dpr = window.devicePixelRatio;
-
-          const topLeft = t.transformPoint({
-            x: bounding.current.x * dpr,
-            y: bounding.current.y * dpr,
-          });
-          const bottomRight = t.transformPoint({
-            x: bounding.current.width * dpr,
-            y: bounding.current.height * dpr,
-          });
-
-          const minX = topLeft.x - (topLeft.x % tileSize);
-          const minY = topLeft.y - (topLeft.y % tileSize);
-
-          let lastScale = rasterScale;
-
-          for (let x = minX; x < bottomRight.x; x += tileSize) {
-            for (let y = minY; y < bottomRight.y; y += tileSize) {
-              const cached = cachedEntry({
-                worker: worker.current,
-                entry: entry as PatternEntry,
-                scale: rasterScale,
-                x,
-                y,
-                isMinX: x === minX,
-                isMinY: y === minY,
-              });
-
-              if (!cached?.tile) continue;
-
-              if (lastScale !== cached.scale) {
-                ctx.scale(lastScale / cached.scale, lastScale / cached.scale);
-                lastScale = cached.scale;
-              }
-
-              ctx.drawImage(cached.tile, cached.x, cached.y);
-            }
-          }
-
-          ctx.scale(lastScale, lastScale);
-        }
-
         ctx.strokeStyle = twColor("neutral-300", "neutral-700");
+
         for (const path of entry.paths) {
           const path2d = cachedPath(path);
           ctx.fill(path2d);
           ctx.stroke(path2d);
         }
       },
-    [isHighlighted, bounding, twColor]
+    [twColor]
   );
+
+  useEffect(() => {
+    const render: Renderer = ({ ctx, scale }) => {
+      if (!worker.current) return;
+
+      const rasterScale = 2 ** Math.round(Math.log2(1 / scale));
+      ctx.scale(1 / rasterScale, 1 / rasterScale);
+
+      const t = ctx.getTransform().inverse();
+      const dpr = window.devicePixelRatio;
+
+      const topLeft = t.transformPoint({
+        x: bounding.current.x * dpr,
+        y: bounding.current.y * dpr,
+      });
+      const bottomRight = t.transformPoint({
+        x: bounding.current.width * dpr,
+        y: bounding.current.height * dpr,
+      });
+
+      const minX = topLeft.x - (topLeft.x % tileSize);
+      const minY = topLeft.y - (topLeft.y % tileSize);
+
+      let lastScale = rasterScale;
+
+      for (let x = minX; x < bottomRight.x; x += tileSize) {
+        for (let y = minY; y < bottomRight.y; y += tileSize) {
+          const cached = cachedEntry({
+            worker: worker.current,
+            scale: rasterScale,
+            x,
+            y,
+          });
+
+          if (!cached?.tile) continue;
+
+          if (lastScale !== cached.scale) {
+            ctx.scale(lastScale / cached.scale, lastScale / cached.scale);
+            lastScale = cached.scale;
+          }
+
+          ctx.drawImage(cached.tile, cached.x, cached.y);
+        }
+      }
+
+      ctx.scale(lastScale, lastScale);
+    };
+
+    addRenderer({ render, ...renderKeys.patterns });
+    return () => removeRenderer(renderKeys.patterns);
+  }, [addRenderer, removeRenderer, bounding]);
 
   useDynamicFill({
     key: renderKeys.entries,

@@ -6,12 +6,13 @@ import { Renderer } from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useLabels } from "@/lib/hooks/use-labels";
+import { cachedPath } from "@/lib/mapping/cache";
 
 type Region = {
   codes: number[];
   area: number;
   center: number[];
-  paths: Path2D[];
+  paths: string[];
 };
 
 const colors = [
@@ -70,9 +71,11 @@ const regionRenderer =
     ctx.strokeStyle = twColor("neutral-300", "neutral-700");
     ctx.lineWidth = scale;
     ctx.lineJoin = "round";
+
     for (const path of region.paths) {
-      ctx.fill(path);
-      ctx.stroke(path);
+      const path2d = cachedPath(path);
+      ctx.fill(path2d);
+      ctx.stroke(path2d);
     }
   };
 

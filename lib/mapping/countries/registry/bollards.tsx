@@ -1,6 +1,6 @@
 import { Pattern, PatternEntry } from "@/types/registry";
 import { albaniaPaths, albaniaMeta } from "../paths/albania";
-import { andorraPaths, andorraMeta } from "../paths/andorra";
+import { andorraMeta } from "../paths/andorra";
 import { austriaPaths, austriaMeta } from "../paths/austria";
 import { belgiumPaths, belgiumMeta } from "../paths/belgium";
 import { bulgariaPaths, bulgariaMeta } from "../paths/bulgaria";
@@ -19,10 +19,10 @@ import { irelandPaths, irelandMeta } from "../paths/ireland";
 import { italyPaths, italyMeta } from "../paths/italy";
 import { kosovoPaths, kosovoMeta } from "../paths/kosovo";
 import { latviaPaths, latviaMeta } from "../paths/latvia";
-import { liechtensteinPaths, liechtensteinMeta } from "../paths/liechtenstein";
+import { liechtensteinMeta } from "../paths/liechtenstein";
 import { lithuaniaPaths, lithuaniaMeta } from "../paths/lithuania";
 import { luxembourgPaths, luxembourgMeta } from "../paths/luxembourg";
-import { maltaPaths, maltaMeta } from "../paths/malta";
+import { maltaMeta } from "../paths/malta";
 import { montenegroPaths, montenegroMeta } from "../paths/montenegro";
 import { netherlandsPaths, netherlandsMeta } from "../paths/netherlands";
 import {
@@ -38,7 +38,7 @@ import {
 } from "../paths/republic-of-serbia";
 import { romaniaPaths, romaniaMeta } from "../paths/romania";
 import { russiaPaths, russiaMeta } from "../paths/russia";
-import { sanMarinoPaths, sanMarinoMeta } from "../paths/san-marino";
+import { sanMarinoMeta } from "../paths/san-marino";
 import { slovakiaPaths, slovakiaMeta } from "../paths/slovakia";
 import { sloveniaPaths, sloveniaMeta } from "../paths/slovenia";
 import { spainPaths, spainMeta } from "../paths/spain";
@@ -47,7 +47,7 @@ import { switzerlandPaths, switzerlandMeta } from "../paths/switzerland";
 import { turkeyPaths, turkeyMeta } from "../paths/turkey";
 import { ukrainePaths, ukraineMeta } from "../paths/ukraine";
 import { unitedKingdomPaths, unitedKingdomMeta } from "../paths/united-kingdom";
-import { createTranslate } from "./pattern";
+import { createTapTarget, createTranslate } from "./pattern";
 
 const size = { width: 400, height: 500 };
 const t = createTranslate(size);
@@ -1381,21 +1381,19 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: albaniaPaths,
     meta: albaniaMeta,
     subjects: ["albaniaItalyMaltaSanMarino"],
-    transform: t(albaniaMeta),
+    transform: t(albaniaMeta, { scale: 2, ox: 0.1, oy: 0.2 }),
   },
   {
     name: "Andorra",
-    paths: andorraPaths,
-    meta: andorraMeta,
     subjects: ["andorraSpain"],
-    transform: t(andorraMeta),
+    ...createTapTarget(andorraMeta, t),
   },
   {
     name: "Austria",
     paths: austriaPaths,
     meta: austriaMeta,
     subjects: ["austria"],
-    transform: t(austriaMeta),
+    transform: t(austriaMeta, { ox: 0.8 }),
   },
   // {
   //   name: "Belarus",
@@ -1434,7 +1432,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: cyprusPaths,
     meta: cyprusMeta,
     subjects: ["cyprus"],
-    transform: t(cyprusMeta),
+    transform: t(cyprusMeta, { oy: 0.3, ox: 0.7 }),
   },
   {
     name: "Czechia",
@@ -1518,7 +1516,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: kosovoPaths,
     meta: kosovoMeta,
     subjects: ["serbia", "serbia2"],
-    transform: t(kosovoMeta),
+    transform: t(kosovoMeta, { scale: 0.9, oy: 0.2 }),
   },
   {
     name: "Latvia",
@@ -1529,10 +1527,8 @@ const entries: PatternEntry<typeof patterns>[] = [
   },
   {
     name: "Liechtenstein",
-    paths: liechtensteinPaths,
-    meta: liechtensteinMeta,
     subjects: ["liechtensteinSwitzerland"],
-    transform: t(liechtensteinMeta),
+    ...createTapTarget(liechtensteinMeta, t),
   },
   {
     name: "Lithuania",
@@ -1550,10 +1546,8 @@ const entries: PatternEntry<typeof patterns>[] = [
   },
   {
     name: "Malta",
-    paths: maltaPaths,
-    meta: maltaMeta,
     subjects: ["albaniaItalyMaltaSanMarino"],
-    transform: t(maltaMeta),
+    ...createTapTarget(maltaMeta, t),
   },
   // {
   //   name: "Monaco",
@@ -1566,7 +1560,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     paths: montenegroPaths,
     meta: montenegroMeta,
     subjects: ["montenegroSlovenia"],
-    transform: t(montenegroMeta),
+    transform: t(montenegroMeta, { scale: 1.7, ox: 0.1, oy: 0.2 }),
   },
   {
     name: "Netherlands",
@@ -1632,10 +1626,8 @@ const entries: PatternEntry<typeof patterns>[] = [
   },
   {
     name: "San Marino",
-    paths: sanMarinoPaths,
-    meta: sanMarinoMeta,
     subjects: ["albaniaItalyMaltaSanMarino"],
-    transform: t(sanMarinoMeta),
+    ...createTapTarget(sanMarinoMeta, t),
   },
   {
     name: "Slovakia",
@@ -1700,7 +1692,7 @@ const entries: PatternEntry<typeof patterns>[] = [
     subjects: ["unitedKingdom"],
     transform: t(unitedKingdomMeta),
   },
-];
+].sort((a, b) => (a.tiny === true ? 1 : b.tiny === true ? -1 : 0));
 
 const subjects = Object.keys(patterns).map((name) => ({ name })) as {
   name: keyof typeof patterns;

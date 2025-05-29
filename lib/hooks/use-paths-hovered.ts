@@ -22,7 +22,7 @@ export function usePathsHovered<TItem extends { paths: string[] }>({
       if (!ctx || e.pointerType !== "mouse") return;
       const { clientX, clientY } = e;
 
-      const newHovered = items.findIndex(({ paths }) =>
+      const newHovered = items.findLastIndex(({ paths }) =>
         pathsHovered({ paths, ctx, clientX, clientY })
       );
 

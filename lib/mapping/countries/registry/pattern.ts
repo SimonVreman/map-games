@@ -17,3 +17,22 @@ export const createTranslate =
       m.north + (-1 + (v.oy ?? 1)) * size.height * scale,
     ];
   };
+
+export const createTapTarget = (
+  { x, y }: PatternEntry["meta"],
+  t: ReturnType<typeof createTranslate>
+): Pick<PatternEntry, "meta" | "paths" | "transform" | "tiny"> => {
+  const r = 2.5;
+  const meta = { x, y, west: x - r, east: x + r, north: y - r, south: y + r };
+
+  return {
+    meta,
+    paths: [
+      `M${x} ${y} m-${r}, 0 a${r},${r} 0 1,0 ${2 * r},0 a${r},${r} 0 1,0 -${
+        2 * r
+      },0`,
+    ],
+    transform: t(meta, { scale: r, ox: 0.1 }),
+    tiny: true,
+  };
+};
