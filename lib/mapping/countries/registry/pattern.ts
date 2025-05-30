@@ -20,19 +20,18 @@ export const createTranslate =
 
 export const createTapTarget = (
   { x, y }: PatternEntry["meta"],
-  t: ReturnType<typeof createTranslate>
+  t?: Parameters<ReturnType<typeof createTranslate>>[1]
 ): Pick<PatternEntry, "meta" | "paths" | "transform" | "tiny"> => {
   const r = 2.5;
-  const meta = { x, y, west: x - r, east: x + r, north: y - r, south: y + r };
 
   return {
-    meta,
+    meta: { x, y, west: x - r, east: x + r, north: y - r, south: y + r },
     paths: [
       `M${x} ${y} m-${r}, 0 a${r},${r} 0 1,0 ${2 * r},0 a${r},${r} 0 1,0 -${
         2 * r
       },0`,
     ],
-    transform: t(meta, { scale: r, ox: 0.1 }),
+    transform: [t?.scale ?? 1, 0, 0, t?.scale ?? 1, 0, 0],
     tiny: true,
   };
 };

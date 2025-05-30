@@ -14,12 +14,12 @@ const patternCache = new Map<string, OffscreenCanvas>();
 const patternKey = (n: string, s: number) => `${n}:${s}`;
 
 let patterns: Record<string, Pattern> = {};
-let colors: string[] = [];
 let entries: PatternEntry<Record<string, Pattern>>[] = [];
 let isReady = false;
 let tileSize = 0;
 let patternWidth = 0;
 let patternHeight = 0;
+let theme: "light" | "dark" = "light";
 
 function mergedPath(paths: string[]): Path2D {
   let mergedPath = pathCache.get(paths);
@@ -45,15 +45,14 @@ function cachedPattern({ subject, scale }: { subject: string; scale: number }) {
   );
 
   const ctx = offscreen.getContext("2d", { alpha: false })!;
+  const pattern = patterns[subject];
 
-  ctx.fillStyle = colors[subject.charCodeAt(0) % colors.length];
+  ctx.fillStyle = pattern.background[theme];
   ctx.fillRect(0, 0, offscreen.width, offscreen.height);
 
   ctx.scale(scale, scale);
 
-  const pattern = patterns[subject];
-
-  for (const { path: p, fill } of pattern) {
+  for (const { path: p, fill } of pattern.paths) {
     if (!fill) continue;
     ctx.fillStyle = fill;
     ctx.fill(cachedPath(p));
@@ -115,6 +114,7 @@ function renderTile({ x, y, scale }: { scale: number; x: number; y: number }) {
   ctx.transform(scale, 0, 0, scale, -x, -y);
 
   for (const entry of entries) {
+    if (entry.tiny) continue;
     renderTileEntry({ entry, scale, ctx });
   }
 
@@ -123,11 +123,11 @@ function renderTile({ x, y, scale }: { scale: number; x: number; y: number }) {
 
 function handleInit(e: MessageEvent<TileInitMessage>) {
   patterns = e.data.patterns;
-  colors = e.data.colors;
   entries = e.data.entries;
   tileSize = e.data.tileSize;
   patternWidth = e.data.patternSize.width;
   patternHeight = e.data.patternSize.height;
+  theme = e.data.theme;
 
   patternCache.clear();
   isReady = true;

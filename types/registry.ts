@@ -17,6 +17,9 @@ export type PatternEntry<
 };
 
 export type Pattern = {
-  path: string;
-  fill?: string;
-}[];
+  background: { light: string; dark: string };
+  paths: {
+    path: string;
+    fill?: string;
+  }[];
+};

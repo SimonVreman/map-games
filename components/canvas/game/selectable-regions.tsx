@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useCanvas } from "../canvas-provider";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
-import { Renderer } from "../types";
+import { ExtendedRenderer, Renderer } from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useLabels } from "@/lib/hooks/use-labels";
@@ -100,26 +100,25 @@ export function SelectableRegions({
     [highlighted, hints, getCodeGroup, twColor]
   );
 
-  const regionRenderer = useCallback(
-    (region: Region): Renderer =>
-      ({ ctx, scale }) => {
-        ctx.strokeStyle = twColor("neutral-300", "neutral-700");
-        ctx.lineWidth = scale;
-        ctx.lineJoin = "round";
+  const renderItem = useCallback<ExtendedRenderer<{ item: Region }>>(
+    ({ ctx, scale, item }) => {
+      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
+      ctx.lineWidth = scale;
+      ctx.lineJoin = "round";
 
-        for (const path of region.paths) {
-          const path2d = cachedPath(path);
-          ctx.fill(path2d);
-          ctx.stroke(path2d);
-        }
-      },
+      for (const path of item.paths) {
+        const path2d = cachedPath(path);
+        ctx.fill(path2d);
+        ctx.stroke(path2d);
+      }
+    },
     [twColor]
   );
 
   useDynamicFill({
     key: renderKeys.regions,
     items: regions,
-    renderer: regionRenderer,
+    renderItem,
     getColor: currentRegionColor,
   });
 

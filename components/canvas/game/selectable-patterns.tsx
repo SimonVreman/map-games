@@ -1,4 +1,5 @@
 import {
+  ExtendedRenderer,
   Renderer,
   TileInitMessage,
   TileProcessedMessage,
@@ -15,20 +16,6 @@ import { useCanvas } from "../canvas-provider";
 import { useTwTheme } from "@/lib/hooks/use-tw-theme";
 
 const tileSize = 500;
-
-const colors = [
-  "chart-1",
-  "chart-2",
-  "chart-3",
-  "chart-4",
-  // "chart-5",
-  // "chart-6",
-  // "chart-7",
-  // "chart-8",
-  // "chart-9",
-  // "chart-10",
-];
-
 const baseKey = "selectable-patterns";
 const renderKeys = {
   patterns: { key: baseKey + ":patterns", order: 0, layer: 0 },
@@ -141,7 +128,7 @@ export function SelectablePatterns<
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
-  const { twColor } = useTwTheme();
+  const { twColor, theme } = useTwTheme();
   const { updateAll, addRenderer, removeRenderer } = useCanvas();
   const bounding = useWindowBounding();
   const worker = useRef<Worker>(null);
@@ -157,12 +144,12 @@ export function SelectablePatterns<
     worker.current?.postMessage({
       type: "init",
       patterns,
-      colors: colors.map((c) => twColor(c)),
       tileSize,
       patternSize: size,
       entries,
+      theme,
     } satisfies TileInitMessage<TMap>);
-  }, [patterns, entries, twColor, size]);
+  }, [patterns, entries, size, theme]);
 
   useEffect(() => {
     const listener = (event: MessageEvent<TileProcessedMessage>) => {
@@ -194,20 +181,45 @@ export function SelectablePatterns<
     [isHighlighted, twColor]
   );
 
-  const entryRenderer = useCallback(
-    (entry: TEntry): Renderer =>
-      ({ ctx, scale }) => {
-        ctx.lineWidth = scale;
-        ctx.lineJoin = "round";
-        ctx.strokeStyle = twColor("neutral-300", "neutral-700");
+  const renderEntry = useCallback<ExtendedRenderer<{ item: TEntry }>>(
+    ({ ctx, scale, item: entry }) => {
+      ctx.lineWidth = scale;
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
 
-        for (const path of entry.paths) {
-          const path2d = cachedPath(path);
+      const isTinyHighlighted = entry.tiny && isHighlighted(entry.name);
+
+      for (const path of entry.paths) {
+        const path2d = cachedPath(path);
+
+        if (isTinyHighlighted) {
+          const diagonal = Math.sqrt(size.width ** 2 + size.height ** 2);
+          const scale = (5 / diagonal) * entry.transform[0];
+          const offsetX = entry.meta.x - (size.width * scale) / 2;
+          const offsetY = entry.meta.y - (size.height * scale) / 2;
+          const { background, paths } = patterns[entry.subjects[0]];
+
+          ctx.save();
+          ctx.fillStyle = background[theme];
           ctx.fill(path2d);
-          ctx.stroke(path2d);
+          ctx.clip(path2d);
+          ctx.transform(scale, 0, 0, scale, offsetX, offsetY);
+
+          for (const { path, fill } of paths) {
+            const path2d = cachedPath(path);
+            if (!fill) continue;
+            ctx.fillStyle = fill;
+            ctx.fill(path2d);
+          }
+
+          ctx.restore();
         }
-      },
-    [twColor]
+
+        ctx.fill(path2d);
+        ctx.stroke(path2d);
+      }
+    },
+    [twColor, isHighlighted, patterns, size.width, size.height, theme]
   );
 
   useEffect(() => {
@@ -264,7 +276,7 @@ export function SelectablePatterns<
   useDynamicFill({
     key: renderKeys.entries,
     items: entries,
-    renderer: entryRenderer,
+    renderItem: renderEntry,
     getColor: currentEntryColor,
   });
 

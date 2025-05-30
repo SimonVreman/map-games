@@ -37,17 +37,18 @@ export type RendererKey = {
   order?: number;
 };
 
-export type Renderer = ({
-  ctx,
-}: {
+export type Renderer = (r: {
   ctx: CanvasRenderingContext2D;
   scale: number;
 }) => void;
 
+export type ExtendedRenderer<T extends object> = (
+  r: Parameters<Renderer>[0] & T
+) => ReturnType<Renderer>;
+
 export type CanvasAnimation = {
-  subject: string | number;
+  index: number;
   timestamp: { start: number; end: number };
-  render: Renderer;
   fill?: { from: Oklch; to: Oklch; interpolator: Interpolator };
 };
 
@@ -62,10 +63,10 @@ export type TileInitMessage<
 > = {
   type: "init";
   patterns: TMap;
-  colors: string[];
   tileSize: number;
   patternSize: { width: number; height: number };
   entries: PatternEntry<TMap>[];
+  theme: "light" | "dark";
 };
 
 export type TileRenderMessage = {

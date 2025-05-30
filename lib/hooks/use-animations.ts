@@ -1,6 +1,7 @@
 import { useCanvas } from "@/components/canvas/canvas-provider";
 import {
   CanvasAnimation,
+  ExtendedRenderer,
   Renderer,
   RendererKey,
 } from "@/components/canvas/types";
@@ -13,16 +14,17 @@ function easeinOutSine(t: number) {
   return -(Math.cos(Math.PI * t) - 1) / 2;
 }
 
-const animate = ({
+const interpolate = ({
   t,
   animation,
-  ...args
-}: { t: number; animation: CanvasAnimation } & Parameters<Renderer>[0]) => {
+  ctx,
+}: {
+  t: number;
+  animation: CanvasAnimation;
+  ctx: CanvasRenderingContext2D;
+}) => {
   const fill = animation.fill;
-
-  if (fill) args.ctx.fillStyle = formatCss(fill.interpolator(t));
-
-  animation.render(args);
+  if (fill) ctx.fillStyle = formatCss(fill.interpolator(t));
 };
 
 const tick =
@@ -46,7 +48,17 @@ const tick =
         : null;
   };
 
-export function useAnimations(key: RendererKey) {
+export function useAnimations<TItem>({
+  key,
+  renderBase,
+  renderStatic,
+  items,
+}: {
+  key: RendererKey;
+  renderBase: ExtendedRenderer<{ item: TItem }>;
+  renderStatic: ExtendedRenderer<{ item: TItem }>;
+  items: TItem[];
+}) {
   const animations = useRef<CanvasAnimation[]>([]);
   const raf = useRef<number | null>(null);
   const { update, addRenderer, removeRenderer } = useCanvas();
@@ -54,7 +66,7 @@ export function useAnimations(key: RendererKey) {
   const start = useCallback(
     (animation: CanvasAnimation) => {
       const index = animations.current.findIndex(
-        (a) => a.subject === animation.subject
+        (a) => a.index === animation.index
       );
 
       animation = mergeAnimations(
@@ -73,32 +85,31 @@ export function useAnimations(key: RendererKey) {
     [update, key.layer]
   );
 
-  const getActive = useCallback(
-    () => animations.current.map((a) => a.subject),
-    []
-  );
-
   useEffect(() => {
-    const animationKey = {
-      key: key.key + ":animated",
-      layer: key.layer,
-      order: (key.order ?? 0) + 1,
-    };
     const render: Renderer = ({ ctx, scale }) => {
       const timestamp = documentTime();
 
-      for (const animation of animations.current) {
-        const { start, end } = animation.timestamp;
-        const progress = Math.min((timestamp - start) / (end - start), 1);
-        const t = easeinOutSine(progress);
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const animation = animations.current.find((a) => a.index === i);
 
-        animate({ t, animation, ctx, scale });
+        if (animation) {
+          const { start, end } = animation.timestamp;
+          const progress = Math.min((timestamp - start) / (end - start), 1);
+          const t = easeinOutSine(progress);
+
+          interpolate({ t, animation, ctx });
+        } else {
+          renderStatic({ item, ctx, scale });
+        }
+
+        renderBase({ item, ctx, scale });
       }
     };
 
-    addRenderer({ render, ...animationKey });
-    return () => removeRenderer(animationKey);
-  }, [addRenderer, removeRenderer, key]);
+    addRenderer({ render, ...key });
+    return () => removeRenderer(key);
+  }, [addRenderer, removeRenderer, key, items, renderBase, renderStatic]);
 
   useEffect(() => {
     if (raf.current == null) return;
@@ -111,6 +122,5 @@ export function useAnimations(key: RendererKey) {
   return {
     animations,
     startAnimation: start,
-    getActiveAnimations: getActive,
   };
 }

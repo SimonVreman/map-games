@@ -1,4 +1,4 @@
-import { CanvasAnimation, Renderer } from "./types";
+import { CanvasAnimation } from "./types";
 import { useMode as applyMode, modeOklch, interpolate } from "culori/fn";
 import { documentTime, oklchEqual } from "@/lib/utils";
 
@@ -6,15 +6,13 @@ const oklch = applyMode(modeOklch);
 const fallbackColor = oklch("oklch(0 0 0)")!;
 
 export const fadeFill = ({
-  subject,
-  render,
+  index,
   from: fromString,
   to: toString,
   start = documentTime(),
   duration = 150,
 }: {
-  subject: string | number;
-  render: Renderer;
+  index: number;
   from: string;
   to: string;
   start?: number;
@@ -25,9 +23,8 @@ export const fadeFill = ({
   const interpolator = interpolate([from, to], "oklch");
 
   return {
-    subject,
+    index,
     timestamp: { start, end: start + duration },
-    render,
     fill: { from, to, interpolator },
   };
 };
