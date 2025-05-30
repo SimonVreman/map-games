@@ -1,3 +1,4 @@
+import { useTwTheme } from "@/lib/hooks/use-tw-theme";
 import { Pattern } from "@/types/registry";
 
 export function PatternPreview<TMap extends Record<string, Pattern>>({
@@ -9,6 +10,7 @@ export function PatternPreview<TMap extends Record<string, Pattern>>({
   size: { width: number; height: number };
   pattern?: keyof TMap;
 }) {
+  const { theme } = useTwTheme();
   const pattern = patternKey ? patterns[patternKey] : null;
 
   if (!pattern) return null;
@@ -18,7 +20,7 @@ export function PatternPreview<TMap extends Record<string, Pattern>>({
       viewBox={`0 0 ${size.width} ${size.height}`}
       className="w-32 bg-secondary"
       preserveAspectRatio="xMidYMid slice"
-      style={{ backgroundColor: pattern.background.light }}
+      style={{ backgroundColor: pattern.background[theme] }}
     >
       {pattern.paths.map((p, i) => (
         <path key={i} d={p.path} fill={p.fill || "none"} />

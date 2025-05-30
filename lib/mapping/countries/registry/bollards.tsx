@@ -52,7 +52,7 @@ import { mapColors } from "../../colors";
 
 const size = { width: 400, height: 500 };
 const t = createTranslate(size);
-const c = mapColors.pastelClay;
+const c = mapColors.sweet;
 
 const patterns: Record<string, Pattern> = {
   albaniaItalyMaltaSanMarino: {
@@ -93,7 +93,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   andorraSpain: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M222 113.5V499.5H269V93.5L222 113.5Z",
@@ -130,7 +130,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   austria: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M169 157V500H122V157H169Z",
@@ -179,7 +179,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   belgium: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M289 113.787L229 130L232.797 118.804C233.227 117.539 234.144 116.498 235.346 115.914L278.741 94.8154C281.676 93.3883 285.17 95.1104 285.825 98.3076L289 113.787Z",
@@ -208,7 +208,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   croatiaBulgariaNorthMacedonia: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M234 112.742V499.5H281V93.5L234 112.742Z",
@@ -274,7 +274,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   czechiaSlovakia: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M234 104.5V499.5H281V97.5L234 104.5Z",
@@ -315,7 +315,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   denmark: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M298 113.787L238 130L241.797 118.804C242.227 117.539 243.144 116.498 244.346 115.914L287.741 94.8154C290.676 93.3883 294.17 95.1104 294.825 98.3076L298 113.787Z",
@@ -352,7 +352,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   estoniaFinlandSweden: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M162 51.5001V500H115V51.5L162 51.5001Z",
@@ -393,7 +393,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   estoniaSweden: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M162 51.5001V500H115V51.5L162 51.5001Z",
@@ -475,7 +475,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   latvia: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M162 60.5V500H115V60.5L127 54H151L162 60.5Z",
@@ -516,7 +516,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   norway: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M162 51.5001V500H115V51.5L162 51.5001Z",
@@ -549,7 +549,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   lithuania: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M234 91.7417V500H281V72.5L234 91.7417Z",
@@ -586,7 +586,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   swedenGermanyLuxembourgSwitzerland: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M234 91.7417V500H281V72.5L234 91.7417Z",
@@ -664,7 +664,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   germany: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M234 91.7417V500H281V72.5L234 91.7417Z",
@@ -742,7 +742,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   hungary: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M234 112.742V499.5H281V93.5L234 112.742Z",
@@ -779,7 +779,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   iceland: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M292 92V500H228V123.965L292 92Z",
@@ -804,7 +804,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   ireland: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M171 127V500H98V127L171 127Z",
@@ -906,7 +906,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   montenegroSlovenia: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M163 157V500H116V157H163Z",
@@ -943,7 +943,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   northMacedonia: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M157 79V500H122V79H157Z",
@@ -988,7 +988,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   poland: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M230 91.7417V500H277V72.5L230 91.7417Z",
@@ -1025,7 +1025,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   portugal: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M234 91.7417V500H281V72.5L234 91.7417Z",
@@ -1095,7 +1095,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   turkey: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M162 97V500H115V97L127 93H151L162 97Z",
@@ -1120,7 +1120,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   serbia: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M296 51.149V499.649H236V82.1484L257 79.1484L281 66.6484L296 51.149Z",
@@ -1157,7 +1157,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   serbia2: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M162 60.5V500H115V60.5L127 54H151L162 60.5Z",
@@ -1194,7 +1194,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   spain: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M234 113.638V499.638H281V93.6377L234 113.638Z",
@@ -1272,7 +1272,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   unitedKingdom: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M161 165V500H89V165H161Z",
@@ -1317,7 +1317,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   netherlands: {
-    background: c[0],
+    background: c[2],
     paths: [
       {
         path: "M165 188V499H118V188L119 183L141 177L164 183L165 188Z",
@@ -1346,7 +1346,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   netherlands2: {
-    background: c[0],
+    background: c[3],
     paths: [
       {
         path: "M165 188V499H118V188L119 183L141 177L164 183L165 188Z",
@@ -1375,7 +1375,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   russia: {
-    background: c[0],
+    background: c[4],
     paths: [
       {
         path: "M162 160.5V500H115V160.5L127 154H151L162 160.5Z",
@@ -1453,7 +1453,7 @@ const patterns: Record<string, Pattern> = {
     ],
   },
   russiaUkraine: {
-    background: c[0],
+    background: c[1],
     paths: [
       {
         path: "M234 112.742V499.5H281V93.5L234 112.742Z",
