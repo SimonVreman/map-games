@@ -11,5 +11,5 @@ export type EuropeanPedestriansSlice = {
 export const createEuropeanPedestriansSlice = createGroupPinSlice({
   name: "europeanPedestrians",
   subjects: pedestrianTypes,
-  targets: europeanPedestrians,
+  targets: europeanPedestrians.entries,
 });

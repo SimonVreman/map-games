@@ -32,7 +32,7 @@ export function PatternTool() {
         const fill = path.getAttribute("fill");
 
         output += " {\n";
-        output += `  path: new Path2D("${d}"),\n`;
+        output += `  path: "${d}",\n`;
         if (fill) output += `  fill: "${fill}",\n`;
         output += " },\n";
       } else if (n.nodeName === "rect") {
@@ -44,7 +44,7 @@ export function PatternTool() {
         const fill = rect.getAttribute("fill");
 
         output += " {\n";
-        output += `  path: new Path2D("M${x} ${y} h${width} v${height} h-${width} Z"),\n`;
+        output += `  path: "M${x} ${y} h${width} v${height} h-${width} Z",\n`;
         if (fill) output += `  fill: "${fill}",\n`;
         output += " },\n";
       } else if (n.nodeName === "circle") {
@@ -55,9 +55,9 @@ export function PatternTool() {
         const fill = circle.getAttribute("fill");
 
         output += " {\n";
-        output += `  path: new Path2D("M${cx} ${cy} m-${r}, 0 a${r},${r} 0 1,0 ${
+        output += `  path: "M${cx} ${cy} m-${r}, 0 a${r},${r} 0 1,0 ${
           2 * +r
-        },0 a${r},${r} 0 1,0 -${2 * +r},0"),\n`;
+        },0 a${r},${r} 0 1,0 -${2 * +r},0",\n`;
         if (fill) output += `  fill: "${fill}",\n`;
         output += " },\n";
       } else if (n.nodeName === "ellipse") {
@@ -69,9 +69,9 @@ export function PatternTool() {
         const fill = ellipse.getAttribute("fill");
 
         output += " {\n";
-        output += `  path: new Path2D("M${cx} ${cy} m-${rx}, 0 a${rx},${ry} 0 1,0 ${
+        output += `  path: "M${cx} ${cy} m-${rx}, 0 a${rx},${ry} 0 1,0 ${
           2 * +rx
-        },0 a${rx},${ry} 0 1,0 -${2 * +rx},0"),\n`;
+        },0 a${rx},${ry} 0 1,0 -${2 * +rx},0",\n`;
         if (fill) output += `  fill: "${fill}",\n`;
         output += " },\n";
       }

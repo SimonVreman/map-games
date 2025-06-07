@@ -1,12 +1,12 @@
 "use client";
 
-import { europeanPedestrians } from "@/lib/mapping/countries/registry/pedestrians";
-import { SvgMap } from "../svg-map";
+import dynamic from "next/dynamic";
 import { EuropeanPedestriansControls } from "./controls";
-import { useAppStore } from "@/lib/store/provider";
-import { svgPedestrianPatterns } from "./pedestrian-patterns";
-import { SelectableCountries } from "../selectable-countries";
-import { useHandleGroupGuess } from "../group-pin/guess";
+import { CanvasMap } from "@/components/canvas/canvas-map";
+
+const Rendering = dynamic(() => import("./rendering"), {
+  ssr: false,
+});
 
 const bounds = {
   north: 71,
@@ -17,22 +17,11 @@ const bounds = {
 };
 
 export function EuropeanPedestriansGame() {
-  const [highlighted, hints] = useAppStore((s) => [
-    s.europeanPedestrians.highlighted,
-    s.europeanPedestrians.hints,
-  ]);
-
-  const { handleGuess } = useHandleGroupGuess({
-    store: "europeanPedestrians",
-    targets: europeanPedestrians,
-  });
-
   return (
     <div className="size-full relative">
       <EuropeanPedestriansControls />
 
-      <SvgMap
-        fontSize={2}
+      <CanvasMap
         bounds={bounds}
         attribution={
           <>
@@ -44,13 +33,8 @@ export function EuropeanPedestriansGame() {
           </>
         }
       >
-        <defs>{svgPedestrianPatterns}</defs>
-        <SelectableCountries
-          items={europeanPedestrians}
-          isHighlighted={(name) => highlighted.includes(name) || hints}
-          onClick={handleGuess}
-        />
-      </SvgMap>
+        <Rendering />
+      </CanvasMap>
     </div>
   );
 }

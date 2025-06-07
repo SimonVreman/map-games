@@ -33,7 +33,6 @@ export function EuropeanBollardsGame() {
           </>
         }
       >
-        {/* <defs>{svgBollardPatterns}</defs> */}
         <Rendering />
       </CanvasMap>
     </div>
