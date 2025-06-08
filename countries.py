@@ -75,14 +75,12 @@ def write_countries():
             continue
 
         boundaries, _ = read_boundaries(df_country, union=True)
-        output = open_utf8(f"output/{filename}.tsx", "w")
-        output.write(
-            f"export const {constant_name}Paths = {'<>' if len(boundaries) > 1 else '('}\n"
-        )
+        output = open_utf8(f"output/countries/{filename}.tsx", "w")
+        output.write(f"export const {constant_name}Paths = [\n")
 
         write_paths(output, boundaries)
 
-        output.write(f"{'</>' if len(boundaries) > 1 else ')'}\n")
+        output.write("]\n")
 
         bounds = df_country.total_bounds
         center = df_country.geometry.union_all().representative_point()
@@ -96,4 +94,4 @@ def write_countries():
         output.close()
 
 
-# write_countries()
+write_countries()

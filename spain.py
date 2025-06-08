@@ -115,6 +115,6 @@ def write_spain_phone():
     output.close()
 
 
-# write_spain()
-# write_spain_phone()
-# write_spain_first_administrative()
+write_spain()
+write_spain_phone()
+write_spain_first_administrative()

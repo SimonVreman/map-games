@@ -155,14 +155,14 @@ def write_paths(
 ):
     for boundary in boundaries:
         output.write(
-            f'<path d="{path_to_string(boundary.exterior, transformation)}{' Z' if close else ''}'
+            f'"{path_to_string(boundary.exterior, transformation)}{' Z' if close else ''}'
         )
 
         if interiors and boundary.interiors:
             for interior in boundary.interiors:
                 output.write(f" {path_to_string(interior, transformation)} Z")
 
-        output.write('" />\n')
+        output.write('",\n')
 
 
 def write_code_paths(
@@ -173,18 +173,14 @@ def write_code_paths(
 ):
     boundaries, center = read_boundaries(df, union=True)
     center = transformation.transform(center) if transformation else center
-    center_x = round(center[0], rounding)
-    center_y = round(center[1], rounding)
+    x = round(center[0], rounding)
+    y = round(center[1], rounding)
     area = df.to_crs("+proj=cea").area.sum() / 1e6
-    open_paths = "<>" if len(boundaries) > 1 else ""
-    close_paths = "</>" if len(boundaries) > 1 else ""
+    key = ",".join(codes)
 
-    output.write(
-        f"{{ codes: [{','.join(codes)}], center: [{center_x},{center_y}], area: {area:.3f}, paths: ({open_paths}"
-    )
-
+    output.write(f"{{ codes: [{key}], center: [{x},{y}], area: {area:.3f}, paths: [")
     write_paths(output, boundaries, transformation=transformation, interiors=True)
-    output.write(f"{close_paths})}},\n")
+    output.write("]},\n")
 
 
 def normalize_string(s):
