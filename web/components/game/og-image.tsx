@@ -1,6 +1,4 @@
-import { readFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
-import { join } from "path";
 import { notFound } from "next/navigation";
 import { games } from "@/lib/games/registry";
 
@@ -10,11 +8,6 @@ const size = { width: 1200, height: 630 };
 const assetBase = `${
   process.env.NODE_ENV === "development" ? "http" : "https"
 }://${process.env.VERCEL_BRANCH_URL}`;
-
-async function getImage(path: string) {
-  const data = await readFile(join(process.cwd(), `public/img${path}`));
-  return Uint8Array.from(data).buffer;
-}
 
 export const ogImageConfig = {
   contentType,
@@ -73,8 +66,7 @@ export async function generateOgImage({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            // @ts-expect-error - does actually work
-            src={await getImage(`/games/${game.slug}-dark.png`)}
+            src={`${assetBase}/img/games/${game.slug}-dark.png`}
             alt="screenshot"
             width={900}
             height={600}
