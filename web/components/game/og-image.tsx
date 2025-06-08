@@ -32,10 +32,10 @@ export async function generateOgImage({
   if (!game) notFound();
 
   const figtreeRegular = await readFile(
-    join(process.cwd(), "public/assets/Figtree-Regular.ttf")
+    join(process.cwd(), "assets/Figtree-Regular.ttf")
   );
   const figtreeBold = await readFile(
-    join(process.cwd(), "public/assets/Figtree-Bold.ttf")
+    join(process.cwd(), "assets/Figtree-Bold.ttf")
   );
 
   return new ImageResponse(
