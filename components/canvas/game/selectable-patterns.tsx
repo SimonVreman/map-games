@@ -88,18 +88,6 @@ function cachedEntry({
 
   if (tileCache.has(key)) return { tile: tileCache.get(key)!, scale, x, y };
 
-  // TODO handle: Just set empty tiles to null
-  // if (
-  //   x + tileSize < meta.west * scale ||
-  //   x > meta.east * scale ||
-  //   y + tileSize < meta.north * scale ||
-  //   y > meta.south * scale
-  // ) {
-  //   tileCache.set(key, null);
-  //   tileState.set(key, TileState.done);
-  //   return null;
-  // }
-
   tileState.set(key, TileState.loading);
 
   worker.postMessage({

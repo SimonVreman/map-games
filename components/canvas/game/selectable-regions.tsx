@@ -100,6 +100,16 @@ export function SelectableRegions({
     [highlighted, hints, getCodeGroup, twColor]
   );
 
+  const isLabelVisible = useCallback(
+    ({ codes }: Region) =>
+      hints ||
+      (highlighted.correctCode != null &&
+        codes.some((c) => c === highlighted.correctCode)) ||
+      (highlighted.incorrectKey != null &&
+        codes.join(",") === highlighted.incorrectKey),
+    [highlighted, hints]
+  );
+
   const renderItem = useCallback<ExtendedRenderer<{ item: Region }>>(
     ({ ctx, scale, item }) => {
       ctx.strokeStyle = twColor("neutral-300", "neutral-700");
@@ -131,12 +141,7 @@ export function SelectableRegions({
     key: renderKeys.labels,
     items: regions,
     getLabel: ({ codes }) => codes.join("/"),
-    isVisible: ({ codes }) =>
-      hints ||
-      (highlighted.correctCode != null &&
-        codes.some((c) => c === highlighted.correctCode)) ||
-      (highlighted.incorrectKey != null &&
-        codes.join(",") === highlighted.incorrectKey),
+    isVisible: isLabelVisible,
   });
 
   /*
