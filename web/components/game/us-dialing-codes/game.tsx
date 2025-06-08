@@ -16,7 +16,7 @@ const bounds = {
   padding: 2,
 };
 
-export function USDialingCodesGame() {
+export default function USDialingCodesGame() {
   return (
     <div className="size-full relative">
       <USDialingCodesControls />

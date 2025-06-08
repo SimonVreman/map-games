@@ -1,4 +1,4 @@
-import { CityBlocksGame } from "@/components/game/city-blocks/game";
+import Game from "@/components/game/city-blocks/game";
 import { getCities } from "@/lib/geonames/cities";
 import { validatedLanguage } from "@/lib/geonames/language";
 import { Metadata } from "next";
@@ -15,5 +15,5 @@ export default async function CityBlocksPlayPage({
   const language = validatedLanguage((await searchParams)?.language);
   const cities = await getCities({ minimumPopulation: 1e5, language });
 
-  return <CityBlocksGame cities={cities} />;
+  return <Game cities={cities} />;
 }

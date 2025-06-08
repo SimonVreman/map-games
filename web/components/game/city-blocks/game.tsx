@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useOnStoreHydrated } from "@/lib/hooks/use-on-store-hydrated";
 import { blocksForCities } from "./blocks";
 
-export function CityBlocksGame({ cities }: { cities: City[] }) {
+export default function CityBlocksGame({ cities }: { cities: City[] }) {
   const router = useRouter();
 
   useOnStoreHydrated((s) => {

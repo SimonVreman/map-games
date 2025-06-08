@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useOnStoreHydrated } from "@/lib/hooks/use-on-store-hydrated";
 
-export function CityCoverGame({ cities }: { cities: City[] }) {
+export default function CityCoverGame({ cities }: { cities: City[] }) {
   const router = useRouter();
 
   useOnStoreHydrated((s) => {

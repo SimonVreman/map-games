@@ -1,11 +1,10 @@
 import { geoguessrGames } from "@/lib/games/geoguessr-registry";
 import { regularGames } from "@/lib/games/regular-registry";
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
-const dynamicGamePages = [...geoguessrGames, ...regularGames].filter(
-  (g) => g.pages.Game
-);
+const dynamicGamePages = [...geoguessrGames, ...regularGames];
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -35,9 +34,11 @@ export async function generateMetadata({
 
 export default async function DynamicPlayPage({ params }: PageProps) {
   const { slug } = await params;
-  const Game = dynamicGamePages.find((g) => g.slug === slug)?.pages.Game;
+  const game = dynamicGamePages.find((g) => g.slug === slug);
 
-  if (!Game) notFound();
+  if (!game) notFound();
+
+  const Game = dynamic(() => import(`@/components/game/${slug}/game`));
 
   return <Game />;
 }

@@ -1,4 +1,4 @@
-import { CityCoverGame } from "@/components/game/city-cover/game";
+import Game from "@/components/game/city-cover/game";
 import { getCities } from "@/lib/geonames/cities";
 import { validatedLanguage } from "@/lib/geonames/language";
 import { Metadata } from "next";
@@ -15,5 +15,5 @@ export default async function CityCoverPlayPage({
   const language = validatedLanguage((await searchParams)?.language);
   const cities = await getCities({ minimumPopulation: 1e5, language });
 
-  return <CityCoverGame cities={cities} />;
+  return <Game cities={cities} />;
 }

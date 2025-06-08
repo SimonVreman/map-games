@@ -16,7 +16,7 @@ const bounds = {
   padding: 2,
 };
 
-export function BrazilDialingCodesGame() {
+export default function BrazilDialingCodesGame() {
   return (
     <div className="size-full relative">
       <BrazilDialingCodesControls />

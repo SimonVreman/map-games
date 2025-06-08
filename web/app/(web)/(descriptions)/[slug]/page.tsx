@@ -4,6 +4,7 @@ import { ProseMdx } from "@/components/mdx/prose-mdx";
 import { geoguessrGames } from "@/lib/games/geoguessr-registry";
 import { regularGames } from "@/lib/games/regular-registry";
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
 const dynamicDescriptionPages = [...geoguessrGames, ...regularGames];
@@ -56,9 +57,13 @@ function getSuggestions(slug: string) {
 export default async function DynamicDescriptionPage({ params }: PageProps) {
   const { slug } = await params;
   const game = dynamicDescriptionPages.find((g) => g.slug === slug);
-  const Description = game?.pages.Description;
 
-  if (!Description) notFound();
+  if (!game) notFound();
+
+  const Description = dynamic(
+    () => import(`@/components/game/${slug}/description.mdx`),
+    { loading: () => <p>Loading game...</p> }
+  );
 
   const suggestions = getSuggestions(slug);
 
@@ -70,6 +75,7 @@ export default async function DynamicDescriptionPage({ params }: PageProps) {
         alt={`Screenshot of ${game.name} game`}
         width={900}
         height={600}
+        priority
       />
       <h1>{game.name}</h1>
       <Description />

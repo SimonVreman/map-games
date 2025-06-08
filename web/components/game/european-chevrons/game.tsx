@@ -16,7 +16,7 @@ const bounds = {
   padding: 2,
 };
 
-export function EuropeanChevronsGame() {
+export default function EuropeanChevronsGame() {
   return (
     <div className="size-full relative">
       <EuropeanChevronsControls />

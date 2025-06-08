@@ -16,7 +16,7 @@ const bounds = {
   padding: 2,
 };
 
-export function EuropeanBollardsGame() {
+export default function EuropeanBollardsGame() {
   return (
     <div className="size-full relative">
       <EuropeanBollardsControls />
