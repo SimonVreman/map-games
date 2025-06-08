@@ -1,22 +1,17 @@
 import { GameGrid } from "@/components/browse/game-grid";
 import { MdxImage } from "@/components/mdx/image";
 import { ProseMdx } from "@/components/mdx/prose-mdx";
-import { geoguessrGames } from "@/lib/games/geoguessr-registry";
-import { regularGames } from "@/lib/games/regular-registry";
+import { games } from "@/lib/games/registry";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-
-const dynamicDescriptionPages = [...geoguessrGames, ...regularGames];
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return dynamicDescriptionPages.map((g) => ({
-    slug: g.slug,
-  }));
+  return games.map((g) => ({ slug: g.slug }));
 }
 
 export async function generateMetadata({
@@ -25,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const game = dynamicDescriptionPages.find((g) => g.slug === slug);
+  const game = games.find((g) => g.slug === slug);
 
   if (!game) notFound();
 
@@ -36,7 +31,7 @@ export async function generateMetadata({
 }
 
 function getSuggestions(slug: string) {
-  const otherGames = dynamicDescriptionPages.filter((g) => g.slug !== slug);
+  const otherGames = games.filter((g) => g.slug !== slug);
 
   // Randomly select games, but deterministically based on the slug
   let seed = slug.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -56,7 +51,7 @@ function getSuggestions(slug: string) {
 
 export default async function DynamicDescriptionPage({ params }: PageProps) {
   const { slug } = await params;
-  const game = dynamicDescriptionPages.find((g) => g.slug === slug);
+  const game = games.find((g) => g.slug === slug);
 
   if (!game) notFound();
 

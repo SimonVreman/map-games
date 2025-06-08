@@ -1,4 +1,9 @@
 import { generateOgImage, ogImageConfig } from "@/components/game/og-image";
+import { games } from "@/lib/games/registry";
+
+export function generateStaticParams() {
+  return games.map((g) => ({ slug: g.slug }));
+}
 
 export const contentType = ogImageConfig.contentType;
 export const size = ogImageConfig.size;
