@@ -2,8 +2,6 @@ import { SelectableRegions } from "@/components/canvas/game/selectable-regions";
 import { useHandleSingleGuess } from "../single-pin/guess";
 import { useAppStore } from "@/lib/store/provider";
 import { spainPhoneCodes } from "@/lib/mapping/spain/paths/phone-codes";
-import { spainPaths } from "@/lib/mapping/spain/paths/country";
-import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
 import { spainDivider } from "@/lib/mapping/spain/paths/divider";
 
 export default function SpainDialingCodesRendering() {
@@ -19,8 +17,6 @@ export default function SpainDialingCodesRendering() {
   return (
     <SelectableRegions
       regions={spainPhoneCodes}
-      country={spainPaths}
-      firstAdministrative={spainProvincesPaths}
       divider={spainDivider}
       hints={hints}
       highlighted={highlighted}

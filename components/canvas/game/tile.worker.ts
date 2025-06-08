@@ -6,6 +6,7 @@ import {
   TileState,
 } from "../types";
 import { cachedPath } from "@/lib/mapping/cache";
+import { resolveFill } from "../utils";
 
 const tileMargin = 10;
 
@@ -54,7 +55,8 @@ function cachedPattern({ subject, scale }: { subject: string; scale: number }) {
 
   for (const { path: p, fill } of pattern.paths) {
     if (!fill) continue;
-    ctx.fillStyle = fill;
+
+    ctx.fillStyle = resolveFill({ fill, ctx });
     ctx.fill(cachedPath(p));
   }
 
@@ -153,13 +155,31 @@ function handleRender(e: MessageEvent<TileRenderMessage>) {
   } satisfies TileProcessedMessage);
 }
 
+const tileMessageQueue = [] as MessageEvent<TileRenderMessage>[];
+let scheduledRender: null | NodeJS.Timeout = null;
+
+function processQueue() {
+  while (tileMessageQueue.length > 0) {
+    const renderEvent = tileMessageQueue.pop();
+    if (!renderEvent) continue;
+    handleRender(renderEvent);
+  }
+}
+
 addEventListener(
   "message",
   (event: MessageEvent<TileInitMessage | TileRenderMessage>) => {
     if (event.data.type === "init") {
       handleInit(event as MessageEvent<TileInitMessage>);
     } else if (event.data.type === "render") {
-      handleRender(event as MessageEvent<TileRenderMessage>);
+      tileMessageQueue.push(event as MessageEvent<TileRenderMessage>);
+
+      if (!isReady || scheduledRender != null) return;
+
+      scheduledRender = setTimeout(() => {
+        scheduledRender = null;
+        processQueue();
+      }, 5);
     }
   }
 );

@@ -14,6 +14,7 @@ import { useWindowBounding } from "@/lib/hooks/use-window-bounding";
 import { cachedPath } from "@/lib/mapping/cache";
 import { useCanvas } from "../canvas-provider";
 import { useTwTheme } from "@/lib/hooks/use-tw-theme";
+import { resolveFill } from "../utils";
 
 const tileSize = 500;
 const baseKey = "selectable-patterns";
@@ -208,7 +209,7 @@ export function SelectablePatterns<
           for (const { path, fill } of paths) {
             const path2d = cachedPath(path);
             if (!fill) continue;
-            ctx.fillStyle = fill;
+            ctx.fillStyle = resolveFill({ fill, ctx });
             ctx.fill(path2d);
           }
 

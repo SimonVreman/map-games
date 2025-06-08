@@ -2,6 +2,11 @@
 
 import { EuropeanChevronsControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
+import dynamic from "next/dynamic";
+
+const Rendering = dynamic(() => import("./rendering"), {
+  ssr: false,
+});
 
 const bounds = {
   north: 71,
@@ -27,7 +32,9 @@ export function EuropeanChevronsGame() {
             </a>
           </>
         }
-      ></CanvasMap>
+      >
+        <Rendering />
+      </CanvasMap>
     </div>
   );
 }

@@ -16,10 +16,16 @@ export type PatternEntry<
   tiny?: boolean;
 };
 
+export type PatternFill =
+  | string
+  | {
+      type: "gradient";
+      start: { x: number; y: number };
+      end: { x: number; y: number };
+      stops: { offset: number; color: string }[];
+    };
+
 export type Pattern = {
   background: { light: string; dark: string };
-  paths: {
-    path: string;
-    fill?: string;
-  }[];
+  paths: { path: string; fill?: PatternFill }[];
 };

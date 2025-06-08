@@ -76,7 +76,7 @@ export function SelectableRegions({
   getCodeGroup,
 }: {
   regions: Region[];
-  divider?: Path2D[];
+  divider?: string[];
   getCodeGroup: (codes: number[]) => number;
   onClick: (codes: number[]) => void;
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
@@ -149,7 +149,7 @@ export function SelectableRegions({
       ctx.lineJoin = "round";
 
       ctx.setLineDash([scale * 5, scale * 5]);
-      for (const path of divider) ctx.stroke(path);
+      for (const path of divider) ctx.stroke(cachedPath(path));
       ctx.setLineDash([]);
     };
 
