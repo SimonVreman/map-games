@@ -1,6 +1,6 @@
 # Simple & fun map games
 
-A collection of map-based games, to which I (plan) to add new ones occasionally.
+A collection of map-based games, to which I (plan) to add new ones occasionally. Most games use a canvas-based renderer I wrote, based on mapping data I combined and transformed to the right format. This is reflected in this repository, where `web` is the Next.js app which runs the games, and `mapgen` is a Python project used to create the map data.
 
 # Contributions
 
