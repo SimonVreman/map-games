@@ -69,6 +69,8 @@ function getRegionColor({
 
 export function SelectableRegions({
   regions,
+  country,
+  firstSubdivision,
   divider = [],
   onClick,
   highlighted,
@@ -76,6 +78,8 @@ export function SelectableRegions({
   getCodeGroup,
 }: {
   regions: Region[];
+  country: string[];
+  firstSubdivision: string[];
   divider?: string[];
   getCodeGroup: (codes: number[]) => number;
   onClick: (codes: number[]) => void;
@@ -149,10 +153,16 @@ export function SelectableRegions({
   */
   useEffect(() => {
     const render: Renderer = ({ ctx, scale }) => {
-      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
       ctx.lineWidth = scale * 2;
       ctx.lineJoin = "round";
 
+      ctx.strokeStyle = twColor("neutral-400", "neutral-600");
+      for (const path of country) ctx.stroke(cachedPath(path));
+
+      ctx.setLineDash([scale * 3, scale * 3]);
+      for (const path of firstSubdivision) ctx.stroke(cachedPath(path));
+
+      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
       ctx.setLineDash([scale * 5, scale * 5]);
       for (const path of divider) ctx.stroke(cachedPath(path));
       ctx.setLineDash([]);
@@ -160,7 +170,14 @@ export function SelectableRegions({
 
     addRenderer({ render, ...renderKeys.country });
     return () => removeRenderer(renderKeys.country);
-  }, [divider, addRenderer, removeRenderer, twColor]);
+  }, [
+    divider,
+    country,
+    firstSubdivision,
+    addRenderer,
+    removeRenderer,
+    twColor,
+  ]);
 
   return null;
 }

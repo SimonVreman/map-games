@@ -3,6 +3,8 @@ import { usDivider } from "@/lib/mapping/us/paths/divider";
 import { usPhoneCodes } from "@/lib/mapping/us/paths/phone-codes";
 import { useHandleSingleGuess } from "../single-pin/guess";
 import { useAppStore } from "@/lib/store/provider";
+import { usPaths } from "@/lib/mapping/us/paths/country";
+import { usStatesPaths } from "@/lib/mapping/us/paths/states";
 
 export default function USDialingCodesRendering() {
   const [highlighted, hints] = useAppStore((s) => [
@@ -17,6 +19,8 @@ export default function USDialingCodesRendering() {
   return (
     <SelectableRegions
       regions={usPhoneCodes}
+      country={usPaths}
+      firstSubdivision={usStatesPaths}
       divider={usDivider}
       hints={hints}
       highlighted={highlighted}

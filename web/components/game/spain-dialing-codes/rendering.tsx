@@ -3,6 +3,8 @@ import { useHandleSingleGuess } from "../single-pin/guess";
 import { useAppStore } from "@/lib/store/provider";
 import { spainPhoneCodes } from "@/lib/mapping/spain/paths/phone-codes";
 import { spainDivider } from "@/lib/mapping/spain/paths/divider";
+import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
+import { spainPaths } from "@/lib/mapping/spain/paths/country";
 
 export default function SpainDialingCodesRendering() {
   const [highlighted, hints] = useAppStore((s) => [
@@ -17,6 +19,8 @@ export default function SpainDialingCodesRendering() {
   return (
     <SelectableRegions
       regions={spainPhoneCodes}
+      country={spainPaths}
+      firstSubdivision={spainProvincesPaths}
       divider={spainDivider}
       hints={hints}
       highlighted={highlighted}
