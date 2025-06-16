@@ -41,6 +41,7 @@ function getRegionColor({
   hovered,
   group,
   hints,
+  enabled,
   twColor,
 }: {
   positive: boolean;
@@ -48,9 +49,12 @@ function getRegionColor({
   hovered: boolean;
   hints: boolean;
   group: number;
+  enabled: boolean;
   twColor: TwColor;
 }) {
-  if (hints) {
+  if (!enabled) {
+    return twColor("neutral-100", "neutral-800");
+  } else if (hints) {
     return twColor(colors[group % colors.length]);
   } else if (positive) {
     return hovered
@@ -69,6 +73,7 @@ function getRegionColor({
 
 export function SelectableRegions({
   regions,
+  enabled,
   country,
   firstSubdivision,
   divider = [],
@@ -78,6 +83,7 @@ export function SelectableRegions({
   getCodeGroup,
 }: {
   regions: Region[];
+  enabled: number[];
   country: string[];
   firstSubdivision: string[];
   divider?: string[];
@@ -97,21 +103,23 @@ export function SelectableRegions({
         negative: incorrectKey === codes.join(","),
         group: getCodeGroup(codes),
         hovered,
+        enabled: codes.some((c) => enabled.includes(c)),
         hints,
         twColor,
       });
     },
-    [highlighted, hints, getCodeGroup, twColor]
+    [highlighted, enabled, hints, getCodeGroup, twColor]
   );
 
   const isLabelVisible = useCallback(
     ({ codes }: Region) =>
-      hints ||
-      (highlighted.correctCode != null &&
-        codes.some((c) => c === highlighted.correctCode)) ||
-      (highlighted.incorrectKey != null &&
-        codes.join(",") === highlighted.incorrectKey),
-    [highlighted, hints]
+      codes.some((c) => enabled.includes(c)) &&
+      (hints ||
+        (highlighted.correctCode != null &&
+          codes.some((c) => c === highlighted.correctCode)) ||
+        (highlighted.incorrectKey != null &&
+          codes.join(",") === highlighted.incorrectKey)),
+    [highlighted, enabled, hints]
   );
 
   const renderItem = useCallback<ExtendedRenderer<{ item: Region }>>(
@@ -138,7 +146,8 @@ export function SelectableRegions({
 
   usePathsClicked({
     items: regions,
-    onClick: (r) => onClick(r.codes),
+    onClick: (r) =>
+      r.codes.some((c) => enabled.includes(c)) && onClick(r.codes),
   });
 
   useLabels({

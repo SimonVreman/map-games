@@ -19,6 +19,7 @@ import { ControlsBase } from "./controls-base";
 export function PinControlsBase({
   stats,
   graphic,
+  dropdownContent,
   children,
   onReset,
   onToggleHints,
@@ -26,6 +27,7 @@ export function PinControlsBase({
 }: {
   stats: React.ReactNode;
   graphic?: React.ReactNode;
+  dropdownContent?: React.ReactNode;
   children: React.ReactNode;
   onReset: () => void;
   onToggleHints?: () => void;
@@ -77,6 +79,12 @@ export function PinControlsBase({
                 <span>Reset</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              {dropdownContent && (
+                <>
+                  {dropdownContent}
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem
                 variant="destructive"
                 onClick={() =>

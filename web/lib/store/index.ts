@@ -63,7 +63,8 @@ export const createAppStore = () =>
         merge: (persisted, current) =>
           merge(
             current,
-            typeof persisted === "object" ? (persisted as object) : {}
+            typeof persisted === "object" ? (persisted as object) : {},
+            { arrayMerge: (_, source) => source }
           ),
       }
     )

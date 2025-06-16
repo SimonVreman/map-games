@@ -4,18 +4,35 @@ import { useAppStore } from "@/lib/store/provider";
 import { PinControlsBase } from "../pin-controls-base";
 import { SinglePinSliceName } from "@/lib/store/slice/single-pin";
 import { AppStore } from "@/lib/store";
+import {
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import { RegionSubset } from "@/lib/mapping/subsets";
 
 export function SinglePinControls<TName extends SinglePinSliceName<AppStore>>({
   store,
+  subsets,
 }: {
   store: TName;
+  subsets: RegionSubset[];
 }) {
-  const [guesses, code, reset, hints, toggleHints] = useAppStore((s) => [
+  const [
+    guesses,
+    code,
+    reset,
+    hints,
+    toggleHints,
+    enabledSubsets,
+    toggleSubset,
+  ] = useAppStore((s) => [
     s[store].guesses,
     s[store].code,
     s[store].reset,
     s[store].hints,
     s[store].toggleHints,
+    s[store].enabledSubsets,
+    s[store].toggleSubset,
   ]);
 
   const lastFailedIndex = guesses.lastIndexOf(false);
@@ -47,9 +64,32 @@ export function SinglePinControls<TName extends SinglePinSliceName<AppStore>>({
           </div>
         </>
       }
+      dropdownContent={
+        <>
+          <DropdownMenuLabel>Enabled</DropdownMenuLabel>
+          {subsets.map((s) => (
+            <DropdownMenuCheckboxItem
+              key={s.key}
+              checked={enabledSubsets.includes(s.key)}
+              onCheckedChange={() => toggleSubset(s.key)}
+              onSelect={(e) => e.preventDefault()}
+            >
+              {s.name}
+            </DropdownMenuCheckboxItem>
+          ))}
+        </>
+      }
     >
-      <p className="text-muted-foreground">Area code:</p>
-      <p className="font-semibold ml-2">({code})</p>
+      {code != null ? (
+        <>
+          <p className="text-muted-foreground">Area code:</p>
+          <p className="font-semibold ml-2">({code})</p>
+        </>
+      ) : (
+        <p className="text-muted-foreground text-base">
+          Enable at least one subset from the menu
+        </p>
+      )}
     </PinControlsBase>
   );
 }
