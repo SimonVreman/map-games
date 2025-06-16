@@ -31,7 +31,11 @@ export default function USDialingCodesRendering() {
       divider={usDivider}
       hints={hints}
       highlighted={highlighted}
-      getCodeGroup={(codes) => +codes[0].toString()[0]}
+      getCodeGroup={(codes) =>
+        usPhoneCodeSubsets.findIndex((s) =>
+          s.codes.some((c) => codes.includes(c))
+        )
+      }
       onClick={handleGuess}
     />
   );
