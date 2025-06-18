@@ -1,12 +1,12 @@
-import { useCallback, useEffect } from "react";
-import { useCanvas } from "../canvas-provider";
+import { useCallback } from "react";
 import { SinglePinSlice } from "@/lib/store/slice/single-pin";
-import { ExtendedRenderer, Renderer } from "../types";
+import { ExtendedRenderer } from "../types";
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useLabels } from "@/lib/hooks/use-labels";
 import { cachedPath } from "@/lib/mapping/cache";
 import { TwColor, useTwTheme } from "@/lib/hooks/use-tw-theme";
+import { Outlines } from "./outlines";
 
 type Region = {
   codes: number[];
@@ -91,7 +91,6 @@ export function SelectableRegions({
   onClick: (codes: number[]) => void;
 } & Pick<SinglePinSlice, "hints" | "highlighted">) {
   const { twColor } = useTwTheme();
-  const { addRenderer, removeRenderer } = useCanvas();
 
   const currentRegionColor = useCallback(
     (region: Region, hovered: boolean) => {
@@ -157,36 +156,12 @@ export function SelectableRegions({
     isVisible: isLabelVisible,
   });
 
-  /*
-    Country outlines renderer
-  */
-  useEffect(() => {
-    const render: Renderer = ({ ctx, scale }) => {
-      ctx.lineWidth = scale * 2;
-      ctx.lineJoin = "round";
-
-      ctx.strokeStyle = twColor("neutral-400", "neutral-600");
-      for (const path of country) ctx.stroke(cachedPath(path));
-
-      ctx.setLineDash([scale * 3, scale * 3]);
-      for (const path of firstSubdivision) ctx.stroke(cachedPath(path));
-
-      ctx.strokeStyle = twColor("neutral-300", "neutral-700");
-      ctx.setLineDash([scale * 5, scale * 5]);
-      for (const path of divider) ctx.stroke(cachedPath(path));
-      ctx.setLineDash([]);
-    };
-
-    addRenderer({ render, ...renderKeys.country });
-    return () => removeRenderer(renderKeys.country);
-  }, [
-    divider,
-    country,
-    firstSubdivision,
-    addRenderer,
-    removeRenderer,
-    twColor,
-  ]);
-
-  return null;
+  return (
+    <Outlines
+      renderKey={renderKeys.country}
+      external={country}
+      internal={firstSubdivision}
+      divider={divider}
+    />
+  );
 }
