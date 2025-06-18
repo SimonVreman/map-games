@@ -7,7 +7,7 @@ import { spainProvincesPaths } from "@/lib/mapping/spain/paths/provinces";
 import { spainPaths } from "@/lib/mapping/spain/paths/country";
 import { spainPhoneCodeSubsets } from "@/lib/mapping/spain/registry/phone-codes";
 
-export default function SpainDialingCodesRendering() {
+export function SpainDialingCodesRendering() {
   const [highlighted, hints, enabledSubsets] = useAppStore((s) => [
     s.spainDialingCodes.highlighted,
     s.spainDialingCodes.hints,

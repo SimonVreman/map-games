@@ -3,7 +3,7 @@ import { useHandleGroupGuess } from "../group-pin/guess";
 import { europeanPedestrians } from "@/lib/mapping/countries/registry/pedestrians";
 import { SelectablePatterns } from "@/components/canvas/game/selectable-patterns";
 
-export default function EuropeanPedestriansRendering() {
+export function EuropeanPedestriansRendering() {
   const [highlighted, hints] = useAppStore((s) => [
     s.europeanPedestrians.highlighted,
     s.europeanPedestrians.hints,

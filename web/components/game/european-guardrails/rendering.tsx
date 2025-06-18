@@ -3,7 +3,7 @@ import { useHandleGroupGuess } from "../group-pin/guess";
 import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails";
 import { SelectablePatterns } from "@/components/canvas/game/selectable-patterns";
 
-export default function EuropeanGuardrailsRendering() {
+export function EuropeanGuardrailsRendering() {
   const [highlighted, hints] = useAppStore((s) => [
     s.europeanGuardrails.highlighted,
     s.europeanGuardrails.hints,

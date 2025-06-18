@@ -3,7 +3,7 @@ import { useHandleGroupGuess } from "../group-pin/guess";
 import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
 import { SelectablePatterns } from "@/components/canvas/game/selectable-patterns";
 
-export default function EuropeanBollardsRendering() {
+export function EuropeanBollardsRendering() {
   const [highlighted, hints] = useAppStore((s) => [
     s.europeanBollards.highlighted,
     s.europeanBollards.hints,

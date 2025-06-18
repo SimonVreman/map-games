@@ -1,12 +1,6 @@
-"use client";
-
 import { USDialingCodesControls } from "./controls";
 import { CanvasMap } from "../../canvas/canvas-map";
-import dynamic from "next/dynamic";
-
-const Rendering = dynamic(() => import("./rendering"), {
-  ssr: false,
-});
+import { USDialingCodesRendering } from "./rendering";
 
 const bounds = {
   north: 53,
@@ -36,7 +30,7 @@ export default function USDialingCodesGame() {
           </>
         }
       >
-        <Rendering />
+        <USDialingCodesRendering />
       </CanvasMap>
     </div>
   );

@@ -1,12 +1,6 @@
-"use client";
-
 import { CanvasMap } from "@/components/canvas/canvas-map";
 import { SpainDialingCodesControls } from "./controls";
-import dynamic from "next/dynamic";
-
-const Rendering = dynamic(() => import("./rendering"), {
-  ssr: false,
-});
+import { SpainDialingCodesRendering } from "./rendering";
 
 const bounds = {
   north: 44,
@@ -32,7 +26,7 @@ export default function SpainDialingCodesGame() {
           </a>
         }
       >
-        <Rendering />
+        <SpainDialingCodesRendering />
       </CanvasMap>
     </div>
   );

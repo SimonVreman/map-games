@@ -7,7 +7,7 @@ import { usPaths } from "@/lib/mapping/us/paths/country";
 import { usStatesPaths } from "@/lib/mapping/us/paths/state-boundaries";
 import { usPhoneCodeSubsets } from "@/lib/mapping/us/registry/phone-codes";
 
-export default function USDialingCodesRendering() {
+export function USDialingCodesRendering() {
   const [highlighted, hints, enabledSubsets] = useAppStore((s) => [
     s.usDialingCodes.highlighted,
     s.usDialingCodes.hints,

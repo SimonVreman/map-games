@@ -1,12 +1,6 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import { EuropeanPedestriansControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
-
-const Rendering = dynamic(() => import("./rendering"), {
-  ssr: false,
-});
+import { EuropeanPedestriansRendering } from "./rendering";
 
 const bounds = {
   north: 71,
@@ -16,7 +10,7 @@ const bounds = {
   padding: 2,
 };
 
-export default function EuropeanPedestriansGame() {
+export function EuropeanPedestriansGame() {
   return (
     <div className="size-full relative">
       <EuropeanPedestriansControls />
@@ -33,7 +27,7 @@ export default function EuropeanPedestriansGame() {
           </>
         }
       >
-        <Rendering />
+        <EuropeanPedestriansRendering />
       </CanvasMap>
     </div>
   );

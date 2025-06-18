@@ -1,12 +1,6 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import { EuropeanGuardrailsControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
-
-const Rendering = dynamic(() => import("./rendering"), {
-  ssr: false,
-});
+import { EuropeanGuardrailsRendering } from "./rendering";
 
 const bounds = {
   north: 71,
@@ -33,7 +27,7 @@ export default function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <Rendering />
+        <EuropeanGuardrailsRendering />
       </CanvasMap>
     </div>
   );

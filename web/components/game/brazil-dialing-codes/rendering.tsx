@@ -6,7 +6,7 @@ import { brazilStatesPaths } from "@/lib/mapping/brazil/paths/states";
 import { brazilPaths } from "@/lib/mapping/brazil/paths/country";
 import { brazilPhoneCodeSubsets } from "@/lib/mapping/brazil/registry/phone-codes";
 
-export default function BrazilDialingCodesRendering() {
+export function BrazilDialingCodesRendering() {
   const [highlighted, hints, enabledSubsets] = useAppStore((s) => [
     s.brazilDialingCodes.highlighted,
     s.brazilDialingCodes.hints,

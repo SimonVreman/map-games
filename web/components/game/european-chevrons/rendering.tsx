@@ -3,7 +3,7 @@ import { useHandleGroupGuess } from "../group-pin/guess";
 import { europeanChevrons } from "@/lib/mapping/countries/registry/chevrons";
 import { SelectablePatterns } from "@/components/canvas/game/selectable-patterns";
 
-export default function EuropeanChevronsRendering() {
+export function EuropeanChevronsRendering() {
   const [highlighted, hints] = useAppStore((s) => [
     s.europeanChevrons.highlighted,
     s.europeanChevrons.hints,
