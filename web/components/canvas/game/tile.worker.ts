@@ -1,4 +1,4 @@
-import { Pattern, PatternEntry } from "@/types/registry";
+import { Pattern, PatternEntry, Sprites } from "@/types/registry";
 import {
   TileInitMessage,
   TileProcessedMessage,
@@ -15,6 +15,7 @@ const patternCache = new Map<string, OffscreenCanvas>();
 const patternKey = (n: string, s: number) => `${n}:${s}`;
 
 let patterns: Record<string, Pattern> = {};
+let sprites: Sprites = {};
 let entries: PatternEntry<Record<string, Pattern>>[] = [];
 let isReady = false;
 let tileSize = 0;
@@ -53,11 +54,17 @@ function cachedPattern({ subject, scale }: { subject: string; scale: number }) {
 
   ctx.scale(scale, scale);
 
-  for (const { path: p, fill } of pattern.paths) {
-    if (!fill) continue;
-
-    ctx.fillStyle = resolveFill({ fill, ctx });
-    ctx.fill(cachedPath(p));
+  for (const { path: p, fill, image } of pattern.paths) {
+    if (image) {
+      ctx.drawImage(
+        sprites[image.sprite].bitmap,
+        ...image.source,
+        ...image.destination
+      );
+    } else if (fill) {
+      ctx.fillStyle = resolveFill({ fill, ctx });
+      ctx.fill(cachedPath(p));
+    }
   }
 
   patternCache.set(key, offscreen);
@@ -83,14 +90,15 @@ function renderTileEntry({
   ctx.transform(...transform);
 
   const height = patternHeight * rasterScale;
+  const width = patternWidth * rasterScale;
   const maxYOffset = (meta.south - meta.north) / transform[3] + height;
+  const maxXOffset = (meta.east - meta.west) / transform[0] + width;
 
   let i = 0;
   const subjectCache: OffscreenCanvas[] = [];
 
   for (let yOffset = 0; yOffset < maxYOffset; yOffset += height) {
     const width = patternWidth * rasterScale;
-    const maxXOffset = (meta.east - meta.west) / transform[0] + width;
     const subject = subjects[i] as string;
 
     for (let xOffset = 0; xOffset < maxXOffset; xOffset += width) {
@@ -125,6 +133,7 @@ function renderTile({ x, y, scale }: { scale: number; x: number; y: number }) {
 
 function handleInit(e: MessageEvent<TileInitMessage>) {
   patterns = e.data.patterns;
+  sprites = e.data.sprites ?? {};
   entries = e.data.entries;
   tileSize = e.data.tileSize;
   patternWidth = e.data.patternSize.width;
@@ -132,6 +141,7 @@ function handleInit(e: MessageEvent<TileInitMessage>) {
   theme = e.data.theme;
 
   patternCache.clear();
+
   isReady = true;
 }
 

@@ -4,7 +4,7 @@ import { usPhoneCodes } from "@/lib/mapping/us/paths/phone-codes";
 import { useHandleSingleGuess } from "../single-pin/guess";
 import { useAppStore } from "@/lib/store/provider";
 import { usPaths } from "@/lib/mapping/us/paths/country";
-import { usStatesPaths } from "@/lib/mapping/us/paths/states";
+import { usStatesPaths } from "@/lib/mapping/us/paths/state-boundaries";
 import { usPhoneCodeSubsets } from "@/lib/mapping/us/registry/phone-codes";
 
 export default function USDialingCodesRendering() {

@@ -1,12 +1,17 @@
 import { PatternEntry } from "@/types/registry";
 
 export const createTranslate =
-  (size: { width: number; height: number }) =>
+  (
+    size: { width: number; height: number },
+    options?: { defaultWidthFraction?: number }
+  ) =>
   (
     m: PatternEntry["meta"],
     v: { scale?: number; ox?: number; oy?: number } = {}
   ): [number, number, number, number, number, number] => {
-    const scale = ((m.east - m.west) * (v.scale ?? 1)) / (3 * size.width);
+    const scale =
+      ((m.east - m.west) * (v.scale ?? 1)) /
+      ((options?.defaultWidthFraction ?? 3) * size.width);
 
     return [
       scale,

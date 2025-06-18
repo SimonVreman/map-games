@@ -9,7 +9,7 @@ import {
 import { usePathsClicked } from "@/lib/hooks/use-paths-clicked";
 import { useDynamicFill } from "@/lib/hooks/use-dynamic-fill";
 import { useCallback, useEffect, useRef } from "react";
-import { Pattern, PatternEntry } from "@/types/registry";
+import { Pattern, PatternEntry, Sprites } from "@/types/registry";
 import { useWindowBounding } from "@/lib/hooks/use-window-bounding";
 import { cachedPath } from "@/lib/mapping/cache";
 import { useCanvas } from "../canvas-provider";
@@ -108,12 +108,14 @@ export function SelectablePatterns<
   patterns,
   size,
   entries,
+  sprites,
   isHighlighted,
   onClick,
 }: {
   patterns: TMap;
   size: { width: number; height: number };
   entries: TEntry[];
+  sprites?: Sprites;
   isHighlighted: (name: string) => boolean;
   onClick: (name: string) => void;
 }) {
@@ -137,8 +139,9 @@ export function SelectablePatterns<
       patternSize: size,
       entries,
       theme,
+      sprites,
     } satisfies TileInitMessage<TMap>);
-  }, [patterns, entries, size, theme]);
+  }, [patterns, entries, size, theme, sprites]);
 
   useEffect(() => {
     const listener = (event: MessageEvent<TileProcessedMessage>) => {

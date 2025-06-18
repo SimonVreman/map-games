@@ -3,7 +3,7 @@ from main import (
     open_utf8,
     read_boundaries,
     write_paths,
-    lat_lon_to_mercator,
+    meta_string,
     normalize_string,
 )
 
@@ -79,18 +79,9 @@ def write_countries():
         output.write(f"export const {constant_name}Paths = [\n")
 
         write_paths(output, boundaries)
-
-        output.write("]\n")
-
-        bounds = df_country.total_bounds
-        center = df_country.geometry.union_all().representative_point()
-        west, north = lat_lon_to_mercator(bounds[3], bounds[0])
-        east, south = lat_lon_to_mercator(bounds[1], bounds[2])
-        center_x, center_y = lat_lon_to_mercator(center.y, center.x)
         output.write(
-            f"export const {constant_name}Meta = {{ west: {round(west, rounding)}, north: {round(north, rounding)}, east: {round(east, rounding)}, south: {round(south, rounding)}, x: {round(center_x, rounding)}, y: {round(center_y, rounding)}  }}\n"
+            f"]\nexport const {constant_name}Meta = {meta_string(df_country)}\n"
         )
-
         output.close()
 
 

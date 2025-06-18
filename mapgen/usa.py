@@ -7,6 +7,7 @@ from main import (
     write_paths,
     Transformation,
     write_code_paths,
+    meta_string,
 )
 import shapely
 import math
@@ -16,14 +17,14 @@ rounding = 3
 
 # Shifts for far away regions
 transformations = {
-    "HI": Transformation([230, 100], 0.8),
-    "AK": Transformation([160, 330], 0.4),
-    "PR": Transformation([-12, -9]),
-    "VI": Transformation([-12, -9]),
-    "AS": Transformation([175, -625], 2),
-    "GU": Transformation([-1655, -470], 2),
-    "CNMI": Transformation([-1655, -470], 2),
-    "MP": Transformation([-1655, -470], 2),
+    "HI": Transformation((230, 100), 0.8),
+    "AK": Transformation((160, 330), 0.4),
+    "PR": Transformation((-12, -9)),
+    "VI": Transformation((-12, -9)),
+    "AS": Transformation((175, -625), 2),
+    "GU": Transformation((-1655, -470), 2),
+    "CNMI": Transformation((-1655, -470), 2),
+    "MP": Transformation((-1655, -470), 2),
 }
 
 
@@ -158,6 +159,103 @@ def write_usa_phone():
     output.close()
 
 
-write_usa_phone()
-write_usa()
-write_usa_first_administrative()
+def write_usa_states():
+    df = gpd.read_file(
+        "input/natural_earth_countries/ne_10m_admin_1_states_provinces.shp"
+    )
+    df_countries = gpd.read_file(
+        "input/natural_earth_countries/ne_10m_admin_0_countries.shp"
+    )
+
+    df = df[df["admin"] == "United States of America"]
+
+    df_mainland = df[(df["name"] != "Alaska") & (df["name"] != "Hawaii")]
+    df_alaska = df[df["name"] == "Alaska"]
+    df_hawaii = df[df["name"] == "Hawaii"]
+    df_puerto_rico = df_countries[df_countries["ADMIN"] == "Puerto Rico"]
+    df_usvi = df_countries[df_countries["ADMIN"] == "United States Virgin Islands"]
+    df_samoa = df_countries[df_countries["ADMIN"] == "American Samoa"]
+    df_guam = df_countries[df_countries["ADMIN"] == "Guam"]
+    df_nmi = df_countries[df_countries["ADMIN"] == "Northern Mariana Islands"]
+
+    output = open_utf8("output/us-states.tsx", "w")
+
+    output.write("export const usStates = {\n")
+
+    for key in df_mainland["name"].unique():
+        state_df = df_mainland[df_mainland["name"] == key]
+        lowerCamelCased = key.split(" ")[0].lower() + "".join(
+            word.capitalize() for word in key.split(" ")[1:]
+        )
+        output.write(f"{lowerCamelCased}: {{\npaths: [\n")
+        write_paths(
+            output,
+            read_boundaries(state_df, union=True)[0],
+        )
+        output.write(f"],\nmeta:{meta_string(state_df)}\n}},\n")
+
+    output.write("alaska: {\npaths: [\n")
+    write_paths(
+        output,
+        read_boundaries(df_alaska, union=True)[0],
+        transformation=transformations["AK"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_alaska,transformation=transformations["AK"])} }},\nhawaii: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_hawaii, union=True)[0],
+        transformation=transformations["HI"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_hawaii,transformation=transformations["HI"])} }},\npuertoRico: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_puerto_rico, union=True)[0],
+        transformation=transformations["PR"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_puerto_rico,transformation=transformations["PR"])} }},\nvirginIslands: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_usvi, union=True)[0],
+        transformation=transformations["VI"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_usvi,transformation=transformations["VI"])} }},\namericanSamoa: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_samoa, union=True)[0],
+        transformation=transformations["AS"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_samoa,transformation=transformations["AS"])} }},\nguam: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_guam, union=True)[0],
+        transformation=transformations["GU"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_guam,transformation=transformations["GU"])} }},\nnorthernMarianaIslands: {{\npaths: [\n"
+    )
+    write_paths(
+        output,
+        read_boundaries(df_nmi, union=True)[0],
+        transformation=transformations["CNMI"],
+    )
+    output.write(
+        f"], meta: {meta_string(df_nmi,transformation=transformations["CNMI"])} }}\n}};\n"
+    )
+
+    output.close()
+
+
+# write_usa_phone()
+# write_usa()
+# write_usa_first_administrative()
+write_usa_states()

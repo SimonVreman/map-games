@@ -190,3 +190,21 @@ def normalize_string(s):
     )
     s = s.replace("’", "'").replace("´", "'").replace("`", "'")
     return s
+
+
+def meta_string(
+    df: gpd.GeoDataFrame,
+    transformation: Transformation | None = None,
+):
+    bounds = df.total_bounds
+    center = df.geometry.union_all().representative_point()
+    west, north = lat_lon_to_mercator(bounds[3], bounds[0])
+    east, south = lat_lon_to_mercator(bounds[1], bounds[2])
+    center_x, center_y = lat_lon_to_mercator(center.y, center.x)
+
+    if transformation is not None:
+        west, north = transformation.transform((west, north))
+        east, south = transformation.transform((east, south))
+        center_x, center_y = transformation.transform((center_x, center_y))
+
+    return f"{{ west: {round(west, rounding)}, north: {round(north, rounding)}, east: {round(east, rounding)}, south: {round(south, rounding)}, x: {round(center_x, rounding)}, y: {round(center_y, rounding)}  }}"

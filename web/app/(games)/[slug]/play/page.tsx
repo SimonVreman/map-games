@@ -1,7 +1,7 @@
 import { games } from "@/lib/games/registry";
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import { DynamicPlayClientPage } from "./page.client";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -35,7 +35,5 @@ export default async function DynamicPlayPage({ params }: PageProps) {
 
   if (!game) notFound();
 
-  const Game = dynamic(() => import(`@/components/game/${slug}/game`));
-
-  return <Game />;
+  return <DynamicPlayClientPage slug={slug} />;
 }

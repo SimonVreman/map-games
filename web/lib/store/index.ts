@@ -32,6 +32,10 @@ import {
   createUSDialingCodesSlice,
   USDialingCodesSlice,
 } from "./game/us-dialing-codes";
+import {
+  createUSLicensePlatesSlice,
+  USLicensePlatesSlice,
+} from "./game/us-license-plates";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -41,7 +45,8 @@ export type AppStore = CityCoverSlice &
   EuropeanGuardrailsSlice &
   EuropeanPedestriansSlice &
   EuropeanBollardsSlice &
-  USDialingCodesSlice;
+  USDialingCodesSlice &
+  USLicensePlatesSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -56,6 +61,7 @@ export const createAppStore = () =>
         ...createEuropeanPedestriansSlice(...a),
         ...createEuropeanBollardsSlice(...a),
         ...createUSDialingCodesSlice(...a),
+        ...createUSLicensePlatesSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),

@@ -1,4 +1,4 @@
-import { Pattern, PatternEntry } from "@/types/registry";
+import { Pattern, PatternEntry, Sprites } from "@/types/registry";
 import { Oklch, interpolate } from "culori";
 
 type Interpolator = ReturnType<typeof interpolate<"oklch">>;
@@ -66,6 +66,7 @@ export type TileInitMessage<
   tileSize: number;
   patternSize: { width: number; height: number };
   entries: PatternEntry<TMap>[];
+  sprites?: Sprites;
   theme: "light" | "dark";
 };
 

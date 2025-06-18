@@ -1,5 +1,5 @@
 import { useTwTheme } from "@/lib/hooks/use-tw-theme";
-import { Pattern, PatternFill } from "@/types/registry";
+import { Pattern, PatternFill, Sprites } from "@/types/registry";
 
 function resolveFill(fill?: PatternFill): {
   fill: string;
@@ -32,14 +32,29 @@ function resolveFill(fill?: PatternFill): {
   return { fill: `url(#${gradientId})`, defs };
 }
 
+function resolveImage(
+  sprites?: Sprites,
+  image?: Pattern["paths"][number]["image"]
+) {
+  if (image == null || sprites == null) return null;
+
+  return (
+    <svg viewBox={image.source.join(" ")}>
+      <image href={sprites[image.sprite].objectUrl} />
+    </svg>
+  );
+}
+
 export function PatternPreview<TMap extends Record<string, Pattern>>({
   patterns,
   size,
   pattern: patternKey,
+  sprites,
 }: {
   patterns: TMap;
   size: { width: number; height: number };
   pattern?: keyof TMap;
+  sprites?: Sprites;
 }) {
   const { theme } = useTwTheme();
   const pattern = patternKey ? patterns[patternKey] : null;
@@ -55,11 +70,13 @@ export function PatternPreview<TMap extends Record<string, Pattern>>({
     >
       {pattern.paths.map((p, i) => {
         const { fill, defs } = resolveFill(p.fill);
+        const imageSvg = resolveImage(sprites, p.image);
 
         return (
           <g key={i}>
             {defs}
-            <path d={p.path} fill={fill} />
+            {imageSvg}
+            {p.path && <path d={p.path} fill={fill} />}
           </g>
         );
       })}
