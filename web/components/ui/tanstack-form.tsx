@@ -1,5 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
+
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import {
@@ -12,7 +13,7 @@ import { Button } from "./button";
 const {
   fieldContext,
   formContext,
-  useFieldContext: _useFieldContext,
+  useFieldContext: useFormFieldContext,
   useFormContext,
 } = createFormHookContexts();
 
@@ -56,11 +57,12 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 
 const useFieldContext = () => {
   const { id } = React.useContext(FormItemContext);
-  const { name, store, ...fieldContext } = _useFieldContext();
-  const errors = useStore(store, (state) => state.meta.errors);
+  const { name, store, ...fieldContext } = useFormFieldContext();
 
-  if (!fieldContext)
+  const errors = useStore(store, (state) => state.meta.errors);
+  if (!fieldContext) {
     throw new Error("useFieldContext should be used within <FormItem>");
+  }
 
   return {
     id,
@@ -124,11 +126,10 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
-  const { formMessageId, errors } = useFieldContext();
+  const { errors, formMessageId } = useFieldContext();
   const body = errors.length
     ? String(errors.at(0)?.message ?? "")
     : props.children;
-
   if (!body) return null;
 
   return (

@@ -20,6 +20,8 @@ export type QuizSlice<
   stats: {
     correct: number;
     incorrect: number;
+    streak: number;
+    maxStreak: number;
     usedHints: boolean;
     total: number;
   };
@@ -33,13 +35,17 @@ export type QuizSlice<
     isCorrect: boolean | null;
     remaining: string[];
   };
-  toggleSubset: (key: string) => void;
   toggleHints: () => void;
   reset: () => void;
 };
 
 export type QuizSliceName<T extends object> = keyof {
   [Key in keyof T as T[Key] extends QuizSlice ? Key : never]: T[Key];
+};
+
+const practiceRetryRange = {
+  min: 1,
+  max: 10,
 };
 
 export const createQuizSlice = <
@@ -59,7 +65,14 @@ export const createQuizSlice = <
     mode: null,
     nextSubjects: [],
     guessed: [],
-    stats: { correct: 0, incorrect: 0, total: 0, usedHints: false },
+    stats: {
+      correct: 0,
+      incorrect: 0,
+      total: 0,
+      streak: 0,
+      maxStreak: 0,
+      usedHints: false,
+    },
     highlight: { positive: [], negative: [] },
     hintsEnabled: false,
     subsetsEnabled: subjectSubsets?.map((s) => s.name),
@@ -100,7 +113,7 @@ export const createQuizSlice = <
 
           set((store) => {
             const s = store[name];
-            const subject = s.nextSubjects.shift();
+            const subject = s.nextSubjects[0];
 
             if (subject == null || s.hintsEnabled || s.guessed.includes(target))
               return;
@@ -130,14 +143,19 @@ export const createQuizSlice = <
             // Update stats and clear guessed
             s.guessed = [];
             s.stats.total += 1;
+            s.stats.streak = isCorrect ? s.stats.streak + 1 : 0;
+            s.stats.maxStreak = Math.max(s.stats.streak, s.stats.maxStreak);
             s.stats[isCorrect ? "correct" : "incorrect"] += 1;
 
             // Update next subjects
+            s.nextSubjects.shift();
             if (s.mode === "infinite") s.nextSubjects = [randomSubject(s)];
             else if (s.mode === "practice" && !isCorrect) {
               const next = s.nextSubjects;
-              // Random position that is not the next one
-              const idx = Math.max(1, Math.floor(Math.random() * next.length));
+              // Random position that is not the next one, but also not further than X ahead.
+              const after = practiceRetryRange.min;
+              const before = Math.min(practiceRetryRange.max, next.length);
+              const idx = Math.max(after, Math.floor(Math.random() * before));
               const head = next.slice(0, idx);
               const tail = next.slice(idx);
               s.nextSubjects = [...head, subject, ...tail];
@@ -165,18 +183,6 @@ export const createQuizSlice = <
                 ? [randomSubject(store[name])]
                 : shuffledSubjects(subsetsEnabled);
           }),
-
-        toggleSubset: (key) => {
-          set((s) => {
-            const enabled = s[name].subsetsEnabled;
-
-            if (enabled.includes(key)) {
-              s[name].subsetsEnabled = enabled.filter((k) => k !== key);
-            } else {
-              s[name].subsetsEnabled.push(key);
-            }
-          });
-        },
 
         toggleHints: () =>
           set((s) => {

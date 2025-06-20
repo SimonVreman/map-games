@@ -18,6 +18,7 @@ export function EuropeanPedestriansGame() {
       <QuizControls
         store="europeanPedestrians"
         label="Where is it seen?"
+        subsets={europeanPedestrians.subsets}
         graphic={({ subject }) => (
           <PatternPreview {...europeanPedestrians} pattern={subject} />
         )}

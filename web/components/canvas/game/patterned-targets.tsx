@@ -289,7 +289,7 @@ export function PatternedTargets<
 
   usePathsClicked({
     items: entries,
-    onClick: ({ name }) => handleGuess(name),
+    onClick: (r) => handleGuess(r.name),
   });
 
   return null;

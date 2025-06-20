@@ -18,6 +18,7 @@ export default function EuropeanBollardsGame() {
       <QuizControls
         store="europeanBollards"
         label="Where is it seen?"
+        subsets={europeanBollards.subsets}
         graphic={({ subject }) => (
           <PatternPreview pattern={subject} {...europeanBollards} />
         )}

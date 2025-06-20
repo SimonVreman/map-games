@@ -160,7 +160,9 @@ export function LabeledTargets<TName extends QuizSliceName<AppStore>>({
 
   usePathsClicked({
     items: targets,
-    onClick: (r) => handleGuess(r.name),
+    onClick: (r) =>
+      r.subjects.some((s) => enabledSubjects.includes(s)) &&
+      handleGuess(r.name),
   });
 
   useLabels({

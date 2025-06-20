@@ -43,6 +43,7 @@ export default function USLicensePlatesGame() {
       <QuizControls
         store="usLicensePlates"
         label="Where is it seen?"
+        subsets={usLicensePlates.subsets}
         graphic={({ subject }) => (
           <PatternPreview
             {...usLicensePlates}

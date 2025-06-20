@@ -18,7 +18,11 @@ const bounds = {
 export default function SpainDialingCodesGame() {
   return (
     <div className="size-full relative">
-      <QuizControls store="spainDialingCodes" label="Area code:" />
+      <QuizControls
+        store="spainDialingCodes"
+        label="Area code:"
+        subsets={spainDialingCodeSubsets}
+      />
 
       <CanvasMap
         bounds={bounds}

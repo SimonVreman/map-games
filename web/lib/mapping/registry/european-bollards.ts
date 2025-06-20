@@ -1818,7 +1818,7 @@ const subsets: QuizSubset[] = [
   {
     name: "all",
     label: "All",
-    subjects: Object.keys(patterns).filter((n) => n.endsWith("Blur")),
+    subjects: Object.keys(patterns),
   },
 ];
 

@@ -4,6 +4,7 @@ import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
 import { brazilDialingCodes } from "@/lib/mapping/paths/brazil/dialing-codes";
 import { brazilPaths } from "@/lib/mapping/paths/brazil/country";
 import { brazilStatesPaths } from "@/lib/mapping/paths/brazil/states";
+import { brazilDialingCodeSubsets } from "@/lib/mapping/registry/brazil-dialing-codes";
 
 const bounds = {
   north: 9,
@@ -16,7 +17,11 @@ const bounds = {
 export default function BrazilDialingCodesGame() {
   return (
     <div className="size-full relative">
-      <QuizControls store="brazilDialingCodes" label="Area code:" />
+      <QuizControls
+        store="brazilDialingCodes"
+        label="Area code:"
+        subsets={brazilDialingCodeSubsets}
+      />
 
       <CanvasMap
         bounds={bounds}
@@ -31,7 +36,7 @@ export default function BrazilDialingCodesGame() {
           targets={brazilDialingCodes}
           country={brazilPaths}
           firstSubdivision={brazilStatesPaths}
-          subsets={brazilDialingCodes}
+          subsets={brazilDialingCodeSubsets}
         />
       </CanvasMap>
     </div>

@@ -40,7 +40,7 @@ export function useTwTheme() {
         const color = getComputedStyle(document.body).getPropertyValue(
           "--color-" + (dark ?? base)
         );
-        darkCache.set(base, color);
+        darkCache.set(dark ?? base, color);
         return color;
       }
     },

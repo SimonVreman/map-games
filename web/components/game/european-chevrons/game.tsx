@@ -18,6 +18,7 @@ export default function EuropeanChevronsGame() {
       <QuizControls
         store="europeanChevrons"
         label="Where is it seen?"
+        subsets={europeanChevrons.subsets}
         graphic={({ subject }) => (
           <PatternPreview pattern={subject} {...europeanChevrons} />
         )}
