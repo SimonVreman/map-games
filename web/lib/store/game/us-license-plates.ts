@@ -1,12 +1,12 @@
-import { usLicensePlates } from "@/lib/mapping/us/registry/license-plates";
-import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
+import { usLicensePlates } from "@/lib/mapping/registry/us-license-plates";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type USLicensePlatesSlice = {
-  usLicensePlates: GroupPinSlice<(typeof usLicensePlates.subjects)[number]>;
+  usLicensePlates: QuizSlice;
 };
 
-export const createUSLicensePlatesSlice = createGroupPinSlice({
+export const createUSLicensePlatesSlice = createQuizSlice({
   name: "usLicensePlates",
-  subjects: usLicensePlates.subjects,
   targets: usLicensePlates.entries,
+  subjectSubsets: usLicensePlates.subsets,
 });

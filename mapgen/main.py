@@ -176,9 +176,12 @@ def write_code_paths(
     x = round(center[0], rounding)
     y = round(center[1], rounding)
     area = df.to_crs("+proj=cea").area.sum() / 1e6
-    key = ",".join(codes)
+    name = "/".join(codes)
+    subjects = ",".join([f'"{c}"' for c in codes])
 
-    output.write(f"{{ codes: [{key}], center: [{x},{y}], area: {area:.3f}, paths: [")
+    output.write(
+        f'{{ name: "{name}", subjects: [{subjects}], center: [{x},{y}], area: {area:.3f}, paths: ['
+    )
     write_paths(output, boundaries, transformation=transformation, interiors=True)
     output.write("]},\n")
 

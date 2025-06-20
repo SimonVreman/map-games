@@ -1,13 +1,15 @@
-import { usPhoneCodeSubsets } from "@/lib/mapping/us/registry/phone-codes";
 import { ImmerStateCreator } from "../types";
-import { createSinglePinSlice, SinglePinSlice } from "../slice/single-pin";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
+import { usDialingCodes } from "@/lib/mapping/paths/united-states/dialing-codes";
+import { usDialingCodeSubsets } from "@/lib/mapping/registry/us-dialing-codes";
 
 export type USDialingCodesSlice = {
-  usDialingCodes: SinglePinSlice;
+  usDialingCodes: QuizSlice;
 };
 
 export const createUSDialingCodesSlice: ImmerStateCreator<USDialingCodesSlice> =
-  createSinglePinSlice({
+  createQuizSlice({
     name: "usDialingCodes",
-    subsets: usPhoneCodeSubsets,
+    targets: usDialingCodes,
+    subjectSubsets: usDialingCodeSubsets,
   });

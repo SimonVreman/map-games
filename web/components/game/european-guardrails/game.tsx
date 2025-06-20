@@ -1,6 +1,8 @@
-import { EuropeanGuardrailsControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
-import { EuropeanGuardrailsRendering } from "./rendering";
+import { QuizControls } from "../quiz/controls";
+import { PatternPreview } from "@/components/canvas/game/pattern-preview";
+import { europeanGuardrails } from "@/lib/mapping/registry/european-guardrails";
+import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
 
 const bounds = {
   north: 71,
@@ -13,7 +15,13 @@ const bounds = {
 export default function EuropeanGuardrailsGame() {
   return (
     <div className="size-full relative">
-      <EuropeanGuardrailsControls />
+      <QuizControls
+        store="europeanGuardrails"
+        label="Where is it seen?"
+        graphic={({ subject }) => (
+          <PatternPreview {...europeanGuardrails} pattern={subject} />
+        )}
+      />
 
       <CanvasMap
         bounds={bounds}
@@ -27,7 +35,7 @@ export default function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <EuropeanGuardrailsRendering />
+        <PatternedTargets store="europeanGuardrails" {...europeanGuardrails} />
       </CanvasMap>
     </div>
   );

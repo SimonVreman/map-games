@@ -1,5 +1,5 @@
-export type RegionSubset = {
-  key: string;
+export type QuizSubset = {
   name: string;
-  codes: number[];
+  label: string;
+  subjects: string[];
 };

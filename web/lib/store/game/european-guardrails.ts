@@ -1,14 +1,12 @@
-import { europeanGuardrails } from "@/lib/mapping/countries/registry/guardrails";
-import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
+import { europeanGuardrails } from "@/lib/mapping/registry/european-guardrails";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanGuardrailsSlice = {
-  europeanGuardrails: GroupPinSlice<
-    (typeof europeanGuardrails.subjects)[number]
-  >;
+  europeanGuardrails: QuizSlice;
 };
 
-export const createEuropeanGuardrailsSlice = createGroupPinSlice({
+export const createEuropeanGuardrailsSlice = createQuizSlice({
   name: "europeanGuardrails",
-  subjects: europeanGuardrails.subjects,
   targets: europeanGuardrails.entries,
+  subjectSubsets: europeanGuardrails.subsets,
 });

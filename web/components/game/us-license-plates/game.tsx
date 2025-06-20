@@ -1,7 +1,13 @@
-import { USLicensePlatesControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
 import { cache, use } from "react";
-import { USLicensePlatesRendering } from "./rendering";
+import { QuizControls } from "../quiz/controls";
+import { PatternPreview } from "@/components/canvas/game/pattern-preview";
+import { usLicensePlates } from "@/lib/mapping/registry/us-license-plates";
+import { Outlines } from "@/components/canvas/game/outlines";
+import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
+import { usPaths } from "@/lib/mapping/paths/united-states/country";
+import { usStatesPaths } from "@/lib/mapping/paths/united-states/state-boundaries";
+import { usDivider } from "@/lib/mapping/paths/united-states/divider";
 
 const bounds = {
   north: 53,
@@ -9,6 +15,12 @@ const bounds = {
   east: -67,
   west: -127,
   padding: 2,
+};
+
+const outlinesRenderKey = {
+  key: "us-license-plates:outlines",
+  order: 3,
+  layer: 0,
 };
 
 const fetchSprites = cache(async () => ({
@@ -28,7 +40,17 @@ export default function USLicensePlatesGame() {
 
   return (
     <div className="size-full relative">
-      <USLicensePlatesControls sprites={sprites} />
+      <QuizControls
+        store="usLicensePlates"
+        label="Where is it seen?"
+        graphic={({ subject }) => (
+          <PatternPreview
+            {...usLicensePlates}
+            pattern={subject}
+            sprites={sprites}
+          />
+        )}
+      />
 
       <CanvasMap
         bounds={bounds}
@@ -40,7 +62,17 @@ export default function USLicensePlatesGame() {
           </>
         }
       >
-        <USLicensePlatesRendering sprites={sprites} />
+        <PatternedTargets
+          {...usLicensePlates}
+          store="usLicensePlates"
+          sprites={sprites}
+        />
+        <Outlines
+          renderKey={outlinesRenderKey}
+          external={usPaths}
+          internal={usStatesPaths}
+          divider={usDivider}
+        />
       </CanvasMap>
     </div>
   );

@@ -1,12 +1,12 @@
-import { europeanChevrons } from "@/lib/mapping/countries/registry/chevrons";
-import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
+import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanChevronsSlice = {
-  europeanChevrons: GroupPinSlice<(typeof europeanChevrons.subjects)[number]>;
+  europeanChevrons: QuizSlice;
 };
 
-export const createEuropeanChevronsSlice = createGroupPinSlice({
+export const createEuropeanChevronsSlice = createQuizSlice({
   name: "europeanChevrons",
-  subjects: europeanChevrons.subjects,
   targets: europeanChevrons.entries,
+  subjectSubsets: europeanChevrons.subsets,
 });

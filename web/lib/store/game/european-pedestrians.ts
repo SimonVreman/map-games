@@ -1,15 +1,12 @@
-import {
-  europeanPedestrians,
-  pedestrianTypes,
-} from "@/lib/mapping/countries/registry/pedestrians";
-import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
+import { europeanPedestrians } from "@/lib/mapping/registry/european-pedestrians";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanPedestriansSlice = {
-  europeanPedestrians: GroupPinSlice<(typeof pedestrianTypes)[number]>;
+  europeanPedestrians: QuizSlice;
 };
 
-export const createEuropeanPedestriansSlice = createGroupPinSlice({
+export const createEuropeanPedestriansSlice = createQuizSlice({
   name: "europeanPedestrians",
-  subjects: pedestrianTypes,
   targets: europeanPedestrians.entries,
+  subjectSubsets: europeanPedestrians.subsets,
 });

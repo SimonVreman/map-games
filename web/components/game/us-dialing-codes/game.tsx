@@ -1,6 +1,11 @@
-import { USDialingCodesControls } from "./controls";
 import { CanvasMap } from "../../canvas/canvas-map";
-import { USDialingCodesRendering } from "./rendering";
+import { QuizControls } from "../quiz/controls";
+import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
+import { usDialingCodes } from "@/lib/mapping/paths/united-states/dialing-codes";
+import { usPaths } from "@/lib/mapping/paths/united-states/country";
+import { usStatesPaths } from "@/lib/mapping/paths/united-states/state-boundaries";
+import { usDivider } from "@/lib/mapping/paths/united-states/divider";
+import { usDialingCodeSubsets } from "@/lib/mapping/registry/us-dialing-codes";
 
 const bounds = {
   north: 53,
@@ -13,7 +18,7 @@ const bounds = {
 export default function USDialingCodesGame() {
   return (
     <div className="size-full relative">
-      <USDialingCodesControls />
+      <QuizControls store="usDialingCodes" label="Area code:" />
 
       <CanvasMap
         bounds={bounds}
@@ -30,7 +35,14 @@ export default function USDialingCodesGame() {
           </>
         }
       >
-        <USDialingCodesRendering />
+        <LabeledTargets
+          store="usDialingCodes"
+          targets={usDialingCodes}
+          country={usPaths}
+          firstSubdivision={usStatesPaths}
+          divider={usDivider}
+          subsets={usDialingCodeSubsets}
+        />
       </CanvasMap>
     </div>
   );

@@ -1,6 +1,8 @@
-import { EuropeanChevronsControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
-import { EuropeanChevronsRendering } from "./rendering";
+import { QuizControls } from "../quiz/controls";
+import { PatternPreview } from "@/components/canvas/game/pattern-preview";
+import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
+import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
 
 const bounds = {
   north: 71,
@@ -13,7 +15,13 @@ const bounds = {
 export default function EuropeanChevronsGame() {
   return (
     <div className="size-full relative">
-      <EuropeanChevronsControls />
+      <QuizControls
+        store="europeanChevrons"
+        label="Where is it seen?"
+        graphic={({ subject }) => (
+          <PatternPreview pattern={subject} {...europeanChevrons} />
+        )}
+      />
 
       <CanvasMap
         bounds={bounds}
@@ -27,7 +35,7 @@ export default function EuropeanChevronsGame() {
           </>
         }
       >
-        <EuropeanChevronsRendering />
+        <PatternedTargets store="europeanChevrons" {...europeanChevrons} />
       </CanvasMap>
     </div>
   );

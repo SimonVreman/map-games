@@ -1,13 +1,15 @@
-import { spainPhoneCodeSubsets } from "@/lib/mapping/spain/registry/phone-codes";
+import { spainDialingCodeSubsets } from "@/lib/mapping/registry/spain-dialing-codes";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 import { ImmerStateCreator } from "../types";
-import { createSinglePinSlice, SinglePinSlice } from "../slice/single-pin";
+import { spainDialingCodes } from "@/lib/mapping/paths/spain/dialing-codes";
 
 export type SpainDialingCodesSlice = {
-  spainDialingCodes: SinglePinSlice;
+  spainDialingCodes: QuizSlice;
 };
 
 export const createSpainDialingCodesSlice: ImmerStateCreator<SpainDialingCodesSlice> =
-  createSinglePinSlice({
+  createQuizSlice({
     name: "spainDialingCodes",
-    subsets: spainPhoneCodeSubsets,
+    targets: spainDialingCodes,
+    subjectSubsets: spainDialingCodeSubsets,
   });

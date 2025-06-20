@@ -1,6 +1,11 @@
 import { CanvasMap } from "@/components/canvas/canvas-map";
-import { SpainDialingCodesControls } from "./controls";
-import { SpainDialingCodesRendering } from "./rendering";
+import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
+import { spainDialingCodes } from "@/lib/mapping/paths/spain/dialing-codes";
+import { spainPaths } from "@/lib/mapping/paths/spain/country";
+import { spainProvincesPaths } from "@/lib/mapping/paths/spain/provinces";
+import { spainDivider } from "@/lib/mapping/paths/spain/divider";
+import { spainDialingCodeSubsets } from "@/lib/mapping/registry/spain-dialing-codes";
+import { QuizControls } from "../quiz/controls";
 
 const bounds = {
   north: 44,
@@ -13,7 +18,7 @@ const bounds = {
 export default function SpainDialingCodesGame() {
   return (
     <div className="size-full relative">
-      <SpainDialingCodesControls />
+      <QuizControls store="spainDialingCodes" label="Area code:" />
 
       <CanvasMap
         bounds={bounds}
@@ -26,7 +31,14 @@ export default function SpainDialingCodesGame() {
           </a>
         }
       >
-        <SpainDialingCodesRendering />
+        <LabeledTargets
+          store="spainDialingCodes"
+          targets={spainDialingCodes}
+          country={spainPaths}
+          firstSubdivision={spainProvincesPaths}
+          divider={spainDivider}
+          subsets={spainDialingCodeSubsets}
+        />
       </CanvasMap>
     </div>
   );

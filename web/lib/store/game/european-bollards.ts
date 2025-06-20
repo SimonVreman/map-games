@@ -1,12 +1,12 @@
-import { europeanBollards } from "@/lib/mapping/countries/registry/bollards";
-import { createGroupPinSlice, GroupPinSlice } from "../slice/group-pin";
+import { europeanBollards } from "@/lib/mapping/registry/european-bollards";
+import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanBollardsSlice = {
-  europeanBollards: GroupPinSlice<(typeof europeanBollards.subjects)[number]>;
+  europeanBollards: QuizSlice;
 };
 
-export const createEuropeanBollardsSlice = createGroupPinSlice({
+export const createEuropeanBollardsSlice = createQuizSlice({
   name: "europeanBollards",
-  subjects: europeanBollards.subjects,
   targets: europeanBollards.entries,
+  subjectSubsets: europeanBollards.subsets,
 });

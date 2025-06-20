@@ -255,7 +255,7 @@ def write_usa_states():
     output.close()
 
 
-# write_usa_phone()
+write_usa_phone()
 # write_usa()
 # write_usa_first_administrative()
-write_usa_states()
+# write_usa_states()

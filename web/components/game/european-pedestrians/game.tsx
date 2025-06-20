@@ -1,6 +1,8 @@
-import { EuropeanPedestriansControls } from "./controls";
 import { CanvasMap } from "@/components/canvas/canvas-map";
-import { EuropeanPedestriansRendering } from "./rendering";
+import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
+import { europeanPedestrians } from "@/lib/mapping/registry/european-pedestrians";
+import { QuizControls } from "../quiz/controls";
+import { PatternPreview } from "@/components/canvas/game/pattern-preview";
 
 const bounds = {
   north: 71,
@@ -13,7 +15,13 @@ const bounds = {
 export function EuropeanPedestriansGame() {
   return (
     <div className="size-full relative">
-      <EuropeanPedestriansControls />
+      <QuizControls
+        store="europeanPedestrians"
+        label="Where is it seen?"
+        graphic={({ subject }) => (
+          <PatternPreview {...europeanPedestrians} pattern={subject} />
+        )}
+      />
 
       <CanvasMap
         bounds={bounds}
@@ -27,7 +35,10 @@ export function EuropeanPedestriansGame() {
           </>
         }
       >
-        <EuropeanPedestriansRendering />
+        <PatternedTargets
+          store="europeanPedestrians"
+          {...europeanPedestrians}
+        />
       </CanvasMap>
     </div>
   );
