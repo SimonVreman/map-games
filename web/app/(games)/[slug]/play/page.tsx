@@ -15,9 +15,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const game = games.find((g) => g.slug === slug);
 
