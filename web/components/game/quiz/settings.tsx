@@ -62,13 +62,20 @@ function SettingsForm<TName extends QuizSliceName<AppStore>>({
   subsets: QuizSubset[];
 }) {
   const router = useRouter();
-  const start = useAppStore((s) => s[store].start);
+  const [start, mode, subsetsEnabled] = useAppStore((s) => [
+    s[store].start,
+    s[store].mode,
+    s[store].subsetsEnabled,
+  ]);
 
   const form = useAppForm({
     validators: { onChange: SettingsSchema },
     defaultValues: {
-      mode: "quiz" as Mode,
-      subsets: subsets.map((s) => ({ name: s.name, enabled: true })),
+      mode: mode ?? ("quiz" as Mode),
+      subsets: subsets.map((s) => ({
+        name: s.name,
+        enabled: subsetsEnabled.includes(s.name),
+      })),
     },
     onSubmit: ({ value: { mode, subsets } }) => {
       start({
@@ -128,35 +135,40 @@ function SettingsForm<TName extends QuizSliceName<AppStore>>({
               <field.Label>What do you want to practice?</field.Label>
 
               <div className="divide-y">
-                {field.state.value.map((_, i) => (
-                  <form.Field key={i} name={`subsets[${i}].enabled`}>
-                    {(subField) => {
-                      return (
-                        <field.Item className="py-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <field.Label
-                              className={cn("font-normal", {
-                                "text-muted-foreground": !subField.state.value,
-                              })}
-                            >
-                              {
-                                subsets.find(
-                                  (s) => s.name === field.state.value[i].name
-                                )?.label
-                              }
-                            </field.Label>
-                            <field.Control>
-                              <Switch
-                                checked={subField.state.value}
-                                onCheckedChange={subField.handleChange}
-                              />
-                            </field.Control>
-                          </div>
-                        </field.Item>
-                      );
-                    }}
-                  </form.Field>
-                ))}
+                {field.state.value.map((_, i) => {
+                  const subset = subsets.find(
+                    (s) => s.name === field.state.value[i].name
+                  );
+                  return (
+                    <form.Field key={i} name={`subsets[${i}].enabled`}>
+                      {(subField) => {
+                        return (
+                          <field.Item className="py-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <field.Label
+                                className={cn("font-normal", {
+                                  "text-muted-foreground":
+                                    !subField.state.value,
+                                })}
+                              >
+                                {subset?.label}
+                                <span className="ml-1 text-muted-foreground text-xs">
+                                  ({subset?.subjects.length ?? "-"})
+                                </span>
+                              </field.Label>
+                              <field.Control>
+                                <Switch
+                                  checked={subField.state.value}
+                                  onCheckedChange={subField.handleChange}
+                                />
+                              </field.Control>
+                            </div>
+                          </field.Item>
+                        );
+                      }}
+                    </form.Field>
+                  );
+                })}
               </div>
               <field.Message />
             </field.Item>
@@ -164,7 +176,7 @@ function SettingsForm<TName extends QuizSliceName<AppStore>>({
         </form.AppField>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <Button variant="secondary" onClick={() => router.back()} type="button">
           Back
         </Button>

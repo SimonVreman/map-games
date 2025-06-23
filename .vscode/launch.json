@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "name": "Mapgen",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}/mapgen",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}

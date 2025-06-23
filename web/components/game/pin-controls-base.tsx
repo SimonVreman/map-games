@@ -12,9 +12,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ControlsBase } from "./controls-base";
+import { useCallback, useEffect } from "react";
 
 export function PinControlsBase({
   stats,
@@ -35,6 +37,21 @@ export function PinControlsBase({
   const router = useRouter();
   const pathname = usePathname();
 
+  const quit = useCallback(
+    () => router.push(pathname.split("/").slice(0, -1).join("/")),
+    [router, pathname]
+  );
+
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => {
+      if (event.code === "KeyQ") quit();
+      if (event.code === "KeyH" && onToggleHints) onToggleHints();
+    };
+
+    window.addEventListener("keyup", listener);
+    return () => window.removeEventListener("keyup", listener);
+  }, [onToggleHints, quit]);
+
   return (
     <ControlsBase>
       <div className="flex max-sm:gap-2 gap-4 w-full">
@@ -53,18 +70,6 @@ export function PinControlsBase({
           {stats}
         </div>
 
-        {onToggleHints && (
-          <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center pointer-events-auto">
-            <Button variant="ghost" size="icon" onClick={onToggleHints}>
-              {hints ? (
-                <LightbulbOffIcon className="size-6 stroke-[1.5]" />
-              ) : (
-                <LightbulbIcon className="size-6 stroke-[1.5]" />
-              )}
-            </Button>
-          </div>
-        )}
-
         <div className="bg-background rounded-md shadow-md size-14 flex items-center justify-center pointer-events-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -77,15 +82,18 @@ export function PinControlsBase({
                 <RotateCwIcon />
                 <span>Reset</span>
               </DropdownMenuItem>
+              {onToggleHints && (
+                <DropdownMenuItem onClick={onToggleHints}>
+                  {hints ? <LightbulbOffIcon /> : <LightbulbIcon />}
+                  <span>Hints</span>
+                  <DropdownMenuShortcut>H</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() =>
-                  router.push(pathname.split("/").slice(0, -1).join("/"))
-                }
-              >
+              <DropdownMenuItem variant="destructive" onClick={quit}>
                 <XIcon />
                 <span>Quit</span>
+                <DropdownMenuShortcut>Q</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

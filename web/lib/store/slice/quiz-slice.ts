@@ -17,6 +17,7 @@ export type QuizSlice<
   // - nextSubjects empty, total = 0: quiz not started
   nextSubjects: SubjectKey[];
   guessed: TargetKey[];
+  targetCount: number;
   stats: {
     correct: number;
     incorrect: number;
@@ -65,6 +66,7 @@ export const createQuizSlice = <
     mode: null,
     nextSubjects: [],
     guessed: [],
+    targetCount: 0,
     stats: {
       correct: 0,
       incorrect: 0,
@@ -93,6 +95,11 @@ export const createQuizSlice = <
     subjectSubsets
       .flatMap((s) => (subsetsEnabled.includes(s.name) ? s.subjects : []))
       .sort(() => Math.random() - 0.5);
+
+  const getTargetCount = (nextSubjects: QuizSlice["nextSubjects"]) =>
+    nextSubjects[0] != null
+      ? targets.filter((t) => t.subjects.includes(nextSubjects[0])).length
+      : 0;
 
   return (
     set: (
@@ -160,6 +167,7 @@ export const createQuizSlice = <
               const tail = next.slice(idx);
               s.nextSubjects = [...head, subject, ...tail];
             }
+            store[name].targetCount = getTargetCount(store[name].nextSubjects);
             // Quiz just runs out.
 
             return;
@@ -182,6 +190,7 @@ export const createQuizSlice = <
               mode === "infinite"
                 ? [randomSubject(store[name])]
                 : shuffledSubjects(subsetsEnabled);
+            store[name].targetCount = getTargetCount(store[name].nextSubjects);
           }),
 
         toggleHints: () =>
@@ -192,7 +201,9 @@ export const createQuizSlice = <
 
         reset: () =>
           set((s) => {
-            s[name] = { ...s[name], ...defaultState };
+            const mode = s[name].mode ?? defaultState.mode;
+            const subsetsEnabled = s[name].subsetsEnabled;
+            s[name] = { ...s[name], ...defaultState, mode, subsetsEnabled };
           }),
       } as QuizSlice,
     } as TSlice);

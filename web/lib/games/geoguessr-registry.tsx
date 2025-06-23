@@ -41,7 +41,7 @@ export const geoguessrGames: GameDefinition[] = [
   },
   {
     name: "US License Plates",
-    description: "todo desc",
+    description: "Can you recognize the US license plates when blurred?",
     slug: "us-license-plates",
   },
 ] as const;

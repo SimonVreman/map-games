@@ -100,7 +100,7 @@ def write_spain_phone():
     df = gpd.read_file("input/spain/whosonfirst-data-admin-es-region-polygon.shp")
 
     output = open_utf8("output/spain-dialing-codes.path.txt", "w")
-    output.write("export const spainPhoneCodes = [\n")
+    output.write("export const spainDialingCodes = [\n")
 
     for key, code in spain_area_codes.items():
         df_ddd = df[df["name_eng"].isin(code["adm2"])]

@@ -107,7 +107,7 @@ def write_usa_phone():
     npa = pd.read_csv("input/usa/npa_report.csv", skiprows=1)
 
     output = open_utf8("output/usa-dialing-codes.path.txt", "w")
-    output.write("export const usPhoneCodes = [\n")
+    output.write("export const usDialingCodes = [\n")
 
     for key in df["AREA_CODE"].unique():
         code_df = df[df["AREA_CODE"] == key]
@@ -116,7 +116,9 @@ def write_usa_phone():
         transformation = transformations[state] if state in transformations else None
 
         parent = npa_df["PARENT_NPA_ID"].iat[0]
-        parent = "" if math.isnan(parent) else str(int(parent))
+        parent = (
+            "" if math.isnan(parent) or str(int(parent)) == key else str(int(parent))
+        )
         parent_df = df[df["AREA_CODE"] == parent]
 
         if parent_df.size != 0:

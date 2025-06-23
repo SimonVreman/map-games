@@ -5944,7 +5944,7 @@ def write_brazil_phone():
     df["ADM2_PT_normalized"] = df["ADM2_PT"].apply(normalize_string)
 
     output = open_utf8("output/brazil-dialing-codes.path.txt", "w")
-    output.write("export const brazilPhoneCodes = [\n")
+    output.write("export const brazilDialingCodes = [\n")
 
     for key, ddd in ddds.items():
         normalized_ddd_cities = set(map(normalize_string, ddd["adm2"]))

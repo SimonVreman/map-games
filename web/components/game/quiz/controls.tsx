@@ -20,17 +20,25 @@ export function QuizControls<TName extends QuizSliceName<AppStore>>({
   subsets: QuizSubset[];
   graphic?: (props: { subject: string }) => React.ReactNode;
 }) {
-  const [stats, mode, reset, hints, toggleHints, nextSubjects] = useAppStore(
-    (s) => [
-      s[store].stats,
-      s[store].mode,
-      s[store].reset,
-      s[store].hintsEnabled,
-      s[store].toggleHints,
-      s[store].nextSubjects,
-      (s[store].nextSubjects[0] ?? null) as string | null,
-    ]
-  );
+  const [
+    stats,
+    mode,
+    reset,
+    hints,
+    toggleHints,
+    nextSubjects,
+    guessedCount,
+    targetCount,
+  ] = useAppStore((s) => [
+    s[store].stats,
+    s[store].mode,
+    s[store].reset,
+    s[store].hintsEnabled,
+    s[store].toggleHints,
+    s[store].nextSubjects,
+    s[store].guessed.length,
+    s[store].targetCount,
+  ]);
 
   const nextSubject = (nextSubjects[0] ?? null) as string | null;
   const completedCounting = mode === "practice" ? stats.correct : stats.total;
@@ -95,9 +103,19 @@ export function QuizControls<TName extends QuizSliceName<AppStore>>({
             </>
           }
         >
-          <p className="text-muted-foreground">{label}</p>
-
-          {!graphic && <p className="font-semibold ml-2">{nextSubject}</p>}
+          <p className="text-muted-foreground">
+            {label}
+            {!graphic && (
+              <span className="font-semibold text-foreground ml-2">
+                {nextSubject}
+              </span>
+            )}
+          </p>
+          {targetCount > 1 && (
+            <p className="ml-auto text-sm">
+              {guessedCount}/{targetCount}
+            </p>
+          )}
         </PinControlsBase>
       )}
       <QuizSettings store={store} subsets={subsets} />
