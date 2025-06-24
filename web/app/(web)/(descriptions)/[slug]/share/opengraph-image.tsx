@@ -11,6 +11,7 @@ export const size = ogImageConfig.size;
 export default async function Image({ params }: { params: { slug: string } }) {
   return generateOgImage({
     slug: params.slug,
-    subtitle: "Can you beat my score?",
+    title: "Can you beat my score?",
+    subtitle: games.find((g) => g.slug === params.slug)?.name,
   });
 }

@@ -60,17 +60,14 @@ export default async function SharedPage({ params, searchParams }: PageProps) {
           height={600}
           priority
         />
-        <div className="w-full absolute bottom-0 p-6 pb-12 pt-32 z-10">
-          <div
-            className="absolute inset-0 opacity-70 -z-10"
-            style={{
-              background:
-                "linear-gradient(to top, var(--color-background) 60%, transparent)",
-            }}
-          />
-          <div className="z-10">
-            <QuizStatistics statistics={score} />
-          </div>
+        <div
+          className="absolute inset-0 bg-background/50 backdrop-blur-md"
+          style={{
+            maskImage: "linear-gradient(to top, #000 40%, transparent 90%)",
+          }}
+        />
+        <div className="absolute bottom-0 w-full p-6 pb-12 pt-32 z-10">
+          <QuizStatistics statistics={score} />
         </div>
       </div>
       <h1>Can you beat me at {game.name}?</h1>
