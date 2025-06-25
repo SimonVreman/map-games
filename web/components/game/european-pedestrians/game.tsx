@@ -12,7 +12,7 @@ const bounds = {
   padding: 2,
 };
 
-export function EuropeanPedestriansGame() {
+export default function EuropeanPedestriansGame() {
   return (
     <div className="size-full relative">
       <QuizControls
