@@ -1,0 +1,20 @@
+{
+  "name": "tilegen",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun run index.ts",
+    "tool:generate-tiles": "bun run tools/generate-tiles.ts",
+    "tool:generate-hillshade": "bun run tools/generate-hillshade.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/geojson": "^7946.0.16"
+  }
+}
