@@ -12,6 +12,7 @@ import { PlacesLayer } from "./layers/PlacesLayer";
 import { LabelsLayer } from "./layers/LabelsLayer";
 import { GeoLinesLayer } from "./layers/GeoLinesLayer";
 import { LatLngBounds } from "../canvas/types";
+import { PatternLayer } from "./layers/PatternLayer";
 
 const minzoom = 2;
 const maxzoom = 6;
@@ -38,9 +39,10 @@ export default function WebGLMap({
       maxBounds={maxBounds}
       minZoom={minzoom}
       maxZoom={maxzoom}
-      maxPitch={0}
+      maxPitch={60}
       attributionControl={false}
       style={{ width: "100%", height: "100%" }}
+      canvasContextAttributes={{ antialias: true }}
       mapStyle={{
         version: 8,
         sources: {
@@ -64,6 +66,7 @@ export default function WebGLMap({
       <GeoLinesLayer />
       <PlacesLayer />
       <LabelsLayer />
+      <PatternLayer />
       {children}
     </Map>
   );

@@ -4,7 +4,7 @@ const bounds = {
   north: 71,
   west: -25,
   south: 34,
-  east: 38,
+  east: 40,
   padding: 2,
 };
 
