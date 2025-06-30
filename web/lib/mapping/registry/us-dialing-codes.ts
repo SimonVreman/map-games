@@ -1,6 +1,7 @@
 import { QuizSubset } from "../subsets";
+import type { USDialingCode } from "../paths/united-states/dialing-codes";
 
-export const usDialingCodeSubsets: QuizSubset[] = [
+export const usDialingCodeSubsets: QuizSubset<USDialingCode>[] = [
   {
     name: "northeast",
     label: "North East",
@@ -88,7 +89,6 @@ export const usDialingCodeSubsets: QuizSubset[] = [
       "410",
       "443",
       "302",
-      "481",
       "610",
       "835",
       "215",
@@ -170,7 +170,6 @@ export const usDialingCodeSubsets: QuizSubset[] = [
       "772",
       "561",
       "728",
-      "745",
       "954",
       "239",
       "470",

@@ -1,7 +1,7 @@
 export const spainDialingCodes = [
   {
     name: "95",
-    subjects: ["95"],
+    subjects: ["95"] as const,
     center: [484.715, 388.346],
     area: 21343.98,
     paths: [
@@ -10,7 +10,7 @@ export const spainDialingCodes = [
   },
   {
     name: "959",
-    subjects: ["959"],
+    subjects: ["959"] as const,
     center: [480.776, 387.489],
     area: 10127.9,
     paths: [
@@ -19,7 +19,7 @@ export const spainDialingCodes = [
   },
   {
     name: "956",
-    subjects: ["956"],
+    subjects: ["956"] as const,
     center: [483.608, 390.872],
     area: 7439.772,
     paths: [
@@ -30,7 +30,7 @@ export const spainDialingCodes = [
   },
   {
     name: "957",
-    subjects: ["957"],
+    subjects: ["957"] as const,
     center: [486.534, 385.881],
     area: 13771.942,
     paths: [
@@ -40,7 +40,7 @@ export const spainDialingCodes = [
   },
   {
     name: "953",
-    subjects: ["953"],
+    subjects: ["953"] as const,
     center: [490.295, 385.886],
     area: 13493.475,
     paths: [
@@ -49,7 +49,7 @@ export const spainDialingCodes = [
   },
   {
     name: "958",
-    subjects: ["958"],
+    subjects: ["958"] as const,
     center: [491.002, 387.874],
     area: 12645.433,
     paths: [
@@ -58,7 +58,7 @@ export const spainDialingCodes = [
   },
   {
     name: "950",
-    subjects: ["950"],
+    subjects: ["950"] as const,
     center: [493.921, 388.191],
     area: 8773.421,
     paths: [
@@ -67,7 +67,7 @@ export const spainDialingCodes = [
   },
   {
     name: "926",
-    subjects: ["926"],
+    subjects: ["926"] as const,
     center: [489.214, 382.324],
     area: 19811.451,
     paths: [
@@ -77,7 +77,7 @@ export const spainDialingCodes = [
   },
   {
     name: "924",
-    subjects: ["924"],
+    subjects: ["924"] as const,
     center: [482.72, 383.263],
     area: 21768.892,
     paths: [
@@ -86,7 +86,7 @@ export const spainDialingCodes = [
   },
   {
     name: "920",
-    subjects: ["920"],
+    subjects: ["920"] as const,
     center: [486.568, 376.309],
     area: 8048.735,
     paths: [
@@ -95,7 +95,7 @@ export const spainDialingCodes = [
   },
   {
     name: "927",
-    subjects: ["927"],
+    subjects: ["927"] as const,
     center: [482.951, 379.452],
     area: 19864.633,
     paths: [
@@ -104,7 +104,7 @@ export const spainDialingCodes = [
   },
   {
     name: "925",
-    subjects: ["925"],
+    subjects: ["925"] as const,
     center: [488.603, 379.345],
     area: 15368.592,
     paths: [
@@ -113,7 +113,7 @@ export const spainDialingCodes = [
   },
   {
     name: "923",
-    subjects: ["923"],
+    subjects: ["923"] as const,
     center: [483.273, 375.784],
     area: 12348.323,
     paths: [
@@ -122,7 +122,7 @@ export const spainDialingCodes = [
   },
   {
     name: "921",
-    subjects: ["921"],
+    subjects: ["921"] as const,
     center: [488.38, 374.525],
     area: 6923.096,
     paths: [
@@ -131,7 +131,7 @@ export const spainDialingCodes = [
   },
   {
     name: "922",
-    subjects: ["922"],
+    subjects: ["922"] as const,
     center: [467.718, 388.208],
     area: 3055.644,
     paths: [
@@ -143,7 +143,7 @@ export const spainDialingCodes = [
   },
   {
     name: "928",
-    subjects: ["928"],
+    subjects: ["928"] as const,
     center: [470.538, 389.376],
     area: 3682.908,
     paths: [
@@ -159,7 +159,7 @@ export const spainDialingCodes = [
   },
   {
     name: "91",
-    subjects: ["91"],
+    subjects: ["91"] as const,
     center: [489.525, 376.667],
     area: 8030.882,
     paths: [
@@ -169,7 +169,7 @@ export const spainDialingCodes = [
   },
   {
     name: "969",
-    subjects: ["969"],
+    subjects: ["969"] as const,
     center: [494.018, 378.787],
     area: 17138.676,
     paths: [
@@ -178,7 +178,7 @@ export const spainDialingCodes = [
   },
   {
     name: "967",
-    subjects: ["967"],
+    subjects: ["967"] as const,
     center: [494.569, 383.17],
     area: 14930.789,
     paths: [
@@ -187,7 +187,7 @@ export const spainDialingCodes = [
   },
   {
     name: "968",
-    subjects: ["968"],
+    subjects: ["968"] as const,
     center: [495.356, 385.503],
     area: 11316.268,
     paths: [
@@ -200,7 +200,7 @@ export const spainDialingCodes = [
   },
   {
     name: "96",
-    subjects: ["96"],
+    subjects: ["96"] as const,
     center: [498.577, 382.49],
     area: 16631.872,
     paths: [
@@ -211,7 +211,7 @@ export const spainDialingCodes = [
   },
   {
     name: "964",
-    subjects: ["964"],
+    subjects: ["964"] as const,
     center: [499.829, 377.665],
     area: 6633.779,
     paths: [
@@ -221,7 +221,7 @@ export const spainDialingCodes = [
   },
   {
     name: "978",
-    subjects: ["978"],
+    subjects: ["978"] as const,
     center: [497.436, 376.392],
     area: 14809.449,
     paths: [
@@ -230,7 +230,7 @@ export const spainDialingCodes = [
   },
   {
     name: "976",
-    subjects: ["976"],
+    subjects: ["976"] as const,
     center: [496.752, 371.814],
     area: 17275.242,
     paths: [
@@ -239,7 +239,7 @@ export const spainDialingCodes = [
   },
   {
     name: "975",
-    subjects: ["975"],
+    subjects: ["975"] as const,
     center: [492.439, 372.703],
     area: 10306.8,
     paths: [
@@ -248,7 +248,7 @@ export const spainDialingCodes = [
   },
   {
     name: "974",
-    subjects: ["974"],
+    subjects: ["974"] as const,
     center: [499.919, 370.707],
     area: 15637.52,
     paths: [
@@ -257,7 +257,7 @@ export const spainDialingCodes = [
   },
   {
     name: "979",
-    subjects: ["979"],
+    subjects: ["979"] as const,
     center: [487.174, 369.681],
     area: 8052.08,
     paths: [
@@ -271,7 +271,7 @@ export const spainDialingCodes = [
   },
   {
     name: "973",
-    subjects: ["973"],
+    subjects: ["973"] as const,
     center: [503.278, 370.963],
     area: 12167.99,
     paths: [
@@ -281,7 +281,7 @@ export const spainDialingCodes = [
   },
   {
     name: "977",
-    subjects: ["977"],
+    subjects: ["977"] as const,
     center: [501.742, 374.731],
     area: 6306.249,
     paths: [
@@ -291,7 +291,7 @@ export const spainDialingCodes = [
   },
   {
     name: "972",
-    subjects: ["972"],
+    subjects: ["972"] as const,
     center: [507.894, 370.944],
     area: 5908.191,
     paths: [
@@ -304,7 +304,7 @@ export const spainDialingCodes = [
   },
   {
     name: "971",
-    subjects: ["971"],
+    subjects: ["971"] as const,
     center: [508.001, 379.977],
     area: 4990.791,
     paths: [
@@ -332,7 +332,7 @@ export const spainDialingCodes = [
   },
   {
     name: "93",
-    subjects: ["93"],
+    subjects: ["93"] as const,
     center: [505.642, 372.121],
     area: 7735.664,
     paths: [
@@ -342,7 +342,7 @@ export const spainDialingCodes = [
   },
   {
     name: "949",
-    subjects: ["949"],
+    subjects: ["949"] as const,
     center: [493.039, 375.88],
     area: 12213.216,
     paths: [
@@ -352,7 +352,7 @@ export const spainDialingCodes = [
   },
   {
     name: "947",
-    subjects: ["947"],
+    subjects: ["947"] as const,
     center: [489.787, 370.0],
     area: 14289.383,
     paths: [
@@ -365,7 +365,7 @@ export const spainDialingCodes = [
   },
   {
     name: "941",
-    subjects: ["941"],
+    subjects: ["941"] as const,
     center: [493.103, 370.163],
     area: 5045.38,
     paths: [
@@ -374,7 +374,7 @@ export const spainDialingCodes = [
   },
   {
     name: "948",
-    subjects: ["948"],
+    subjects: ["948"] as const,
     center: [494.914, 368.917],
     area: 10391.597,
     paths: [
@@ -385,7 +385,7 @@ export const spainDialingCodes = [
   },
   {
     name: "945",
-    subjects: ["945"],
+    subjects: ["945"] as const,
     center: [492.549, 368.038],
     area: 3037.518,
     paths: [
@@ -394,7 +394,7 @@ export const spainDialingCodes = [
   },
   {
     name: "943",
-    subjects: ["943"],
+    subjects: ["943"] as const,
     center: [493.876, 366.896],
     area: 1982.511,
     paths: [
@@ -403,7 +403,7 @@ export const spainDialingCodes = [
   },
   {
     name: "94",
-    subjects: ["94"],
+    subjects: ["94"] as const,
     center: [492.079, 366.541],
     area: 2215.515,
     paths: [
@@ -413,7 +413,7 @@ export const spainDialingCodes = [
   },
   {
     name: "942",
-    subjects: ["942"],
+    subjects: ["942"] as const,
     center: [488.157, 366.933],
     area: 5330.176,
     paths: [
@@ -424,7 +424,7 @@ export const spainDialingCodes = [
   },
   {
     name: "98",
-    subjects: ["98"],
+    subjects: ["98"] as const,
     center: [483.739, 366.415],
     area: 10605.232,
     paths: [
@@ -433,7 +433,7 @@ export const spainDialingCodes = [
   },
   {
     name: "987",
-    subjects: ["987"],
+    subjects: ["987"] as const,
     center: [483.413, 368.835],
     area: 15578.623,
     paths: [
@@ -442,7 +442,7 @@ export const spainDialingCodes = [
   },
   {
     name: "983",
-    subjects: ["983"],
+    subjects: ["983"] as const,
     center: [486.953, 372.324],
     area: 8110.541,
     paths: [
@@ -453,7 +453,7 @@ export const spainDialingCodes = [
   },
   {
     name: "980",
-    subjects: ["980"],
+    subjects: ["980"] as const,
     center: [483.494, 372.389],
     area: 10561.285,
     paths: [
@@ -462,7 +462,7 @@ export const spainDialingCodes = [
   },
   {
     name: "988",
-    subjects: ["988"],
+    subjects: ["988"] as const,
     center: [479.06, 370.501],
     area: 7274.848,
     paths: [
@@ -471,7 +471,7 @@ export const spainDialingCodes = [
   },
   {
     name: "982",
-    subjects: ["982"],
+    subjects: ["982"] as const,
     center: [479.287, 367.3],
     area: 9857.82,
     paths: [
@@ -482,7 +482,7 @@ export const spainDialingCodes = [
   },
   {
     name: "981",
-    subjects: ["981"],
+    subjects: ["981"] as const,
     center: [476.165, 366.863],
     area: 7963.51,
     paths: [
@@ -496,7 +496,7 @@ export const spainDialingCodes = [
   },
   {
     name: "986",
-    subjects: ["986"],
+    subjects: ["986"] as const,
     center: [476.293, 369.849],
     area: 4494.911,
     paths: [
@@ -516,3 +516,6 @@ export const spainDialingCodes = [
     ],
   },
 ];
+
+export type SpainDialingCode =
+  (typeof spainDialingCodes)[number]["subjects"][number];

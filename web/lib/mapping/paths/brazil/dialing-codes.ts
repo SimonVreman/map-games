@@ -1,7 +1,7 @@
 export const brazilDialingCodes = [
   {
     name: "11",
-    subjects: ["11"],
+    subjects: ["11"] as const,
     center: [370.2325, 566.8342],
     area: 1,
     paths: [
@@ -10,7 +10,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "12",
-    subjects: ["12"],
+    subjects: ["12"] as const,
     center: [373.7316, 566.048],
     area: 1,
     paths: [
@@ -32,7 +32,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "13",
-    subjects: ["13"],
+    subjects: ["13"] as const,
     center: [367.3473, 570.1662],
     area: 1,
     paths: [
@@ -43,7 +43,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "14",
-    subjects: ["14"],
+    subjects: ["14"] as const,
     center: [363.4633, 564.1912],
     area: 1,
     paths: [
@@ -52,7 +52,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "15",
-    subjects: ["15"],
+    subjects: ["15"] as const,
     center: [365.71, 568.6449],
     area: 1,
     paths: [
@@ -61,7 +61,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "16",
-    subjects: ["16"],
+    subjects: ["16"] as const,
     center: [367.2209, 559.9195],
     area: 1,
     paths: [
@@ -70,7 +70,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "17",
-    subjects: ["17"],
+    subjects: ["17"] as const,
     center: [362.539, 558.8706],
     area: 1,
     paths: [
@@ -79,7 +79,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "18",
-    subjects: ["18"],
+    subjects: ["18"] as const,
     center: [358.1086, 561.5401],
     area: 1,
     paths: [
@@ -88,7 +88,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "19",
-    subjects: ["19"],
+    subjects: ["19"] as const,
     center: [368.6151, 563.4064],
     area: 1,
     paths: [
@@ -97,7 +97,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "21",
-    subjects: ["21"],
+    subjects: ["21"] as const,
     center: [380.3118, 564.4711],
     area: 1,
     paths: [
@@ -123,7 +123,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "22",
-    subjects: ["22"],
+    subjects: ["22"] as const,
     center: [383.8102, 562.3103],
     area: 1,
     paths: [
@@ -140,7 +140,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "24",
-    subjects: ["24"],
+    subjects: ["24"] as const,
     center: [377.7797, 564.5363],
     area: 1,
     paths: [
@@ -168,7 +168,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "27",
-    subjects: ["27"],
+    subjects: ["27"] as const,
     center: [388.0365, 554.733],
     area: 1,
     paths: [
@@ -181,7 +181,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "28",
-    subjects: ["28"],
+    subjects: ["28"] as const,
     center: [385.477, 558.9396],
     area: 1,
     paths: [
@@ -190,7 +190,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "31",
-    subjects: ["31"],
+    subjects: ["31"] as const,
     center: [379.2366, 556.1073],
     area: 1,
     paths: [
@@ -200,7 +200,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "32",
-    subjects: ["32"],
+    subjects: ["32"] as const,
     center: [379.4678, 560.8475],
     area: 1,
     paths: [
@@ -209,7 +209,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "33",
-    subjects: ["33"],
+    subjects: ["33"] as const,
     center: [384.0276, 550.8275],
     area: 1,
     paths: [
@@ -219,7 +219,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "34",
-    subjects: ["34"],
+    subjects: ["34"] as const,
     center: [366.3708, 553.6695],
     area: 1,
     paths: [
@@ -229,7 +229,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "35",
-    subjects: ["35"],
+    subjects: ["35"] as const,
     center: [373.7079, 561.314],
     area: 1,
     paths: [
@@ -238,7 +238,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "37",
-    subjects: ["37"],
+    subjects: ["37"] as const,
     center: [374.2972, 555.4099],
     area: 1,
     paths: [
@@ -247,7 +247,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "38",
-    subjects: ["38"],
+    subjects: ["38"] as const,
     center: [375.2258, 547.1534],
     area: 1,
     paths: [
@@ -259,7 +259,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "41",
-    subjects: ["41"],
+    subjects: ["41"] as const,
     center: [364.0315, 572.6863],
     area: 1,
     paths: [
@@ -268,7 +268,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "42",
-    subjects: ["42"],
+    subjects: ["42"] as const,
     center: [357.4509, 572.5411],
     area: 1,
     paths: [
@@ -283,7 +283,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "43",
-    subjects: ["43"],
+    subjects: ["43"] as const,
     center: [360.4922, 568.1286],
     area: 1,
     paths: [
@@ -295,7 +295,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "44",
-    subjects: ["44"],
+    subjects: ["44"] as const,
     center: [352.8149, 567.8652],
     area: 1,
     paths: [
@@ -304,7 +304,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "45",
-    subjects: ["45"],
+    subjects: ["45"] as const,
     center: [351.3179, 571.7979],
     area: 1,
     paths: [
@@ -313,7 +313,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "46",
-    subjects: ["46"],
+    subjects: ["46"] as const,
     center: [352.8736, 574.6281],
     area: 1,
     paths: [
@@ -323,7 +323,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "47",
-    subjects: ["47"],
+    subjects: ["47"] as const,
     center: [362.5907, 577.3249],
     area: 1,
     paths: [
@@ -337,7 +337,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "48",
-    subjects: ["48"],
+    subjects: ["48"] as const,
     center: [363.6086, 581.8252],
     area: 1,
     paths: [
@@ -353,7 +353,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "49",
-    subjects: ["49"],
+    subjects: ["49"] as const,
     center: [358.3855, 579.2253],
     area: 1,
     paths: [
@@ -363,7 +363,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "51",
-    subjects: ["51"],
+    subjects: ["51"] as const,
     center: [354.762, 587.7327],
     area: 1,
     paths: [
@@ -378,7 +378,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "53",
-    subjects: ["53"],
+    subjects: ["53"] as const,
     center: [352.9409, 594.2409],
     area: 1,
     paths: [
@@ -398,7 +398,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "54",
-    subjects: ["54"],
+    subjects: ["54"] as const,
     center: [356.0215, 582.212],
     area: 1,
     paths: [
@@ -416,7 +416,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "55",
-    subjects: ["55"],
+    subjects: ["55"] as const,
     center: [347.3692, 584.8937],
     area: 1,
     paths: [
@@ -427,7 +427,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "61",
-    subjects: ["61"],
+    subjects: ["61"] as const,
     center: [367.2409, 544.8766],
     area: 1,
     paths: [
@@ -436,7 +436,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "62",
-    subjects: ["62"],
+    subjects: ["62"] as const,
     center: [363.2696, 541.6131],
     area: 1,
     paths: [
@@ -446,7 +446,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "63",
-    subjects: ["63"],
+    subjects: ["63"] as const,
     center: [365.4698, 525.9916],
     area: 1,
     paths: [
@@ -455,7 +455,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "64",
-    subjects: ["64"],
+    subjects: ["64"] as const,
     center: [360.3845, 549.8356],
     area: 1,
     paths: [
@@ -466,7 +466,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "65",
-    subjects: ["65"],
+    subjects: ["65"] as const,
     center: [339.7308, 541.8915],
     area: 1,
     paths: [
@@ -478,7 +478,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "66",
-    subjects: ["66"],
+    subjects: ["66"] as const,
     center: [351.8065, 535.5578],
     area: 1,
     paths: [
@@ -489,7 +489,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "67",
-    subjects: ["67"],
+    subjects: ["67"] as const,
     center: [347.8116, 558.5467],
     area: 1,
     paths: [
@@ -500,7 +500,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "68",
-    subjects: ["68"],
+    subjects: ["68"] as const,
     center: [303.5592, 525.4454],
     area: 1,
     paths: [
@@ -511,7 +511,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "69",
-    subjects: ["69"],
+    subjects: ["69"] as const,
     center: [323.8627, 530.2798],
     area: 1,
     paths: [
@@ -520,7 +520,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "71",
-    subjects: ["71"],
+    subjects: ["71"] as const,
     center: [393.3563, 535.5061],
     area: 1,
     paths: [
@@ -529,7 +529,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "73",
-    subjects: ["73"],
+    subjects: ["73"] as const,
     center: [390.1449, 543.9083],
     area: 1,
     paths: [
@@ -540,7 +540,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "74",
-    subjects: ["74"],
+    subjects: ["74"] as const,
     center: [384.5577, 529.104],
     area: 1,
     paths: [
@@ -549,7 +549,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "75",
-    subjects: ["75"],
+    subjects: ["75"] as const,
     center: [391.5714, 531.0813],
     area: 1,
     paths: [
@@ -558,7 +558,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "77",
-    subjects: ["77"],
+    subjects: ["77"] as const,
     center: [377.9801, 536.327],
     area: 1,
     paths: [
@@ -567,7 +567,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "79",
-    subjects: ["79"],
+    subjects: ["79"] as const,
     center: [396.7578, 529.4541],
     area: 1,
     paths: [
@@ -576,7 +576,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "81",
-    subjects: ["81"],
+    subjects: ["81"] as const,
     center: [400.5601, 522.7037],
     area: 1,
     paths: [
@@ -588,7 +588,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "82",
-    subjects: ["82"],
+    subjects: ["82"] as const,
     center: [398.0964, 526.9474],
     area: 1,
     paths: [
@@ -597,7 +597,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "83",
-    subjects: ["83"],
+    subjects: ["83"] as const,
     center: [397.9458, 519.9525],
     area: 1,
     paths: [
@@ -607,7 +607,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "84",
-    subjects: ["84"],
+    subjects: ["84"] as const,
     center: [398.1946, 516.4396],
     area: 1,
     paths: [
@@ -616,7 +616,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "85",
-    subjects: ["85"],
+    subjects: ["85"] as const,
     center: [391.6971, 510.9947],
     area: 1,
     paths: [
@@ -625,7 +625,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "86",
-    subjects: ["86"],
+    subjects: ["86"] as const,
     center: [383.1277, 513.1478],
     area: 1,
     paths: [
@@ -634,7 +634,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "87",
-    subjects: ["87"],
+    subjects: ["87"] as const,
     center: [392.6023, 523.3561],
     area: 1,
     paths: [
@@ -643,7 +643,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "88",
-    subjects: ["88"],
+    subjects: ["88"] as const,
     center: [390.6455, 514.804],
     area: 1,
     paths: [
@@ -655,7 +655,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "89",
-    subjects: ["89"],
+    subjects: ["89"] as const,
     center: [379.8533, 523.2297],
     area: 1,
     paths: [
@@ -664,7 +664,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "91",
-    subjects: ["91"],
+    subjects: ["91"] as const,
     center: [363.4656, 506.1917],
     area: 1,
     paths: [
@@ -697,7 +697,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "92",
-    subjects: ["92"],
+    subjects: ["92"] as const,
     center: [335.8368, 509.849],
     area: 1,
     paths: [
@@ -707,7 +707,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "93",
-    subjects: ["93"],
+    subjects: ["93"] as const,
     center: [348.6678, 509.8039],
     area: 1,
     paths: [
@@ -716,7 +716,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "94",
-    subjects: ["94"],
+    subjects: ["94"] as const,
     center: [358.175, 518.4494],
     area: 1,
     paths: [
@@ -725,7 +725,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "95",
-    subjects: ["95"],
+    subjects: ["95"] as const,
     center: [330.0006, 494.8747],
     area: 1,
     paths: [
@@ -734,7 +734,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "96",
-    subjects: ["96"],
+    subjects: ["96"] as const,
     center: [355.4857, 495.4594],
     area: 1,
     paths: [
@@ -745,7 +745,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "97",
-    subjects: ["97"],
+    subjects: ["97"] as const,
     center: [318.0472, 510.5233],
     area: 1,
     paths: [
@@ -754,7 +754,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "98",
-    subjects: ["98"],
+    subjects: ["98"] as const,
     center: [380.1799, 508.3056],
     area: 1,
     paths: [
@@ -799,7 +799,7 @@ export const brazilDialingCodes = [
   },
   {
     name: "99",
-    subjects: ["99"],
+    subjects: ["99"] as const,
     center: [372.6016, 519.3091],
     area: 1,
     paths: [
@@ -807,3 +807,5 @@ export const brazilDialingCodes = [
     ],
   },
 ];
+export type BrazilDialingCode =
+  (typeof brazilDialingCodes)[number]["subjects"][number];

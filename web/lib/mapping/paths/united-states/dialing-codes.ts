@@ -1,7 +1,7 @@
 export const usDialingCodes = [
   {
     name: "201/551",
-    subjects: ["201", "551"],
+    subjects: ["201", "551"] as const,
     center: [294.433, 375.333],
     area: 748.086,
     paths: [
@@ -10,7 +10,7 @@ export const usDialingCodes = [
   },
   {
     name: "202/771",
-    subjects: ["202", "771"],
+    subjects: ["202", "771"] as const,
     center: [286.146, 382.561],
     area: 176.98,
     paths: [
@@ -19,7 +19,7 @@ export const usDialingCodes = [
   },
   {
     name: "203/475",
-    subjects: ["203", "475"],
+    subjects: ["203", "475"] as const,
     center: [296.999, 373.716],
     area: 3352.095,
     paths: [
@@ -29,7 +29,7 @@ export const usDialingCodes = [
   },
   {
     name: "205/659",
-    subjects: ["205", "659"],
+    subjects: ["205", "659"] as const,
     center: [257.218, 402.32],
     area: 32532.864,
     paths: [
@@ -38,7 +38,7 @@ export const usDialingCodes = [
   },
   {
     name: "206/564",
-    subjects: ["206", "564"],
+    subjects: ["206", "564"] as const,
     center: [160.258, 349.343],
     area: 620.381,
     paths: [
@@ -49,7 +49,7 @@ export const usDialingCodes = [
   },
   {
     name: "207",
-    subjects: ["207"],
+    subjects: ["207"] as const,
     center: [307.888, 358.692],
     area: 84194.972,
     paths: [
@@ -111,7 +111,7 @@ export const usDialingCodes = [
   },
   {
     name: "208/986",
-    subjects: ["208", "986"],
+    subjects: ["208", "986"] as const,
     center: [179.265, 357.773],
     area: 216441.197,
     paths: [
@@ -120,7 +120,7 @@ export const usDialingCodes = [
   },
   {
     name: "209/350",
-    subjects: ["209", "350"],
+    subjects: ["209", "350"] as const,
     center: [165.487, 386.844],
     area: 29543.711,
     paths: [
@@ -129,7 +129,7 @@ export const usDialingCodes = [
   },
   {
     name: "210/726",
-    subjects: ["210", "726"],
+    subjects: ["210", "726"] as const,
     center: [226.46, 414.39],
     area: 3193.087,
     paths: [
@@ -138,7 +138,7 @@ export const usDialingCodes = [
   },
   {
     name: "212/332/646/917",
-    subjects: ["212", "332", "646", "917"],
+    subjects: ["212", "332", "646", "917"] as const,
     center: [294.548, 375.694],
     area: 69.186,
     paths: [
@@ -150,7 +150,7 @@ export const usDialingCodes = [
   },
   {
     name: "213/323/738",
-    subjects: ["213", "323", "738"],
+    subjects: ["213", "323", "738"] as const,
     center: [171.589, 399.346],
     area: 497.856,
     paths: [
@@ -159,7 +159,7 @@ export const usDialingCodes = [
   },
   {
     name: "214/469/945/972",
-    subjects: ["214", "469", "945", "972"],
+    subjects: ["214", "469", "945", "972"] as const,
     center: [231.741, 403.681],
     area: 10074.952,
     paths: [
@@ -168,7 +168,7 @@ export const usDialingCodes = [
   },
   {
     name: "215/267/445",
-    subjects: ["215", "267", "445"],
+    subjects: ["215", "267", "445"] as const,
     center: [291.619, 377.915],
     area: 2345.567,
     paths: [
@@ -177,7 +177,7 @@ export const usDialingCodes = [
   },
   {
     name: "216",
-    subjects: ["216"],
+    subjects: ["216"] as const,
     center: [273.31, 373.112],
     area: 521.704,
     paths: [
@@ -186,7 +186,7 @@ export const usDialingCodes = [
   },
   {
     name: "217/447",
-    subjects: ["217", "447"],
+    subjects: ["217", "447"] as const,
     center: [251.466, 379.199],
     area: 42706.784,
     paths: [
@@ -195,7 +195,7 @@ export const usDialingCodes = [
   },
   {
     name: "218",
-    subjects: ["218"],
+    subjects: ["218"] as const,
     center: [239.422, 349.177],
     area: 119343.193,
     paths: [
@@ -204,7 +204,7 @@ export const usDialingCodes = [
   },
   {
     name: "219",
-    subjects: ["219"],
+    subjects: ["219"] as const,
     center: [257.808, 374.218],
     area: 7743.757,
     paths: [
@@ -213,7 +213,7 @@ export const usDialingCodes = [
   },
   {
     name: "225",
-    subjects: ["225"],
+    subjects: ["225"] as const,
     center: [246.987, 411.083],
     area: 11593.995,
     paths: [
@@ -222,7 +222,7 @@ export const usDialingCodes = [
   },
   {
     name: "228",
-    subjects: ["228"],
+    subjects: ["228"] as const,
     center: [252.654, 411.112],
     area: 4500.646,
     paths: [
@@ -232,7 +232,7 @@ export const usDialingCodes = [
   },
   {
     name: "229",
-    subjects: ["229"],
+    subjects: ["229"] as const,
     center: [266.505, 407.495],
     area: 34915.281,
     paths: [
@@ -241,7 +241,7 @@ export const usDialingCodes = [
   },
   {
     name: "231",
-    subjects: ["231"],
+    subjects: ["231"] as const,
     center: [262.353, 361.859],
     area: 25319.921,
     paths: [
@@ -257,7 +257,7 @@ export const usDialingCodes = [
   },
   {
     name: "239",
-    subjects: ["239"],
+    subjects: ["239"] as const,
     center: [274.186, 425.246],
     area: 9317.165,
     paths: [
@@ -330,7 +330,7 @@ export const usDialingCodes = [
   },
   {
     name: "248/947",
-    subjects: ["248", "947"],
+    subjects: ["248", "947"] as const,
     center: [268.33, 368.777],
     area: 2575.746,
     paths: [
@@ -339,7 +339,7 @@ export const usDialingCodes = [
   },
   {
     name: "251",
-    subjects: ["251"],
+    subjects: ["251"] as const,
     center: [256.627, 408.872],
     area: 20971.715,
     paths: [
@@ -351,7 +351,7 @@ export const usDialingCodes = [
   },
   {
     name: "252",
-    subjects: ["252"],
+    subjects: ["252"] as const,
     center: [286.193, 394.013],
     area: 32433.698,
     paths: [
@@ -404,7 +404,7 @@ export const usDialingCodes = [
   },
   {
     name: "253",
-    subjects: ["253"],
+    subjects: ["253"] as const,
     center: [160.162, 350.945],
     area: 1952.347,
     paths: [
@@ -420,7 +420,7 @@ export const usDialingCodes = [
   },
   {
     name: "254",
-    subjects: ["254"],
+    subjects: ["254"] as const,
     center: [229.32, 406.663],
     area: 34184.357,
     paths: [
@@ -429,7 +429,7 @@ export const usDialingCodes = [
   },
   {
     name: "256/938",
-    subjects: ["256", "938"],
+    subjects: ["256", "938"] as const,
     center: [261.905, 400.073],
     area: 34943.089,
     paths: [
@@ -438,7 +438,7 @@ export const usDialingCodes = [
   },
   {
     name: "260",
-    subjects: ["260"],
+    subjects: ["260"] as const,
     center: [262.882, 374.814],
     area: 10921.85,
     paths: [
@@ -447,7 +447,7 @@ export const usDialingCodes = [
   },
   {
     name: "262",
-    subjects: ["262"],
+    subjects: ["262"] as const,
     center: [254.577, 367.223],
     area: 6762.259,
     paths: [
@@ -456,7 +456,7 @@ export const usDialingCodes = [
   },
   {
     name: "269",
-    subjects: ["269"],
+    subjects: ["269"] as const,
     center: [262.254, 370.222],
     area: 11816.339,
     paths: [
@@ -465,7 +465,7 @@ export const usDialingCodes = [
   },
   {
     name: "270/364",
-    subjects: ["270", "364"],
+    subjects: ["270", "364"] as const,
     center: [258.876, 388.018],
     area: 44785.439,
     paths: [
@@ -475,7 +475,7 @@ export const usDialingCodes = [
   },
   {
     name: "276",
-    subjects: ["276"],
+    subjects: ["276"] as const,
     center: [272.719, 389.09],
     area: 17917.767,
     paths: [
@@ -484,7 +484,7 @@ export const usDialingCodes = [
   },
   {
     name: "227/240/301",
-    subjects: ["227", "240", "301"],
+    subjects: ["227", "240", "301"] as const,
     center: [286.665, 382.605],
     area: 10735.1,
     paths: [
@@ -497,7 +497,7 @@ export const usDialingCodes = [
   },
   {
     name: "302",
-    subjects: ["302"],
+    subjects: ["302"] as const,
     center: [290.059, 381.658],
     area: 5119.143,
     paths: [
@@ -508,7 +508,7 @@ export const usDialingCodes = [
   },
   {
     name: "303/720/983",
-    subjects: ["303", "720", "983"],
+    subjects: ["303", "720", "983"] as const,
     center: [208.492, 379.503],
     area: 17240.36,
     paths: [
@@ -517,7 +517,7 @@ export const usDialingCodes = [
   },
   {
     name: "304/681",
-    subjects: ["304", "681"],
+    subjects: ["304", "681"] as const,
     center: [276.958, 382.465],
     area: 62753.719,
     paths: [
@@ -526,7 +526,7 @@ export const usDialingCodes = [
   },
   {
     name: "305/645/786",
-    subjects: ["305", "645", "786"],
+    subjects: ["305", "645", "786"] as const,
     center: [276.1, 426.815],
     area: 5480.979,
     paths: [
@@ -641,7 +641,7 @@ export const usDialingCodes = [
   },
   {
     name: "307",
-    subjects: ["307"],
+    subjects: ["307"] as const,
     center: [201.254, 367.448],
     area: 253333.569,
     paths: [
@@ -650,7 +650,7 @@ export const usDialingCodes = [
   },
   {
     name: "308",
-    subjects: ["308"],
+    subjects: ["308"] as const,
     center: [219.394, 373.073],
     area: 117858.285,
     paths: [
@@ -659,7 +659,7 @@ export const usDialingCodes = [
   },
   {
     name: "309/861",
-    subjects: ["309", "861"],
+    subjects: ["309", "861"] as const,
     center: [249.838, 375.054],
     area: 24603.309,
     paths: [
@@ -668,7 +668,7 @@ export const usDialingCodes = [
   },
   {
     name: "310/424",
-    subjects: ["310", "424"],
+    subjects: ["310", "424"] as const,
     center: [171.045, 401.508],
     area: 1369.331,
     paths: [
@@ -680,7 +680,7 @@ export const usDialingCodes = [
   },
   {
     name: "312/872",
-    subjects: ["312", "872"],
+    subjects: ["312", "872"] as const,
     center: [256.519, 371.682],
     area: 47.186,
     paths: [
@@ -689,7 +689,7 @@ export const usDialingCodes = [
   },
   {
     name: "313/679",
-    subjects: ["313", "679"],
+    subjects: ["313", "679"] as const,
     center: [268.994, 369.953],
     area: 627.037,
     paths: [
@@ -699,7 +699,7 @@ export const usDialingCodes = [
   },
   {
     name: "314/557",
-    subjects: ["314", "557"],
+    subjects: ["314", "557"] as const,
     center: [249.052, 383.502],
     area: 1043.105,
     paths: [
@@ -708,7 +708,7 @@ export const usDialingCodes = [
   },
   {
     name: "315/680",
-    subjects: ["315", "680"],
+    subjects: ["315", "680"] as const,
     center: [290.498, 364.574],
     area: 33848.357,
     paths: [
@@ -727,7 +727,7 @@ export const usDialingCodes = [
   },
   {
     name: "316",
-    subjects: ["316"],
+    subjects: ["316"] as const,
     center: [229.982, 386.494],
     area: 5725.847,
     paths: [
@@ -736,7 +736,7 @@ export const usDialingCodes = [
   },
   {
     name: "317/463",
-    subjects: ["317", "463"],
+    subjects: ["317", "463"] as const,
     center: [260.616, 379.472],
     area: 5728.511,
     paths: [
@@ -745,7 +745,7 @@ export const usDialingCodes = [
   },
   {
     name: "318/457",
-    subjects: ["318", "457"],
+    subjects: ["318", "457"] as const,
     center: [242.75, 406.628],
     area: 55845.448,
     paths: [
@@ -754,7 +754,7 @@ export const usDialingCodes = [
   },
   {
     name: "319",
-    subjects: ["319"],
+    subjects: ["319"] as const,
     center: [244.963, 372.518],
     area: 23185.778,
     paths: [
@@ -763,7 +763,7 @@ export const usDialingCodes = [
   },
   {
     name: "320",
-    subjects: ["320"],
+    subjects: ["320"] as const,
     center: [235.219, 357.569],
     area: 39102.45,
     paths: [
@@ -772,7 +772,7 @@ export const usDialingCodes = [
   },
   {
     name: "321",
-    subjects: ["321"],
+    subjects: ["321"] as const,
     center: [275.605, 417.967],
     area: 2684.653,
     paths: [
@@ -804,7 +804,7 @@ export const usDialingCodes = [
   },
   {
     name: "325",
-    subjects: ["325"],
+    subjects: ["325"] as const,
     center: [222.774, 407.516],
     area: 76199.84,
     paths: [
@@ -813,7 +813,7 @@ export const usDialingCodes = [
   },
   {
     name: "234/330",
-    subjects: ["234", "330"],
+    subjects: ["234", "330"] as const,
     center: [274.3, 375.228],
     area: 13312.917,
     paths: [
@@ -822,7 +822,7 @@ export const usDialingCodes = [
   },
   {
     name: "334",
-    subjects: ["334"],
+    subjects: ["334"] as const,
     center: [259.584, 405.648],
     area: 45342.183,
     paths: [
@@ -831,7 +831,7 @@ export const usDialingCodes = [
   },
   {
     name: "336/743",
-    subjects: ["336", "743"],
+    subjects: ["336", "743"] as const,
     center: [277.823, 392.673],
     area: 18997.908,
     paths: [
@@ -840,7 +840,7 @@ export const usDialingCodes = [
   },
   {
     name: "337",
-    subjects: ["337"],
+    subjects: ["337"] as const,
     center: [242.476, 410.991],
     area: 29635.692,
     paths: [
@@ -850,7 +850,7 @@ export const usDialingCodes = [
   },
   {
     name: "340",
-    subjects: ["340"],
+    subjects: ["340"] as const,
     center: [308.114, 440.948],
     area: 347.991,
     paths: [
@@ -883,7 +883,7 @@ export const usDialingCodes = [
   },
   {
     name: "352",
-    subjects: ["352"],
+    subjects: ["352"] as const,
     center: [271.81, 415.35],
     area: 20637.401,
     paths: [
@@ -991,7 +991,7 @@ export const usDialingCodes = [
   },
   {
     name: "360/564",
-    subjects: ["360", "564"],
+    subjects: ["360", "564"] as const,
     center: [161.79, 346.6],
     area: 54573.567,
     paths: [
@@ -1031,7 +1031,7 @@ export const usDialingCodes = [
   },
   {
     name: "361",
-    subjects: ["361"],
+    subjects: ["361"] as const,
     center: [228.317, 418.204],
     area: 48391.409,
     paths: [
@@ -1051,7 +1051,7 @@ export const usDialingCodes = [
   },
   {
     name: "386",
-    subjects: ["386"],
+    subjects: ["386"] as const,
     center: [269.674, 412.036],
     area: 14028.881,
     paths: [
@@ -1067,7 +1067,7 @@ export const usDialingCodes = [
   },
   {
     name: "401",
-    subjects: ["401"],
+    subjects: ["401"] as const,
     center: [301.067, 372.481],
     area: 2818.411,
     paths: [
@@ -1086,7 +1086,7 @@ export const usDialingCodes = [
   },
   {
     name: "402/531",
-    subjects: ["402", "531"],
+    subjects: ["402", "531"] as const,
     center: [230.57, 373.083],
     area: 82480.123,
     paths: [
@@ -1095,7 +1095,7 @@ export const usDialingCodes = [
   },
   {
     name: "404/470/678/943",
-    subjects: ["404", "470", "678", "943"],
+    subjects: ["404", "470", "678", "943"] as const,
     center: [265.641, 400.256],
     area: 951.807,
     paths: [
@@ -1104,7 +1104,7 @@ export const usDialingCodes = [
   },
   {
     name: "405/572",
-    subjects: ["405", "572"],
+    subjects: ["405", "572"] as const,
     center: [229.102, 394.798],
     area: 26118.453,
     paths: [
@@ -1113,7 +1113,7 @@ export const usDialingCodes = [
   },
   {
     name: "406",
-    subjects: ["406"],
+    subjects: ["406"] as const,
     center: [196.269, 353.027],
     area: 380830.102,
     paths: [
@@ -1122,7 +1122,7 @@ export const usDialingCodes = [
   },
   {
     name: "321/407/689",
-    subjects: ["321", "407", "689"],
+    subjects: ["321", "407", "689"] as const,
     center: [274.279, 418.028],
     area: 7852.027,
     paths: [
@@ -1131,7 +1131,7 @@ export const usDialingCodes = [
   },
   {
     name: "408/669",
-    subjects: ["408", "669"],
+    subjects: ["408", "669"] as const,
     center: [161.674, 388.412],
     area: 3401.184,
     paths: [
@@ -1140,7 +1140,7 @@ export const usDialingCodes = [
   },
   {
     name: "409",
-    subjects: ["409"],
+    subjects: ["409"] as const,
     center: [238.503, 410.825],
     area: 16423.219,
     paths: [
@@ -1155,7 +1155,7 @@ export const usDialingCodes = [
   },
   {
     name: "410/443/667",
-    subjects: ["410", "443", "667"],
+    subjects: ["410", "443", "667"] as const,
     center: [289.046, 382.811],
     area: 14926.127,
     paths: [
@@ -1186,7 +1186,7 @@ export const usDialingCodes = [
   },
   {
     name: "412/878",
-    subjects: ["412", "878"],
+    subjects: ["412", "878"] as const,
     center: [277.936, 377.086],
     area: 1404.067,
     paths: [
@@ -1195,7 +1195,7 @@ export const usDialingCodes = [
   },
   {
     name: "413",
-    subjects: ["413"],
+    subjects: ["413"] as const,
     center: [297.548, 369.823],
     area: 7120.508,
     paths: [
@@ -1204,7 +1204,7 @@ export const usDialingCodes = [
   },
   {
     name: "414",
-    subjects: ["414"],
+    subjects: ["414"] as const,
     center: [255.61, 367.402],
     area: 699.914,
     paths: [
@@ -1213,7 +1213,7 @@ export const usDialingCodes = [
   },
   {
     name: "415/628",
-    subjects: ["415", "628"],
+    subjects: ["415", "628"] as const,
     center: [159.166, 385.63],
     area: 1262.86,
     paths: [
@@ -1225,7 +1225,7 @@ export const usDialingCodes = [
   },
   {
     name: "417",
-    subjects: ["417"],
+    subjects: ["417"] as const,
     center: [240.887, 387.891],
     area: 43371.61,
     paths: [
@@ -1234,7 +1234,7 @@ export const usDialingCodes = [
   },
   {
     name: "419/567",
-    subjects: ["419", "567"],
+    subjects: ["419", "567"] as const,
     center: [268.216, 374.957],
     area: 26558.226,
     paths: [
@@ -1251,7 +1251,7 @@ export const usDialingCodes = [
   },
   {
     name: "423/729",
-    subjects: ["423", "729"],
+    subjects: ["423", "729"] as const,
     center: [264.572, 394.722],
     area: 25209.19,
     paths: [
@@ -1261,7 +1261,7 @@ export const usDialingCodes = [
   },
   {
     name: "425",
-    subjects: ["425"],
+    subjects: ["425"] as const,
     center: [161.39, 349.358],
     area: 4398.156,
     paths: [
@@ -1270,7 +1270,7 @@ export const usDialingCodes = [
   },
   {
     name: "432",
-    subjects: ["432"],
+    subjects: ["432"] as const,
     center: [212.046, 409.588],
     area: 101300.46,
     paths: [
@@ -1279,7 +1279,7 @@ export const usDialingCodes = [
   },
   {
     name: "434",
-    subjects: ["434"],
+    subjects: ["434"] as const,
     center: [280.818, 387.563],
     area: 23833.485,
     paths: [
@@ -1288,7 +1288,7 @@ export const usDialingCodes = [
   },
   {
     name: "435",
-    subjects: ["435"],
+    subjects: ["435"] as const,
     center: [190.141, 380.39],
     area: 207364.781,
     paths: [
@@ -1297,7 +1297,7 @@ export const usDialingCodes = [
   },
   {
     name: "436/440",
-    subjects: ["436", "440"],
+    subjects: ["436", "440"] as const,
     center: [275.009, 372.548],
     area: 5760.984,
     paths: [
@@ -1307,7 +1307,7 @@ export const usDialingCodes = [
   },
   {
     name: "478",
-    subjects: ["478"],
+    subjects: ["478"] as const,
     center: [269.12, 403.978],
     area: 20783.34,
     paths: [
@@ -1316,7 +1316,7 @@ export const usDialingCodes = [
   },
   {
     name: "479",
-    subjects: ["479"],
+    subjects: ["479"] as const,
     center: [239.878, 394.655],
     area: 23935.178,
     paths: [
@@ -1325,7 +1325,7 @@ export const usDialingCodes = [
   },
   {
     name: "501",
-    subjects: ["501"],
+    subjects: ["501"] as const,
     center: [243.077, 396.206],
     area: 20478.945,
     paths: [
@@ -1334,7 +1334,7 @@ export const usDialingCodes = [
   },
   {
     name: "502",
-    subjects: ["502"],
+    subjects: ["502"] as const,
     center: [262.921, 385.171],
     area: 9400.547,
     paths: [
@@ -1343,7 +1343,7 @@ export const usDialingCodes = [
   },
   {
     name: "503/971",
-    subjects: ["503", "971"],
+    subjects: ["503", "971"] as const,
     center: [158.817, 358.502],
     area: 24084.716,
     paths: [
@@ -1353,7 +1353,7 @@ export const usDialingCodes = [
   },
   {
     name: "504",
-    subjects: ["504"],
+    subjects: ["504"] as const,
     center: [250.272, 413.674],
     area: 5313.809,
     paths: [
@@ -1608,7 +1608,7 @@ export const usDialingCodes = [
   },
   {
     name: "505",
-    subjects: ["505"],
+    subjects: ["505"] as const,
     center: [199.507, 394.067],
     area: 66495.854,
     paths: [
@@ -1617,7 +1617,7 @@ export const usDialingCodes = [
   },
   {
     name: "507/924",
-    subjects: ["507", "924"],
+    subjects: ["507", "924"] as const,
     center: [238.551, 363.03],
     area: 46936.68,
     paths: [
@@ -1626,7 +1626,7 @@ export const usDialingCodes = [
   },
   {
     name: "508/774",
-    subjects: ["508", "774"],
+    subjects: ["508", "774"] as const,
     center: [302.383, 371.353],
     area: 7188.702,
     paths: [
@@ -1654,7 +1654,7 @@ export const usDialingCodes = [
   },
   {
     name: "509",
-    subjects: ["509"],
+    subjects: ["509"] as const,
     center: [168.789, 350.519],
     area: 113498.406,
     paths: [
@@ -1663,7 +1663,7 @@ export const usDialingCodes = [
   },
   {
     name: "341/510",
-    subjects: ["341", "510"],
+    subjects: ["341", "510"] as const,
     center: [160.802, 386.586],
     area: 1080.468,
     paths: [
@@ -1675,7 +1675,7 @@ export const usDialingCodes = [
   },
   {
     name: "512/737",
-    subjects: ["512", "737"],
+    subjects: ["512", "737"] as const,
     center: [229.218, 410.837],
     area: 15636.593,
     paths: [
@@ -1684,7 +1684,7 @@ export const usDialingCodes = [
   },
   {
     name: "283/513",
-    subjects: ["283", "513"],
+    subjects: ["283", "513"] as const,
     center: [265.691, 381.357],
     area: 4524.512,
     paths: [
@@ -1693,7 +1693,7 @@ export const usDialingCodes = [
   },
   {
     name: "515",
-    subjects: ["515"],
+    subjects: ["515"] as const,
     center: [239.083, 370.002],
     area: 18595.416,
     paths: [
@@ -1702,7 +1702,7 @@ export const usDialingCodes = [
   },
   {
     name: "363/516",
-    subjects: ["363", "516"],
+    subjects: ["363", "516"] as const,
     center: [295.635, 375.827],
     area: 720.237,
     paths: [
@@ -1714,7 +1714,7 @@ export const usDialingCodes = [
   },
   {
     name: "517",
-    subjects: ["517"],
+    subjects: ["517"] as const,
     center: [265.283, 369.973],
     area: 12343.9,
     paths: [
@@ -1723,7 +1723,7 @@ export const usDialingCodes = [
   },
   {
     name: "518/838",
-    subjects: ["518", "838"],
+    subjects: ["518", "838"] as const,
     center: [294.643, 365.731],
     area: 33457.923,
     paths: [
@@ -1732,7 +1732,7 @@ export const usDialingCodes = [
   },
   {
     name: "520",
-    subjects: ["520"],
+    subjects: ["520"] as const,
     center: [191.137, 404.781],
     area: 57016.199,
     paths: [
@@ -1741,7 +1741,7 @@ export const usDialingCodes = [
   },
   {
     name: "530/837",
-    subjects: ["530", "837"],
+    subjects: ["530", "837"] as const,
     center: [162.548, 378.165],
     area: 103391.313,
     paths: [
@@ -1750,7 +1750,7 @@ export const usDialingCodes = [
   },
   {
     name: "540/826",
-    subjects: ["540", "826"],
+    subjects: ["540", "826"] as const,
     center: [279.56, 385.396],
     area: 34136.02,
     paths: [
@@ -1759,7 +1759,7 @@ export const usDialingCodes = [
   },
   {
     name: "458/541",
-    subjects: ["458", "541"],
+    subjects: ["458", "541"] as const,
     center: [165.169, 363.633],
     area: 227009.923,
     paths: [
@@ -1768,7 +1768,7 @@ export const usDialingCodes = [
   },
   {
     name: "357/559",
-    subjects: ["357", "559"],
+    subjects: ["357", "559"] as const,
     center: [168.026, 390.316],
     area: 34192.352,
     paths: [
@@ -1777,7 +1777,7 @@ export const usDialingCodes = [
   },
   {
     name: "561/728",
-    subjects: ["561", "728"],
+    subjects: ["561", "728"] as const,
     center: [276.478, 423.031],
     area: 6054.117,
     paths: [
@@ -1787,7 +1787,7 @@ export const usDialingCodes = [
   },
   {
     name: "562",
-    subjects: ["562"],
+    subjects: ["562"] as const,
     center: [171.909, 399.888],
     area: 527.871,
     paths: [
@@ -1796,7 +1796,7 @@ export const usDialingCodes = [
   },
   {
     name: "563",
-    subjects: ["563"],
+    subjects: ["563"] as const,
     center: [247.096, 369.79],
     area: 19099.84,
     paths: [
@@ -1805,7 +1805,7 @@ export const usDialingCodes = [
   },
   {
     name: "272/570",
-    subjects: ["272", "570"],
+    subjects: ["272", "570"] as const,
     center: [287.84, 374.009],
     area: 31069.657,
     paths: [
@@ -1814,7 +1814,7 @@ export const usDialingCodes = [
   },
   {
     name: "235/573",
-    subjects: ["235", "573"],
+    subjects: ["235", "573"] as const,
     center: [244.184, 385.055],
     area: 65965.571,
     paths: [
@@ -1823,7 +1823,7 @@ export const usDialingCodes = [
   },
   {
     name: "574",
-    subjects: ["574"],
+    subjects: ["574"] as const,
     center: [260.267, 374.432],
     area: 9636.432,
     paths: [
@@ -1832,7 +1832,7 @@ export const usDialingCodes = [
   },
   {
     name: "575",
-    subjects: ["575"],
+    subjects: ["575"] as const,
     center: [205.43, 398.915],
     area: 248421.626,
     paths: [
@@ -1841,7 +1841,7 @@ export const usDialingCodes = [
   },
   {
     name: "580",
-    subjects: ["580"],
+    subjects: ["580"] as const,
     center: [223.986, 395.05],
     area: 103522.744,
     paths: [
@@ -1850,7 +1850,7 @@ export const usDialingCodes = [
   },
   {
     name: "585",
-    subjects: ["585"],
+    subjects: ["585"] as const,
     center: [283.845, 368.634],
     area: 11210.119,
     paths: [
@@ -1859,7 +1859,7 @@ export const usDialingCodes = [
   },
   {
     name: "586",
-    subjects: ["586"],
+    subjects: ["586"] as const,
     center: [269.685, 368.666],
     area: 1427.077,
     paths: [
@@ -1868,7 +1868,7 @@ export const usDialingCodes = [
   },
   {
     name: "601/769",
-    subjects: ["601", "769"],
+    subjects: ["601", "769"] as const,
     center: [250.189, 407.068],
     area: 58156.044,
     paths: [
@@ -1877,7 +1877,7 @@ export const usDialingCodes = [
   },
   {
     name: "480/602/623",
-    subjects: ["480", "602", "623"],
+    subjects: ["480", "602", "623"] as const,
     center: [188.833, 400.373],
     area: 13044.241,
     paths: [
@@ -1886,7 +1886,7 @@ export const usDialingCodes = [
   },
   {
     name: "603",
-    subjects: ["603"],
+    subjects: ["603"] as const,
     center: [301.244, 363.615],
     area: 24000.403,
     paths: [
@@ -1897,7 +1897,7 @@ export const usDialingCodes = [
   },
   {
     name: "605",
-    subjects: ["605"],
+    subjects: ["605"] as const,
     center: [221.517, 362.794],
     area: 199740.308,
     paths: [
@@ -1906,7 +1906,7 @@ export const usDialingCodes = [
   },
   {
     name: "606",
-    subjects: ["606"],
+    subjects: ["606"] as const,
     center: [268.901, 386.767],
     area: 38616.787,
     paths: [
@@ -1915,7 +1915,7 @@ export const usDialingCodes = [
   },
   {
     name: "607",
-    subjects: ["607"],
+    subjects: ["607"] as const,
     center: [288.505, 369.865],
     area: 20319.8,
     paths: [
@@ -1924,7 +1924,7 @@ export const usDialingCodes = [
   },
   {
     name: "353/608",
-    subjects: ["353", "608"],
+    subjects: ["353", "608"] as const,
     center: [249.31, 365.608],
     area: 32384.988,
     paths: [
@@ -1933,7 +1933,7 @@ export const usDialingCodes = [
   },
   {
     name: "609/640",
-    subjects: ["609", "640"],
+    subjects: ["609", "640"] as const,
     center: [293.076, 379.666],
     area: 5875.85,
     paths: [
@@ -1970,7 +1970,7 @@ export const usDialingCodes = [
   },
   {
     name: "484/610/835",
-    subjects: ["484", "610", "835"],
+    subjects: ["484", "610", "835"] as const,
     center: [289.246, 377.363],
     area: 7726.671,
     paths: [
@@ -1979,7 +1979,7 @@ export const usDialingCodes = [
   },
   {
     name: "612",
-    subjects: ["612"],
+    subjects: ["612"] as const,
     center: [240.873, 359.984],
     area: 189.329,
     paths: [
@@ -1988,7 +1988,7 @@ export const usDialingCodes = [
   },
   {
     name: "380/614",
-    subjects: ["380", "614"],
+    subjects: ["380", "614"] as const,
     center: [269.238, 378.692],
     area: 2270.585,
     paths: [
@@ -1997,7 +1997,7 @@ export const usDialingCodes = [
   },
   {
     name: "615/629",
-    subjects: ["615", "629"],
+    subjects: ["615", "629"] as const,
     center: [259.177, 392.277],
     area: 14260.438,
     paths: [
@@ -2006,7 +2006,7 @@ export const usDialingCodes = [
   },
   {
     name: "616",
-    subjects: ["616"],
+    subjects: ["616"] as const,
     center: [262.183, 367.376],
     area: 5594.584,
     paths: [
@@ -2015,7 +2015,7 @@ export const usDialingCodes = [
   },
   {
     name: "617/857",
-    subjects: ["617", "857"],
+    subjects: ["617", "857"] as const,
     center: [302.402, 370.06],
     area: 343.826,
     paths: [
@@ -2029,7 +2029,7 @@ export const usDialingCodes = [
   },
   {
     name: "618/730",
-    subjects: ["618", "730"],
+    subjects: ["618", "730"] as const,
     center: [252.347, 385.044],
     area: 40667.873,
     paths: [
@@ -2038,7 +2038,7 @@ export const usDialingCodes = [
   },
   {
     name: "619/858",
-    subjects: ["619", "858"],
+    subjects: ["619", "858"] as const,
     center: [175.849, 403.426],
     area: 4364.77,
     paths: [
@@ -2048,7 +2048,7 @@ export const usDialingCodes = [
   },
   {
     name: "620",
-    subjects: ["620"],
+    subjects: ["620"] as const,
     center: [222.702, 385.888],
     area: 103979.66,
     paths: [
@@ -2057,7 +2057,7 @@ export const usDialingCodes = [
   },
   {
     name: "626",
-    subjects: ["626"],
+    subjects: ["626"] as const,
     center: [172.276, 398.901],
     area: 1396.919,
     paths: [
@@ -2066,7 +2066,7 @@ export const usDialingCodes = [
   },
   {
     name: "331/630",
-    subjects: ["331", "630"],
+    subjects: ["331", "630"] as const,
     center: [254.847, 372.077],
     area: 2151.66,
     paths: [
@@ -2075,7 +2075,7 @@ export const usDialingCodes = [
   },
   {
     name: "631/934",
-    subjects: ["631", "934"],
+    subjects: ["631", "934"] as const,
     center: [297.521, 375.264],
     area: 2392.126,
     paths: [
@@ -2094,7 +2094,7 @@ export const usDialingCodes = [
   },
   {
     name: "636",
-    subjects: ["636"],
+    subjects: ["636"] as const,
     center: [247.84, 383.866],
     area: 7345.351,
     paths: [
@@ -2103,7 +2103,7 @@ export const usDialingCodes = [
   },
   {
     name: "641",
-    subjects: ["641"],
+    subjects: ["641"] as const,
     center: [241.945, 371.086],
     area: 40997.301,
     paths: [
@@ -2112,7 +2112,7 @@ export const usDialingCodes = [
   },
   {
     name: "650",
-    subjects: ["650"],
+    subjects: ["650"] as const,
     center: [160.466, 387.804],
     area: 1342.246,
     paths: [
@@ -2121,7 +2121,7 @@ export const usDialingCodes = [
   },
   {
     name: "651",
-    subjects: ["651"],
+    subjects: ["651"] as const,
     center: [241.719, 359.9],
     area: 5053.849,
     paths: [
@@ -2130,7 +2130,7 @@ export const usDialingCodes = [
   },
   {
     name: "660",
-    subjects: ["660"],
+    subjects: ["660"] as const,
     center: [241.194, 381.152],
     area: 49560.333,
     paths: [
@@ -2139,7 +2139,7 @@ export const usDialingCodes = [
   },
   {
     name: "661",
-    subjects: ["661"],
+    subjects: ["661"] as const,
     center: [169.25, 395.642],
     area: 25213.159,
     paths: [
@@ -2148,7 +2148,7 @@ export const usDialingCodes = [
   },
   {
     name: "471/662",
-    subjects: ["471", "662"],
+    subjects: ["471", "662"] as const,
     center: [250.85, 400.302],
     area: 60854.877,
     paths: [
@@ -2157,7 +2157,7 @@ export const usDialingCodes = [
   },
   {
     name: "670",
-    subjects: ["670"],
+    subjects: ["670"] as const,
     center: [151.785, 450.531],
     area: 474.214,
     paths: [
@@ -2181,7 +2181,7 @@ export const usDialingCodes = [
   },
   {
     name: "671",
-    subjects: ["671"],
+    subjects: ["671"] as const,
     center: [149.197, 454.588],
     area: 544.451,
     paths: [
@@ -2191,7 +2191,7 @@ export const usDialingCodes = [
   },
   {
     name: "701",
-    subjects: ["701"],
+    subjects: ["701"] as const,
     center: [220.966, 349.81],
     area: 183107.809,
     paths: [
@@ -2200,7 +2200,7 @@ export const usDialingCodes = [
   },
   {
     name: "702/725",
-    subjects: ["702", "725"],
+    subjects: ["702", "725"] as const,
     center: [179.822, 392.906],
     area: 20903.215,
     paths: [
@@ -2209,7 +2209,7 @@ export const usDialingCodes = [
   },
   {
     name: "571/703",
-    subjects: ["571", "703"],
+    subjects: ["571", "703"] as const,
     center: [285.037, 382.647],
     area: 2803.617,
     paths: [
@@ -2218,7 +2218,7 @@ export const usDialingCodes = [
   },
   {
     name: "704/980",
-    subjects: ["704", "980"],
+    subjects: ["704", "980"] as const,
     center: [275.227, 394.553],
     area: 12567.375,
     paths: [
@@ -2227,7 +2227,7 @@ export const usDialingCodes = [
   },
   {
     name: "706/762",
-    subjects: ["706", "762"],
+    subjects: ["706", "762"] as const,
     center: [269.444, 399.697],
     area: 41049.464,
     paths: [
@@ -2237,7 +2237,7 @@ export const usDialingCodes = [
   },
   {
     name: "369/707",
-    subjects: ["369", "707"],
+    subjects: ["369", "707"] as const,
     center: [156.937, 378.501],
     area: 32495.77,
     paths: [
@@ -2252,7 +2252,7 @@ export const usDialingCodes = [
   },
   {
     name: "464/708",
-    subjects: ["464", "708"],
+    subjects: ["464", "708"] as const,
     center: [256.245, 372.692],
     area: 1639.36,
     paths: [
@@ -2261,7 +2261,7 @@ export const usDialingCodes = [
   },
   {
     name: "712",
-    subjects: ["712"],
+    subjects: ["712"] as const,
     center: [235.14, 371.082],
     area: 43866.857,
     paths: [
@@ -2270,7 +2270,7 @@ export const usDialingCodes = [
   },
   {
     name: "281/346/621/713/832",
-    subjects: ["281", "346", "621", "713", "832"],
+    subjects: ["281", "346", "621", "713", "832"] as const,
     center: [234.927, 413.036],
     area: 10619.255,
     paths: [
@@ -2279,7 +2279,7 @@ export const usDialingCodes = [
   },
   {
     name: "657/714",
-    subjects: ["657", "714"],
+    subjects: ["657", "714"] as const,
     center: [172.779, 400.132],
     area: 1050.214,
     paths: [
@@ -2288,7 +2288,7 @@ export const usDialingCodes = [
   },
   {
     name: "534/715",
-    subjects: ["534", "715"],
+    subjects: ["534", "715"] as const,
     center: [249.317, 357.871],
     area: 83105.707,
     paths: [
@@ -2303,7 +2303,7 @@ export const usDialingCodes = [
   },
   {
     name: "624/716",
-    subjects: ["624", "716"],
+    subjects: ["624", "716"] as const,
     center: [281.23, 368.642],
     area: 10337.623,
     paths: [
@@ -2317,7 +2317,7 @@ export const usDialingCodes = [
   },
   {
     name: "223/717",
-    subjects: ["223", "717"],
+    subjects: ["223", "717"] as const,
     center: [286.394, 377.548],
     area: 16828.996,
     paths: [
@@ -2326,7 +2326,7 @@ export const usDialingCodes = [
   },
   {
     name: "347/465/718/917/929",
-    subjects: ["347", "465", "718", "917", "929"],
+    subjects: ["347", "465", "718", "917", "929"] as const,
     center: [294.814, 376.08],
     area: 718.271,
     paths: [
@@ -2343,7 +2343,7 @@ export const usDialingCodes = [
   },
   {
     name: "719",
-    subjects: ["719"],
+    subjects: ["719"] as const,
     center: [210.597, 384.588],
     area: 107407.397,
     paths: [
@@ -2352,7 +2352,7 @@ export const usDialingCodes = [
   },
   {
     name: "724/878",
-    subjects: ["724", "878"],
+    subjects: ["724", "878"] as const,
     center: [278.679, 376.083],
     area: 18113.762,
     paths: [
@@ -2361,7 +2361,7 @@ export const usDialingCodes = [
   },
   {
     name: "727",
-    subjects: ["727"],
+    subjects: ["727"] as const,
     center: [270.234, 418.725],
     area: 1212.89,
     paths: [
@@ -2402,7 +2402,7 @@ export const usDialingCodes = [
   },
   {
     name: "731",
-    subjects: ["731"],
+    subjects: ["731"] as const,
     center: [252.973, 393.541],
     area: 23148.696,
     paths: [
@@ -2411,7 +2411,7 @@ export const usDialingCodes = [
   },
   {
     name: "732/848",
-    subjects: ["732", "848"],
+    subjects: ["732", "848"] as const,
     center: [293.822, 377.845],
     area: 2760.839,
     paths: [
@@ -2428,7 +2428,7 @@ export const usDialingCodes = [
   },
   {
     name: "679/734",
-    subjects: ["679", "734"],
+    subjects: ["679", "734"] as const,
     center: [267.933, 370.725],
     area: 4325.194,
     paths: [
@@ -2439,7 +2439,7 @@ export const usDialingCodes = [
   },
   {
     name: "220/740",
-    subjects: ["220", "740"],
+    subjects: ["220", "740"] as const,
     center: [271.486, 379.855],
     area: 37141.653,
     paths: [
@@ -2448,7 +2448,7 @@ export const usDialingCodes = [
   },
   {
     name: "757/948",
-    subjects: ["757", "948"],
+    subjects: ["757", "948"] as const,
     center: [286.717, 389.497],
     area: 8329.098,
     paths: [
@@ -2477,7 +2477,7 @@ export const usDialingCodes = [
   },
   {
     name: "442/760",
-    subjects: ["442", "760"],
+    subjects: ["442", "760"] as const,
     center: [175.321, 394.314],
     area: 119716.17,
     paths: [
@@ -2486,7 +2486,7 @@ export const usDialingCodes = [
   },
   {
     name: "763",
-    subjects: ["763"],
+    subjects: ["763"] as const,
     center: [240.124, 358.43],
     area: 4784.619,
     paths: [
@@ -2495,7 +2495,7 @@ export const usDialingCodes = [
   },
   {
     name: "765",
-    subjects: ["765"],
+    subjects: ["765"] as const,
     center: [258.516, 378.114],
     area: 24876.98,
     paths: [
@@ -2504,7 +2504,7 @@ export const usDialingCodes = [
   },
   {
     name: "470/678/770/943",
-    subjects: ["470", "678", "770", "943"],
+    subjects: ["470", "678", "770", "943"] as const,
     center: [263.952, 400.409],
     area: 19587.004,
     paths: [
@@ -2513,7 +2513,7 @@ export const usDialingCodes = [
   },
   {
     name: "772",
-    subjects: ["772"],
+    subjects: ["772"] as const,
     center: [276.382, 420.72],
     area: 4237.777,
     paths: [
@@ -2527,7 +2527,7 @@ export const usDialingCodes = [
   },
   {
     name: "773/872",
-    subjects: ["773", "872"],
+    subjects: ["773", "872"] as const,
     center: [256.425, 371.838],
     area: 508.155,
     paths: [
@@ -2536,7 +2536,7 @@ export const usDialingCodes = [
   },
   {
     name: "775",
-    subjects: ["775"],
+    subjects: ["775"] as const,
     center: [174.93, 382.169],
     area: 265448.841,
     paths: [
@@ -2545,7 +2545,7 @@ export const usDialingCodes = [
   },
   {
     name: "339/781",
-    subjects: ["339", "781"],
+    subjects: ["339", "781"] as const,
     center: [302.25, 370.274],
     area: 1641.075,
     paths: [
@@ -2555,7 +2555,7 @@ export const usDialingCodes = [
   },
   {
     name: "785",
-    subjects: ["785"],
+    subjects: ["785"] as const,
     center: [226.149, 382.026],
     area: 96466.587,
     paths: [
@@ -2564,7 +2564,7 @@ export const usDialingCodes = [
   },
   {
     name: "787/939",
-    subjects: ["787", "939"],
+    subjects: ["787", "939"] as const,
     center: [303.547, 439.509],
     area: 8872.039,
     paths: [
@@ -2580,7 +2580,7 @@ export const usDialingCodes = [
   },
   {
     name: "385/801",
-    subjects: ["385", "801"],
+    subjects: ["385", "801"] as const,
     center: [189.26, 376.375],
     area: 12518.917,
     paths: [
@@ -2589,7 +2589,7 @@ export const usDialingCodes = [
   },
   {
     name: "802",
-    subjects: ["802"],
+    subjects: ["802"] as const,
     center: [297.855, 364.115],
     area: 24900.937,
     paths: [
@@ -2598,7 +2598,7 @@ export const usDialingCodes = [
   },
   {
     name: "803/839",
-    subjects: ["803", "839"],
+    subjects: ["803", "839"] as const,
     center: [274.66, 400.055],
     area: 31321.047,
     paths: [
@@ -2607,7 +2607,7 @@ export const usDialingCodes = [
   },
   {
     name: "686/804",
-    subjects: ["686", "804"],
+    subjects: ["686", "804"] as const,
     center: [284.967, 387.3],
     area: 16594.53,
     paths: [
@@ -2617,7 +2617,7 @@ export const usDialingCodes = [
   },
   {
     name: "805/820",
-    subjects: ["805", "820"],
+    subjects: ["805", "820"] as const,
     center: [165.601, 395.816],
     area: 18487.276,
     paths: [
@@ -2632,7 +2632,7 @@ export const usDialingCodes = [
   },
   {
     name: "806",
-    subjects: ["806"],
+    subjects: ["806"] as const,
     center: [217.445, 397.986],
     area: 112389.739,
     paths: [
@@ -2641,7 +2641,7 @@ export const usDialingCodes = [
   },
   {
     name: "808",
-    subjects: ["808"],
+    subjects: ["808"] as const,
     center: [284.559, 455.594],
     area: 16643.397,
     paths: [
@@ -2659,7 +2659,7 @@ export const usDialingCodes = [
   },
   {
     name: "810",
-    subjects: ["810"],
+    subjects: ["810"] as const,
     center: [268.844, 367.361],
     area: 7242.827,
     paths: [
@@ -2672,7 +2672,7 @@ export const usDialingCodes = [
   },
   {
     name: "812/930",
-    subjects: ["812", "930"],
+    subjects: ["812", "930"] as const,
     center: [259.754, 383.266],
     area: 34791.183,
     paths: [
@@ -2681,7 +2681,7 @@ export const usDialingCodes = [
   },
   {
     name: "656/813",
-    subjects: ["656", "813"],
+    subjects: ["656", "813"] as const,
     center: [271.255, 418.872],
     area: 3606.058,
     paths: [
@@ -2697,7 +2697,7 @@ export const usDialingCodes = [
   },
   {
     name: "582/814",
-    subjects: ["582", "814"],
+    subjects: ["582", "814"] as const,
     center: [282.046, 374.942],
     area: 39839.651,
     paths: [
@@ -2706,7 +2706,7 @@ export const usDialingCodes = [
   },
   {
     name: "779/815",
-    subjects: ["779", "815"],
+    subjects: ["779", "815"] as const,
     center: [252.968, 373.064],
     area: 30668.704,
     paths: [
@@ -2715,7 +2715,7 @@ export const usDialingCodes = [
   },
   {
     name: "816/975",
-    subjects: ["816", "975"],
+    subjects: ["816", "975"] as const,
     center: [237.883, 381.393],
     area: 13277.988,
     paths: [
@@ -2724,7 +2724,7 @@ export const usDialingCodes = [
   },
   {
     name: "682/817",
-    subjects: ["682", "817"],
+    subjects: ["682", "817"] as const,
     center: [229.097, 404.036],
     area: 7134.532,
     paths: [
@@ -2733,7 +2733,7 @@ export const usDialingCodes = [
   },
   {
     name: "747/818",
-    subjects: ["747", "818"],
+    subjects: ["747", "818"] as const,
     center: [170.978, 398.691],
     area: 1360.178,
     paths: [
@@ -2742,7 +2742,7 @@ export const usDialingCodes = [
   },
   {
     name: "828",
-    subjects: ["828"],
+    subjects: ["828"] as const,
     center: [271.872, 393.773],
     area: 22987.121,
     paths: [
@@ -2751,7 +2751,7 @@ export const usDialingCodes = [
   },
   {
     name: "830",
-    subjects: ["830"],
+    subjects: ["830"] as const,
     center: [222.666, 414.765],
     area: 64404.481,
     paths: [
@@ -2760,7 +2760,7 @@ export const usDialingCodes = [
   },
   {
     name: "831",
-    subjects: ["831"],
+    subjects: ["831"] as const,
     center: [163.327, 390.931],
     area: 11804.644,
     paths: [
@@ -2769,7 +2769,7 @@ export const usDialingCodes = [
   },
   {
     name: "843/854",
-    subjects: ["843", "854"],
+    subjects: ["843", "854"] as const,
     center: [278.732, 401.364],
     area: 30978.587,
     paths: [
@@ -2830,7 +2830,7 @@ export const usDialingCodes = [
   },
   {
     name: "329/845",
-    subjects: ["329", "845"],
+    subjects: ["329", "845"] as const,
     center: [293.654, 372.568],
     area: 11634.833,
     paths: [
@@ -2839,7 +2839,7 @@ export const usDialingCodes = [
   },
   {
     name: "224/847",
-    subjects: ["224", "847"],
+    subjects: ["224", "847"] as const,
     center: [255.426, 370.454],
     area: 2936.373,
     paths: [
@@ -2848,7 +2848,7 @@ export const usDialingCodes = [
   },
   {
     name: "448/850",
-    subjects: ["448", "850"],
+    subjects: ["448", "850"] as const,
     center: [264.753, 411.522],
     area: 34358.304,
     paths: [
@@ -2862,7 +2862,7 @@ export const usDialingCodes = [
   },
   {
     name: "856",
-    subjects: ["856"],
+    subjects: ["856"] as const,
     center: [291.039, 379.945],
     area: 3902.479,
     paths: [
@@ -2871,7 +2871,7 @@ export const usDialingCodes = [
   },
   {
     name: "859",
-    subjects: ["859"],
+    subjects: ["859"] as const,
     center: [266.278, 384.634],
     area: 11835.842,
     paths: [
@@ -2880,7 +2880,7 @@ export const usDialingCodes = [
   },
   {
     name: "860/959",
-    subjects: ["860", "959"],
+    subjects: ["860", "959"] as const,
     center: [298.675, 372.505],
     area: 9533.141,
     paths: [
@@ -2891,7 +2891,7 @@ export const usDialingCodes = [
   },
   {
     name: "863",
-    subjects: ["863"],
+    subjects: ["863"] as const,
     center: [273.983, 421.252],
     area: 19919.505,
     paths: [
@@ -2900,7 +2900,7 @@ export const usDialingCodes = [
   },
   {
     name: "821/864",
-    subjects: ["821", "864"],
+    subjects: ["821", "864"] as const,
     center: [271.475, 398.118],
     area: 17918.455,
     paths: [
@@ -2909,7 +2909,7 @@ export const usDialingCodes = [
   },
   {
     name: "865",
-    subjects: ["865"],
+    subjects: ["865"] as const,
     center: [266.81, 392.884],
     area: 9322.568,
     paths: [
@@ -2918,7 +2918,7 @@ export const usDialingCodes = [
   },
   {
     name: "327/870",
-    subjects: ["327", "870"],
+    subjects: ["327", "870"] as const,
     center: [246.721, 396.938],
     area: 93313.257,
     paths: [
@@ -2927,7 +2927,7 @@ export const usDialingCodes = [
   },
   {
     name: "901",
-    subjects: ["901"],
+    subjects: ["901"] as const,
     center: [250.982, 394.993],
     area: 5055.317,
     paths: [
@@ -2936,7 +2936,7 @@ export const usDialingCodes = [
   },
   {
     name: "430/903",
-    subjects: ["430", "903"],
+    subjects: ["430", "903"] as const,
     center: [235.945, 404.385],
     area: 54260.012,
     paths: [
@@ -2945,7 +2945,7 @@ export const usDialingCodes = [
   },
   {
     name: "324/904",
-    subjects: ["324", "904"],
+    subjects: ["324", "904"] as const,
     center: [272.457, 411.846],
     area: 8924.84,
     paths: [
@@ -2957,7 +2957,7 @@ export const usDialingCodes = [
   },
   {
     name: "906",
-    subjects: ["906"],
+    subjects: ["906"] as const,
     center: [258.216, 354.609],
     area: 42820.169,
     paths: [
@@ -2972,7 +2972,7 @@ export const usDialingCodes = [
   },
   {
     name: "907",
-    subjects: ["907"],
+    subjects: ["907"] as const,
     center: [191.105, 438.967],
     area: 1506348.57,
     paths: [
@@ -3100,7 +3100,7 @@ export const usDialingCodes = [
   },
   {
     name: "908",
-    subjects: ["908"],
+    subjects: ["908"] as const,
     center: [291.903, 375.841],
     area: 3027.934,
     paths: [
@@ -3109,7 +3109,7 @@ export const usDialingCodes = [
   },
   {
     name: "840/909",
-    subjects: ["840", "909"],
+    subjects: ["840", "909"] as const,
     center: [174.253, 399.063],
     area: 3818.726,
     paths: [
@@ -3118,7 +3118,7 @@ export const usDialingCodes = [
   },
   {
     name: "472/910",
-    subjects: ["472", "910"],
+    subjects: ["472", "910"] as const,
     center: [281.984, 397.121],
     area: 27423.928,
     paths: [
@@ -3157,7 +3157,7 @@ export const usDialingCodes = [
   },
   {
     name: "912",
-    subjects: ["912"],
+    subjects: ["912"] as const,
     center: [271.967, 407.073],
     area: 35071.936,
     paths: [
@@ -3196,7 +3196,7 @@ export const usDialingCodes = [
   },
   {
     name: "913",
-    subjects: ["913"],
+    subjects: ["913"] as const,
     center: [236.555, 382.785],
     area: 6924.242,
     paths: [
@@ -3206,7 +3206,7 @@ export const usDialingCodes = [
   },
   {
     name: "914",
-    subjects: ["914"],
+    subjects: ["914"] as const,
     center: [295.04, 374.478],
     area: 1214.009,
     paths: [
@@ -3218,7 +3218,7 @@ export const usDialingCodes = [
   },
   {
     name: "915",
-    subjects: ["915"],
+    subjects: ["915"] as const,
     center: [207.909, 407.746],
     area: 18963.078,
     paths: [
@@ -3227,7 +3227,7 @@ export const usDialingCodes = [
   },
   {
     name: "279/916",
-    subjects: ["279", "916"],
+    subjects: ["279", "916"] as const,
     center: [163.023, 383.827],
     area: 3739.256,
     paths: [
@@ -3236,7 +3236,7 @@ export const usDialingCodes = [
   },
   {
     name: "539/918",
-    subjects: ["539", "918"],
+    subjects: ["539", "918"] as const,
     center: [234.707, 394.13],
     area: 51392.003,
     paths: [
@@ -3245,7 +3245,7 @@ export const usDialingCodes = [
   },
   {
     name: "919/984",
-    subjects: ["919", "984"],
+    subjects: ["919", "984"] as const,
     center: [280.874, 393.411],
     area: 13483.133,
     paths: [
@@ -3254,7 +3254,7 @@ export const usDialingCodes = [
   },
   {
     name: "274/920",
-    subjects: ["274", "920"],
+    subjects: ["274", "920"] as const,
     center: [254.091, 363.371],
     area: 22214.464,
     paths: [
@@ -3268,7 +3268,7 @@ export const usDialingCodes = [
   },
   {
     name: "925",
-    subjects: ["925"],
+    subjects: ["925"] as const,
     center: [161.53, 386.464],
     area: 2751.336,
     paths: [
@@ -3277,7 +3277,7 @@ export const usDialingCodes = [
   },
   {
     name: "928",
-    subjects: ["928"],
+    subjects: ["928"] as const,
     center: [189.686, 397.705],
     area: 225207.427,
     paths: [
@@ -3286,7 +3286,7 @@ export const usDialingCodes = [
   },
   {
     name: "931",
-    subjects: ["931"],
+    subjects: ["931"] as const,
     center: [263.235, 393.258],
     area: 32085.009,
     paths: [
@@ -3295,7 +3295,7 @@ export const usDialingCodes = [
   },
   {
     name: "936",
-    subjects: ["936"],
+    subjects: ["936"] as const,
     center: [235.083, 409.477],
     area: 29538.502,
     paths: [
@@ -3304,7 +3304,7 @@ export const usDialingCodes = [
   },
   {
     name: "326/937",
-    subjects: ["326", "937"],
+    subjects: ["326", "937"] as const,
     center: [266.099, 379.928],
     area: 16772.748,
     paths: [
@@ -3313,7 +3313,7 @@ export const usDialingCodes = [
   },
   {
     name: "940",
-    subjects: ["940"],
+    subjects: ["940"] as const,
     center: [226.668, 401.319],
     area: 40293.331,
     paths: [
@@ -3322,7 +3322,7 @@ export const usDialingCodes = [
   },
   {
     name: "941",
-    subjects: ["941"],
+    subjects: ["941"] as const,
     center: [271.453, 421.425],
     area: 5281.618,
     paths: [
@@ -3378,7 +3378,7 @@ export const usDialingCodes = [
   },
   {
     name: "949",
-    subjects: ["949"],
+    subjects: ["949"] as const,
     center: [173.167, 400.917],
     area: 1022.946,
     paths: [
@@ -3387,7 +3387,7 @@ export const usDialingCodes = [
   },
   {
     name: "951",
-    subjects: ["951"],
+    subjects: ["951"] as const,
     center: [174.891, 400.488],
     area: 5699.104,
     paths: [
@@ -3396,7 +3396,7 @@ export const usDialingCodes = [
   },
   {
     name: "952",
-    subjects: ["952"],
+    subjects: ["952"] as const,
     center: [240.24, 360.766],
     area: 3118.7,
     paths: [
@@ -3405,7 +3405,7 @@ export const usDialingCodes = [
   },
   {
     name: "754/954",
-    subjects: ["754", "954"],
+    subjects: ["754", "954"] as const,
     center: [276.417, 424.711],
     area: 3146.191,
     paths: [
@@ -3414,7 +3414,7 @@ export const usDialingCodes = [
   },
   {
     name: "956",
-    subjects: ["956"],
+    subjects: ["956"] as const,
     center: [224.459, 421.75],
     area: 20282.317,
     paths: [
@@ -3429,7 +3429,7 @@ export const usDialingCodes = [
   },
   {
     name: "748/970",
-    subjects: ["748", "970"],
+    subjects: ["748", "970"] as const,
     center: [200.484, 382.188],
     area: 144953.62,
     paths: [
@@ -3438,7 +3438,7 @@ export const usDialingCodes = [
   },
   {
     name: "862/973",
-    subjects: ["862", "973"],
+    subjects: ["862", "973"] as const,
     center: [292.842, 374.861],
     area: 3239.033,
     paths: [
@@ -3447,7 +3447,7 @@ export const usDialingCodes = [
   },
   {
     name: "351/978",
-    subjects: ["351", "978"],
+    subjects: ["351", "978"] as const,
     center: [301.18, 368.982],
     area: 4734.355,
     paths: [
@@ -3456,7 +3456,7 @@ export const usDialingCodes = [
   },
   {
     name: "979",
-    subjects: ["979"],
+    subjects: ["979"] as const,
     center: [231.882, 412.679],
     area: 22324.701,
     paths: [
@@ -3469,7 +3469,7 @@ export const usDialingCodes = [
   },
   {
     name: "985",
-    subjects: ["985"],
+    subjects: ["985"] as const,
     center: [248.722, 412.433],
     area: 16608.905,
     paths: [
@@ -3504,7 +3504,7 @@ export const usDialingCodes = [
   },
   {
     name: "989",
-    subjects: ["989"],
+    subjects: ["989"] as const,
     center: [266.104, 362.842],
     area: 35856.108,
     paths: [
@@ -3513,7 +3513,7 @@ export const usDialingCodes = [
   },
   {
     name: "684",
-    subjects: ["684"],
+    subjects: ["684"] as const,
     center: [226.37, 455.346],
     area: 180.304,
     paths: [
@@ -3525,3 +3525,5 @@ export const usDialingCodes = [
     ],
   },
 ];
+
+export type USDialingCode = (typeof usDialingCodes)[number]["subjects"][number];
