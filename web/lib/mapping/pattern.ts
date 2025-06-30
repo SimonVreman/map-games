@@ -23,6 +23,16 @@ export const createTranslate =
     ];
   };
 
+export const createTranslateNew =
+  (options?: { defaultWidthFraction?: number }) =>
+  (
+    v: { scale?: number; ox?: number; oy?: number } = {}
+  ): [number, number, number, number, number, number] => {
+    const scale = (v.scale ?? 1) / (options?.defaultWidthFraction ?? 3);
+
+    return [scale, 0, 0, scale, -1 + (v.ox ?? 1), -1 + (v.oy ?? 1)];
+  };
+
 export const createTapTarget = (
   { x, y }: PatternEntry["meta"],
   t?: Parameters<ReturnType<typeof createTranslate>>[1]

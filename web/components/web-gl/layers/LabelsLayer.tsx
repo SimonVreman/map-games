@@ -16,7 +16,7 @@ const states: LayerSpecification = {
   id: "state-labels",
   "source-layer": "labels",
   paint: {
-    "text-halo-color": "#fff",
+    "text-halo-color": "#ffffffee",
     "text-halo-width": 1,
     "text-color": "#666",
   },
@@ -44,7 +44,7 @@ const countries: LayerSpecification = {
   ...baseConfig,
   id: "country-labels",
   paint: {
-    "text-halo-color": "#fff",
+    "text-halo-color": "#ffffffee",
     "text-halo-width": 1,
     "text-color": "#222",
   },

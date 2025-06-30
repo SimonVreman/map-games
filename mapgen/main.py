@@ -8,7 +8,7 @@ open_utf8 = partial(open, encoding="UTF-8")
 
 mercator_reach = 85.05112877980659
 x_domain = 1000
-rounding = 3
+precision = 6
 simplify = 0.01
 
 

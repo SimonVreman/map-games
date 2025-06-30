@@ -26,8 +26,8 @@ export type PatternFill =
     };
 
 export type Pattern = {
-  background: { light: string; dark: string };
-  paths: {
+  background?: { light: string; dark: string };
+  paths?: {
     path: string;
     fill?: PatternFill;
     image?: {
@@ -37,6 +37,7 @@ export type Pattern = {
       destination: [number, number, number, number];
     };
   }[];
+  svg?: string;
 };
 
 export type Sprites = Record<

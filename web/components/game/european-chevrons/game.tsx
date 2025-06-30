@@ -1,8 +1,9 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
+import WebGLMap from "@/components/web-gl/WebGLMap";
 import { QuizControls } from "../quiz/controls";
-import { PatternPreview } from "@/components/canvas/game/pattern-preview";
+
 import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
-import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
+import { PatternLayer } from "@/components/web-gl/layers/PatternLayer";
+import { cache, use } from "react";
 
 const bounds = {
   north: 71,
@@ -12,19 +13,30 @@ const bounds = {
   padding: 2,
 };
 
+const fetchTargets = cache(
+  async () =>
+    await fetch("/assets/geo/european-countries.geojson").then(
+      async (r) => (await r.json()) as GeoJSON.FeatureCollection
+    )
+);
+
+const targetsPromise = fetchTargets();
+
 export default function EuropeanChevronsGame() {
+  const targets = use(targetsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
         store="europeanChevrons"
         label="Where is it seen?"
         subsets={europeanChevrons.subsets}
-        graphic={({ subject }) => (
-          <PatternPreview pattern={subject} {...europeanChevrons} />
-        )}
+        // graphic={({ subject }) => (
+        //   <PatternPreview pattern={subject} {...europeanChevrons} />
+        // )}
       />
 
-      <CanvasMap
+      <WebGLMap
         bounds={bounds}
         attribution={
           <>
@@ -36,8 +48,9 @@ export default function EuropeanChevronsGame() {
           </>
         }
       >
-        <PatternedTargets store="europeanChevrons" {...europeanChevrons} />
-      </CanvasMap>
+        {/* <PatternedTargets store="europeanChevrons" {...europeanChevrons} /> */}
+        <PatternLayer targets={targets} {...europeanChevrons} />
+      </WebGLMap>
     </div>
   );
 }

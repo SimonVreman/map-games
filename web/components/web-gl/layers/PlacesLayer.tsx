@@ -11,7 +11,7 @@ const config: LayerSpecification = {
   minzoom: 3,
   paint: {
     "text-color": "#222",
-    "text-halo-color": "#fff",
+    "text-halo-color": "#ffffffee",
     "text-halo-width": 1,
   },
   layout: {

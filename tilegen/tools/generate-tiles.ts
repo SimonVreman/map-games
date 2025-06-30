@@ -1,36 +1,10 @@
 import { $ } from "bun";
-import { Glob } from "bun";
-
-type Layer = {
-  name: string;
-  properties: string[];
-  zoomOffset?: { min?: number; max?: number };
-};
-
-const layers: Layer[] = [
-  { name: "land", properties: ["min_zoom"] },
-  { name: "country-boundaries", properties: ["min_zoom"] },
-  { name: "lakes", properties: ["min_zoom"] },
-  {
-    name: "places",
-    properties: ["min_zoom", "name", "scalerank", "adm0cap"],
-    zoomOffset: { min: -1 },
-  },
-  { name: "railroads", properties: ["min_zoom", "scalerank"] },
-  { name: "rivers", properties: ["min_zoom"] },
-  { name: "roads", properties: ["min_zoom", "scalerank", "name"] },
-  {
-    name: "state-boundaries",
-    properties: ["min_zoom"],
-    zoomOffset: { min: -2 },
-  },
-  { name: "geo-lines", properties: ["name"] },
-];
+import { layers, type Layer } from "../lib/layers";
+import { tippecanoeMeta } from "../lib/tippecanoe";
+import { mapConfig } from "../lib/constants";
 
 const computedLayers: Layer[] = [{ name: "labels", properties: [] }];
 
-const maxMapZoom = 6;
-const shapeGlob = new Glob("*.shp");
 const stateLabelsEnabled = [
   "Brazil",
   "United States of America",
@@ -44,82 +18,6 @@ const stateLabelsEnabled = [
   "Indonesia",
   "Japan",
 ];
-
-function tippecanoeMeta({
-  min_zoom = 0,
-  max_zoom = maxMapZoom,
-}: {
-  min_zoom: any;
-  max_zoom: any;
-}) {
-  return {
-    tippecanoe: {
-      minzoom: Math.floor(min_zoom),
-      maxzoom: Math.ceil(max_zoom),
-    },
-  };
-}
-
-async function generateGeoJSON() {
-  for (const { name: layer } of layers) {
-    const dir = `input/ne/${layer}`;
-    const shapefile = shapeGlob.scanSync(dir).next().value;
-    const outputFile = `output/${layer}.raw.geojson`;
-
-    if (!shapefile) throw new Error(`No shapefile found for layer: ${layer}`);
-
-    await $`ogr2ogr -f GeoJSON ${outputFile} ${dir}/${shapefile}`;
-  }
-}
-
-async function filterGeoJSON() {
-  for (const layer of layers) {
-    const inputFile = `output/${layer.name}.raw.geojson`;
-    const outputFile = `output/${layer.name}.geojson`;
-
-    const { features, ...base } = (await Bun.file(
-      inputFile
-    ).json()) as GeoJSON.FeatureCollection;
-
-    const newFeatures = [] as GeoJSON.Feature[];
-
-    for (const { properties, ...f } of features) {
-      const filtered: GeoJSON.GeoJsonProperties = {};
-
-      for (const key in properties) {
-        const lowerKey = key.toLowerCase();
-        if (!layer.properties.includes(lowerKey)) continue;
-        filtered[lowerKey] = properties[key];
-      }
-
-      filtered.min_zoom = Math.max(
-        0,
-        (filtered.min_zoom ?? 0) + (layer.zoomOffset?.min ?? 0)
-      );
-      filtered.max_zoom =
-        (filtered.max_zoom ?? maxMapZoom) + (layer.zoomOffset?.max ?? 0);
-
-      if (filtered.min_zoom > maxMapZoom) continue;
-
-      newFeatures.push({
-        ...f,
-        properties: filtered,
-        ...tippecanoeMeta({
-          min_zoom: filtered.min_zoom,
-          max_zoom: filtered.max_zoom,
-        }),
-      });
-    }
-
-    await Bun.write(
-      outputFile,
-      JSON.stringify({
-        ...base,
-        features: newFeatures,
-      } satisfies GeoJSON.FeatureCollection)
-    );
-  }
-}
 
 async function createCustomLayers() {
   // Country and state labels
@@ -136,7 +34,7 @@ async function createCustomLayers() {
     if (!props?.LABEL_X || !props.LABEL_Y || !props.NAME) continue;
 
     const min_zoom = (props.MIN_LABEL ?? 1) - 1;
-    const max_zoom = props.MAX_LABEL ?? maxMapZoom;
+    const max_zoom = props.MAX_LABEL ?? mapConfig.maxZoom;
 
     geo.features.push({
       type: "Feature",
@@ -169,7 +67,7 @@ async function createCustomLayers() {
       continue;
 
     const min_zoom = Math.max(0, (props.min_label ?? 0) - 2);
-    const max_zoom = props.max_label ?? maxMapZoom;
+    const max_zoom = props.max_label ?? mapConfig.maxZoom;
 
     geo.features.push({
       type: "Feature",
@@ -194,6 +92,7 @@ async function createCustomLayers() {
 
 async function generateTiles() {
   const layerArgs = [...layers, ...computedLayers]
+    .filter((l) => l.includeTiles !== false)
     .map(({ name: layer }) => `-L ${layer}:output/${layer}.geojson`)
     .join(" ");
 
@@ -213,11 +112,6 @@ async function extractTiles() {
 }
 
 async function main() {
-  console.log("Starting tile generation");
-  console.log("Generating GeoJSON from shapefiles");
-  await generateGeoJSON();
-  console.log("Filtering GeoJSON files");
-  await filterGeoJSON();
   console.log("Creating custom layers");
   await createCustomLayers();
   console.log("Generating tiles from GeoJSON");

@@ -3,21 +3,8 @@ import { useCallback, useEffect, useRef } from "react";
 import * as THREE from "three";
 import * as maplibregl from "maplibre-gl";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
-
-const modelOrigin = maplibregl.MercatorCoordinate.fromLngLat([10, 40]);
-
-const modelTransform = {
-  translateX: modelOrigin.x,
-  translateY: modelOrigin.y,
-  translateZ: modelOrigin.z,
-  scale: modelOrigin.meterInMercatorCoordinateUnits(),
-};
-
-const testSvg = `<svg width="400" height="400" viewBox="0 0 400 400">
-<rect width="400" height="400" fill="white"/>
-<path d="M221 79H99L179 200L99 321H221L301 200L221 79Z" fill="black"/>
-</svg>
-`;
+import clipping from "polygon-clipping";
+import { Pattern, PatternEntry } from "@/types/registry";
 
 type PatternCtx = {
   map: maplibregl.Map | null;
@@ -26,6 +13,50 @@ type PatternCtx = {
   scene: THREE.Scene | null;
 };
 
+function mapGeometry(geometry: GeoJSON.Geometry) {
+  if (geometry.type !== "Polygon" && geometry.type !== "MultiPolygon")
+    return [];
+
+  const polygons =
+    geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+
+  return polygons.map((p) => [
+    p[0].map((v) => {
+      const mapped = maplibregl.MercatorCoordinate.fromLngLat(
+        v as [number, number]
+      );
+      return [mapped.x, mapped.y] as [number, number];
+    }),
+  ]) as clipping.MultiPolygon;
+}
+
+function parsePatterns<TMap extends Record<string, Pattern>>(patterns: TMap) {
+  const parsed = {} as Record<
+    keyof TMap,
+    { shapes: THREE.Shape[]; material: THREE.Material }[]
+  >;
+  const loader = new SVGLoader();
+
+  for (const pattern in patterns) {
+    if (!patterns[pattern].svg) continue;
+    const { paths } = loader.parse(patterns[pattern].svg);
+
+    parsed[pattern] = [];
+
+    for (const path of paths)
+      parsed[pattern].push({
+        shapes: SVGLoader.createShapes(path),
+        material: new THREE.MeshBasicMaterial({
+          color: path.color,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        }),
+      });
+  }
+
+  return parsed;
+}
+
 function dispose(ctx: PatternCtx) {
   // TODO dispose resources properly!!
   if (ctx.renderer) ctx.renderer.dispose();
@@ -33,7 +64,20 @@ function dispose(ctx: PatternCtx) {
   if (ctx.camera) ctx.camera.clear();
 }
 
-export function PatternLayer() {
+export function PatternLayer<
+  TMap extends Record<string, Pattern>,
+  TEntry extends PatternEntry<TMap>
+>({
+  patterns,
+  size,
+  entries,
+  targets,
+}: {
+  patterns: TMap;
+  size: { width: number; height: number };
+  entries: TEntry[];
+  targets: GeoJSON.FeatureCollection;
+}) {
   const ctx = useRef<PatternCtx>({
     map: null,
     renderer: null,
@@ -60,34 +104,93 @@ export function PatternLayer() {
       dispose(ctx.current);
       ctx.current = { map, camera, scene, renderer };
 
-      const loader = new SVGLoader();
-      const { paths } = loader.parse(testSvg);
-      const group = new THREE.Group();
+      const parsedPatterns = parsePatterns(patterns);
+      const countries = targets.features;
 
-      for (let i = 0; i < paths.length; i++) {
-        const path = paths[i];
+      for (const { name, subjects, transform } of entries) {
+        const country = countries.find((c) => c.properties?.name === name);
+        if (!country) continue;
 
-        const material = new THREE.MeshBasicMaterial({
-          color: path.color,
-          side: THREE.DoubleSide,
-          depthWrite: false,
-        });
+        const group = new THREE.Group();
+        const topLeft = maplibregl.MercatorCoordinate.fromLngLat([
+          country.bbox![0],
+          country.bbox![3],
+        ]);
+        const bottomRight = maplibregl.MercatorCoordinate.fromLngLat([
+          country.bbox![2],
+          country.bbox![1],
+        ]);
+        const mappedCountry = mapGeometry(country.geometry);
+        const patternScale =
+          ((bottomRight.x - topLeft.x) / size.width) * transform[0];
 
-        const shapes = SVGLoader.createShapes(path);
+        const subjectPolygons = subjects.map((s) =>
+          parsedPatterns[s].map((p) => ({
+            polygons: p.shapes.map(
+              (s) =>
+                [
+                  s
+                    .getPoints()
+                    .map((v) => [
+                      v.x * patternScale + topLeft.x,
+                      v.y * patternScale + topLeft.y,
+                    ]),
+                ] as clipping.Polygon
+            ),
+            material: p.material,
+          }))
+        );
 
-        for (let j = 0; j < shapes.length; j++) {
-          const shape = shapes[j];
-          const geometry = new THREE.ShapeGeometry(shape);
-          const mesh = new THREE.Mesh(geometry, material);
-          group.add(mesh);
+        const multiPolygons = {} as Record<keyof TMap, clipping.MultiPolygon[]>;
+        const offsetX = size.width * patternScale;
+        const offsetY = size.height * patternScale;
+        const maxX = bottomRight.x - topLeft.x;
+        const maxY = bottomRight.y - topLeft.y;
+
+        let i = 0;
+
+        for (let y = transform[5] * offsetY; y < maxY; y += offsetY) {
+          const subject = subjects[i];
+          const polygons = subjectPolygons[i];
+          multiPolygons[subject] ??= [];
+
+          for (let x = transform[4] * offsetX; x < maxX; x += offsetX)
+            for (let polyIndex = 0; polyIndex < polygons.length; polyIndex++) {
+              multiPolygons[subject][polyIndex] ??= [];
+              multiPolygons[subject][polyIndex].push(
+                ...polygons[polyIndex].polygons.map(
+                  (p) =>
+                    p.map((r) =>
+                      r.map((c) => [c[0] + x, c[1] + y])
+                    ) as clipping.Polygon
+                )
+              );
+            }
+
+          i = (i + 1) % subjects.length;
         }
+
+        for (const subject in multiPolygons) {
+          for (let i = 0; i < multiPolygons[subject].length; i++) {
+            const polygons = multiPolygons[subject][i];
+            const intersected = clipping.intersection(mappedCountry, polygons);
+            if (intersected.length === 0) continue;
+
+            const mesh = new THREE.Mesh(
+              new THREE.ShapeGeometry(
+                intersected.map(
+                  (s) =>
+                    new THREE.Shape(s[0].map((v) => new THREE.Vector2(...v)))
+                )
+              ),
+              parsedPatterns[subject][i].material
+            );
+            group.add(mesh);
+          }
+        }
+
+        scene.add(group);
       }
-
-      // const geometry = new THREE.PlaneGeometry(1e6, 1e6);
-      // const material = new THREE.MeshBasicMaterial({ color: 0xaa5555 });
-      // const cube = new THREE.Mesh(geometry, material);
-
-      scene.add(group);
     },
     []
   );
@@ -100,21 +203,7 @@ export function PatternLayer() {
       args.defaultProjectionData.mainMatrix
     );
 
-    const l = new THREE.Matrix4()
-      .makeTranslation(
-        modelTransform.translateX,
-        modelTransform.translateY,
-        modelTransform.translateZ
-      )
-      .scale(
-        new THREE.Vector3(
-          modelTransform.scale * 1e3,
-          modelTransform.scale * 1e3,
-          modelTransform.scale * 1e3
-        )
-      );
-
-    camera.projectionMatrix = m.multiply(l);
+    camera.projectionMatrix = m;
     renderer.resetState();
     renderer.render(scene, camera);
     map.triggerRepaint();
