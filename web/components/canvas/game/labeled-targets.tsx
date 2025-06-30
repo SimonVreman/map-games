@@ -13,7 +13,7 @@ import { useAppStore } from "@/lib/store/provider";
 
 type Target = {
   name: string;
-  subjects: string[];
+  subjects: readonly string[];
   area: number;
   center: number[];
   paths: string[];
