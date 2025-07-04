@@ -1,8 +1,11 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
-import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
 import { europeanPedestrians } from "@/lib/mapping/registry/european-pedestrians";
 import { QuizControls } from "../quiz/controls";
-import { PatternPreview } from "@/components/canvas/game/pattern-preview";
+import { PatternPreview } from "@/components/web-gl/pattern-preview";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { use } from "react";
+import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
 
 const bounds = {
   north: 71,
@@ -12,7 +15,11 @@ const bounds = {
   padding: 2,
 };
 
-export function EuropeanPedestriansGame() {
+const targetsPromise = fetchGeoAsset("european-countries");
+
+export default function EuropeanPedestriansGame() {
+  const targets = use(targetsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
@@ -24,7 +31,7 @@ export function EuropeanPedestriansGame() {
         )}
       />
 
-      <CanvasMap
+      <WebGLMap
         bounds={bounds}
         attribution={
           <>
@@ -36,11 +43,17 @@ export function EuropeanPedestriansGame() {
           </>
         }
       >
-        <PatternedTargets
+        <PatternLayer
           store="europeanPedestrians"
+          targets={targets}
           {...europeanPedestrians}
         />
-      </CanvasMap>
+        <TargetLayer
+          store="europeanPedestrians"
+          targets={targets}
+          {...europeanPedestrians}
+        />
+      </WebGLMap>
     </div>
   );
 }

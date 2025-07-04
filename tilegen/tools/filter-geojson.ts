@@ -1,10 +1,12 @@
 import { $ } from "bun";
 import { Glob } from "bun";
-import { layers } from "../lib/layers";
+import { layers as allLayers } from "../lib/layers";
 import { mapConfig } from "../lib/constants";
 import { tippecanoeMeta } from "../lib/tippecanoe";
 
 const shapeGlob = new Glob("*.shp");
+
+const layers = allLayers.filter((l) => l.type === "ne");
 
 async function generateGeoJSON() {
   for (const { name: layer } of layers) {

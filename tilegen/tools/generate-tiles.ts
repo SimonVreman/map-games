@@ -1,9 +1,7 @@
 import { $ } from "bun";
-import { layers, type Layer } from "../lib/layers";
+import { layers } from "../lib/layers";
 import { tippecanoeMeta } from "../lib/tippecanoe";
 import { mapConfig } from "../lib/constants";
-
-const computedLayers: Layer[] = [{ name: "labels", properties: [] }];
 
 const stateLabelsEnabled = [
   "Brazil",
@@ -91,7 +89,7 @@ async function createCustomLayers() {
 }
 
 async function generateTiles() {
-  const layerArgs = [...layers, ...computedLayers]
+  const layerArgs = layers
     .filter((l) => l.includeTiles !== false)
     .map(({ name: layer }) => `-L ${layer}:output/${layer}.geojson`)
     .join(" ");

@@ -1,4 +1,9 @@
-export const liechtensteinPaths = [
-"M 526.448 350.653 L 526.52 350.734 L 526.501 350.791 L 526.564 350.919 L 526.533 351.045 L 526.616 351.094 L 526.71 351.291 L 526.614 351.494 L 526.325 351.466 L 526.423 351.286 L 526.347 351.007 L 526.354 350.869 L 526.448 350.653 Z",
-]
-export const liechtensteinMeta = { west: 526.322, north: 350.653, east: 526.71, south: 351.513, x: 526.486, y: 351.084  }
+export const liechtensteinPaths = [];
+export const liechtensteinMeta = {
+  west: 526.322,
+  north: 350.653,
+  east: 526.71,
+  south: 351.513,
+  x: 526.486,
+  y: 351.084,
+};

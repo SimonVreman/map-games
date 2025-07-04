@@ -3,23 +3,24 @@
 import Map from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { map } from "./constants";
-import { OceanLayer } from "./layers/OceanLayer";
-import { LandLayer } from "./layers/LandLayer";
-import { RoadRailLayer } from "./layers/RoadRailLayer";
-import { RiverLakeLayer } from "./layers/RiverLakeLayer";
-import { PlacesLayer } from "./layers/PlacesLayer";
-import { LabelsLayer } from "./layers/LabelsLayer";
-import { GeoLinesLayer } from "./layers/GeoLinesLayer";
 import { LatLngBounds } from "../canvas/types";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
-import { CountryBoundariesLayer } from "./layers/CountryBoundariesLayer";
-import { StateBoundariesLayer } from "./layers/StateBoundariesLayer";
+import { LandLayer } from "./layers/land-layer";
+import { RiverLakeLayer } from "./layers/river-lake-layer";
+import { RoadRailLayer } from "./layers/road-rail-layer";
+import { StateBoundariesLayer } from "./layers/state-boundaries-layer";
+import { CountryBoundariesLayer } from "./layers/country-boundaries-layer";
+import { GeoLinesLayer } from "./layers/geo-lines-layer";
+import { PlacesLayer } from "./layers/places-layer";
+import { LabelsLayer } from "./layers/labels-layer";
+import { MapTheme } from "./map-theme";
+import { MapGridLayer } from "./layers/map-grid-layer";
 
 const minzoom = 2;
 const maxzoom = 6;
 
-export default function WebGLMap({
+export function WebGLMap({
   bounds,
   attribution,
   children,
@@ -69,20 +70,27 @@ export default function WebGLMap({
           layers: [],
         }}
       >
-        <OceanLayer />
+        <MapTheme />
+
+        <MapGridLayer />
+
+        {/* <OceanLayer /> */}
         <LandLayer />
         <RiverLakeLayer />
         <RoadRailLayer />
+
+        {children}
+
         <StateBoundariesLayer />
         <CountryBoundariesLayer />
         <GeoLinesLayer />
         <PlacesLayer />
         <LabelsLayer />
-        {children}
       </Map>
       {attribution && (
-        <div className="bg-neutral-50 dark:bg-neutral-700 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
+        <div className="bg-neutral-50/70 dark:bg-neutral-700/70 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
           {attribution}
+          {/* https://doi.org/10.2909/602507b2-96c7-47bb-b79d-7ba25e97d0a9 copernicus */}
         </div>
       )}
       {!loaded && (

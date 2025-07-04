@@ -1,0 +1,49 @@
+import {
+  Layer,
+  LayerSpecification,
+  Source,
+  SourceSpecification,
+} from "react-map-gl/maplibre";
+import maplibregl from "maplibre-gl";
+
+const base64 =
+  "GvwKeAIKBWxpbmVzKIAgGgV3aWR0aCIGCgR3aWRlIggKBm5hcnJvdxIRGAISAgAAIgkJgECAQAoA5T8SDxgCEgIAACIHCQAACoBAABIQGAISAgAAIggJAIBACgDlPxIQGAISAgABIggJAOQBCoBAABIRGAISAgABIgkJ5AGAQAoA5T8SEBgCEgIAASIICQDIAwqAQAASERgCEgIAASIJCcgDgEAKAOU/EhAYAhICAAEiCAkAqgUKgEAAEhAYAhICAAEiCAkAjgcKgEAAEhEYAhICAAEiCQmqBYBACgDlPxIRGAISAgABIgkJjgeAQAoA5T8SEBgCEgIAASIICQDyCAqAQAASEBgCEgIAASIICQDWCgqAQAASEBgCEgIAASIICQC4DAqAQAASEBgCEgIAASIICQCcDgqAQAASERgCEgIAASIJCfIIgEAKAOU/EhEYAhICAAEiCQnWCoBACgDlPxIRGAISAgABIgkJuAyAQAoA5T8SERgCEgIAASIJCZwOgEAKAOU/EhAYAhICAAAiCAkAgBAKgEAAEhAYAhICAAEiCAkA5BEKgEAAEhAYAhICAAEiCAkAyBMKgEAAEhAYAhICAAEiCAkAqhUKgEAAEhAYAhICAAEiCAkAjhcKgEAAEhAYAhICAAEiCAkA8hgKgEAAEhAYAhICAAEiCAkA1hoKgEAAEhAYAhICAAEiCAkAuBwKgEAAEhAYAhICAAEiCAkAnB4KgEAAEhEYAhICAAAiCQmAEIBACgDlPxIRGAISAgABIgkJ5BGAQAoA5T8SERgCEgIAASIJCcgTgEAKAOU/EhEYAhICAAEiCQmqFYBACgDlPxIRGAISAgABIgkJjheAQAoA5T8SERgCEgIAASIJCfIYgEAKAOU/EhEYAhICAAEiCQnWGoBACgDlPxIRGAISAgABIgkJuByAQAoA5T8SERgCEgIAASIJCZwegEAKAOU/EhAYAhICAAAiCAkAgCAKgEAAEhAYAhICAAEiCAkA5CEKgEAAEhAYAhICAAEiCAkAyCMKgEAAEhAYAhICAAEiCAkAqiUKgEAAEhAYAhICAAEiCAkAjicKgEAAEhAYAhICAAEiCAkA8igKgEAAEhAYAhICAAEiCAkA1ioKgEAAEhAYAhICAAEiCAkAuCwKgEAAEhAYAhICAAEiCAkAnC4KgEAAEhAYAhICAAAiCAkAgDAKgEAAEhAYAhICAAEiCAkA5DEKgEAAEhAYAhICAAEiCAkAyDMKgEAAEhAYAhICAAEiCAkAqjUKgEAAEhAYAhICAAEiCAkAjjcKgEAAEhAYAhICAAEiCAkA8jgKgEAAEhAYAhICAAEiCAkA1joKgEAAEhAYAhICAAEiCAkAuDwKgEAAEhAYAhICAAEiCAkAnD4KgEAAEhEYAhICAAAiCQmAIIBACgDlPxIRGAISAgABIgkJ5CGAQAoA5T8SERgCEgIAASIJCcgjgEAKAOU/EhEYAhICAAEiCQmqJYBACgDlPxIRGAISAgABIgkJjieAQAoA5T8SERgCEgIAASIJCfIogEAKAOU/EhEYAhICAAEiCQnWKoBACgDlPxIRGAISAgABIgkJuCyAQAoA5T8SERgCEgIAASIJCZwugEAKAOU/EhEYAhICAAAiCQmAMIBACgDlPxIRGAISAgABIgkJ5DGAQAoA5T8SERgCEgIAASIJCcgzgEAKAOU/EhEYAhICAAEiCQmqNYBACgDlPxIRGAISAgABIgkJjjeAQAoA5T8SERgCEgIAASIJCfI4gEAKAOU/EhEYAhICAAEiCQnWOoBACgDlPxIRGAISAgABIgkJuDyAQAoA5T8SERgCEgIAASIJCZw+gEAKAOU/EhAYAhICAAAiCAkAgEAKgEAA";
+
+maplibregl.addProtocol("background-grid", async () => ({
+  data: Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)),
+}));
+
+const source: SourceSpecification & { id: string } = {
+  id: "background-grid",
+  type: "vector",
+  tiles: ["background-grid://{z}/{x}/{y}.pbf"],
+};
+
+const background: LayerSpecification = {
+  id: "background",
+  type: "background",
+  paint: {
+    "background-color": "hsl(0 0% 90%)",
+  },
+};
+
+const grid: LayerSpecification = {
+  id: "background-grid",
+  type: "line",
+  source: "background-grid",
+  "source-layer": "lines",
+  paint: {
+    "line-width": 1,
+    "line-color": "hsl(0 0% 95%)",
+  },
+};
+
+export function MapGridLayer() {
+  return (
+    <>
+      <Source {...source} />
+      <Layer {...background} />
+      <Layer {...grid} />
+    </>
+  );
+}

@@ -57,10 +57,7 @@ import {
   unitedKingdomPaths,
   unitedKingdomMeta,
 } from "../paths/europe/united-kingdom";
-import {
-  createTapTarget,
-  createTranslateNew as createTranslate,
-} from "../pattern";
+import { createTapTarget, createTranslate } from "../pattern";
 import { QuizSubset } from "../subsets";
 
 const size = { width: 400, height: 400 };
@@ -81,11 +78,10 @@ const createPattern = ({
   bg: keyof typeof colors;
   fg: keyof typeof colors;
 }): Pattern => ({
-  svg: `<svg width="400" height="400" viewBox="0 0 400 400">
+  svg: `<svg viewBox="0 0 400 400">
 <rect width="400" height="400" fill="${colors[bg]}"/>
 <path d="M221 79H99L179 200L99 321H221L301 200L221 79Z" fill="${colors[fg]}"/>
-</svg>
-`,
+</svg>`,
 });
 
 const patterns: Record<string, Pattern> = {

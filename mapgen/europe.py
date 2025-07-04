@@ -50,7 +50,7 @@ countries_used = [
     "Moldova",
 ]
 
-precision = 6
+precision = 3
 output_path = "../web/public/assets/geo/european-countries.geojson"
 
 
@@ -60,6 +60,7 @@ def write_countries():
     df_used = df[df["ADMIN"].isin(countries_used)]
     df_used["name"] = df_used["NAME"]
     df_used = df_used[["name", "geometry"]]
+    df_used.simplify(0.01)
     df_used.geometry.set_precision(1 / 10**precision)
 
     df_used.to_file(
@@ -67,6 +68,7 @@ def write_countries():
         driver="GeoJSON",
         WRITE_BBOX="YES",
         COORDINATE_PRECISION=precision,
+        ID_GENERATE="YES",
     )
 
     # Minimize the file size by removing all whitespace

@@ -6,8 +6,8 @@
   "scripts": {
     "start": "bun run index.ts",
     "tool:filter-geojson": "bun run tools/filter-geojson.ts",
-    "tool:generate-tiles": "bun run tools/generate-tiles.ts",
-    "tool:game-geojson": "bun run tools/game-geojson.ts"
+    "tool:polygonize-landcover": "bun run tools/polygonize-landcover.ts",
+    "tool:generate-tiles": "bun run tools/generate-tiles.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
