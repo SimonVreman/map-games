@@ -28,7 +28,7 @@ export type SpellingBeeSlice = {
   );
 };
 
-const minAvailableWords = 10;
+const minAvailableWords = 20;
 const maxAvailableWords = 80;
 const minWordLength = 4;
 const maxWordLength = 25;
