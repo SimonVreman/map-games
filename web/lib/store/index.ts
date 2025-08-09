@@ -36,6 +36,7 @@ import {
   createUSLicensePlatesSlice,
   USLicensePlatesSlice,
 } from "./game/us-license-plates";
+import { createSpellingBeeSlice, SpellingBeeSlice } from "./game/spelling-bee";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -46,7 +47,8 @@ export type AppStore = CityCoverSlice &
   EuropeanPedestriansSlice &
   EuropeanBollardsSlice &
   USDialingCodesSlice &
-  USLicensePlatesSlice;
+  USLicensePlatesSlice &
+  SpellingBeeSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -62,6 +64,7 @@ export const createAppStore = () =>
         ...createEuropeanBollardsSlice(...a),
         ...createUSDialingCodesSlice(...a),
         ...createUSLicensePlatesSlice(...a),
+        ...createSpellingBeeSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),

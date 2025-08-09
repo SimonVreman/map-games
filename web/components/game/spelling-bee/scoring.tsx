@@ -1,0 +1,90 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { wordScore } from "@/lib/store/game/spelling-bee";
+import { useAppStore } from "@/lib/store/provider";
+import { cn } from "@/lib/utils";
+
+const ranks = [0, 0.05, 0.1, 0.2, 0.3, 0.45, 0.65, 0.85];
+
+export function SpellingBeeScoring() {
+  const [words, score, maxScore, options] = useAppStore((s) => [
+    s.spellingBee.words,
+    s.spellingBee.score,
+    s.spellingBee.maxScore,
+    s.spellingBee.options,
+  ]);
+
+  const progress = score ? score / (maxScore ?? 1) : 0;
+
+  return (
+    <>
+      <div className="w-full h-8 max-w-lg relative select-none">
+        <div className="absolute flex items-center size-full">
+          <div className="h-0.5 w-full bg-neutral-200 dark:bg-neutral-800 rounded-full" />
+        </div>
+        <div className="absolute size-full flex justify-between items-center">
+          {ranks.map((r, i) => {
+            const isActive = progress >= r && progress < (ranks[i + 1] ?? 1);
+            return (
+              <div
+                key={r}
+                className={cn(
+                  "size-2 bg-neutral-200 dark:bg-neutral-800 rounded-full flex items-center justify-center transition-all duration-300",
+                  {
+                    "bg-yellow-300 dark:bg-purple-900": progress >= r,
+                    "size-8": isActive,
+                  }
+                )}
+              >
+                <span
+                  className={cn(
+                    "text-center text-sm opacity-0 transition-opacity duration-300",
+                    { "opacity-100": isActive }
+                  )}
+                >
+                  {score ?? 0}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="w-full max-w-lg h-14 relative">
+        <Accordion type="single" collapsible className="w-full absolute">
+          <AccordionItem value="score">
+            <AccordionTrigger
+              className={cn("items-center text-base min-w-0", {
+                "text-muted-foreground": !words?.length,
+              })}
+            >
+              <span className="min-w-0 truncate shrink">
+                {!!words?.length
+                  ? words
+                      ?.toReversed()
+                      .map(([f, ...w]) => f.toUpperCase() + w.join(""))
+                      .join(", ")
+                  : "Begin met spel(l)en!"}
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="w-full p-4 grid gap-2 text-base grid-cols-2 backdrop-blur-md bg-background/50 border-b max-h-[400px] overflow-y-scroll">
+              {words?.map((w) => (
+                <div key={w} className="">
+                  <span className="font-medium mr-2">
+                    {w[0].toUpperCase() + w.slice(1)}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {wordScore({ word: w, options: options ?? "" })}
+                  </span>
+                </div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </>
+  );
+}
