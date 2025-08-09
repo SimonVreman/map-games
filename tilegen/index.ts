@@ -12,8 +12,8 @@ function addCors(response: Response): Response {
 Bun.serve({
   port: 3030,
   routes: {
-    "/tiles/:z/:x/:y": async (req) => {
-      const file = `./output/tiles/${req.params.z}/${req.params.x}/${req.params.y}`;
+    "/tiles/:set/:z/:x/:y": async (req) => {
+      const file = `./output/tiles/${req.params.set}/${req.params.z}/${req.params.x}/${req.params.y}`;
       try {
         const data = await Bun.file(file).arrayBuffer();
         return addCors(

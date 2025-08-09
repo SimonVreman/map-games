@@ -7,7 +7,8 @@
     "start": "bun run index.ts",
     "tool:filter-geojson": "bun run tools/filter-geojson.ts",
     "tool:polygonize-landcover": "bun run tools/polygonize-landcover.ts",
-    "tool:generate-tiles": "bun run tools/generate-tiles.ts"
+    "tool:generate-tiles": "bun run tools/generate-tiles.ts",
+    "tool:generate-game-tiles": "bun run tools/generate-game-tiles.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -16,6 +17,9 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@types/geojson": "^7946.0.16"
+    "@types/geojson": "^7946.0.16",
+    "happy-dom": "^18.0.1",
+    "path-data-polyfill": "^1.0.10",
+    "polygon-clipping": "^0.15.7"
   }
 }

@@ -27,6 +27,6 @@ export const layers: Layer[] = [
     zoomOffset: { min: -2 },
   },
   { name: "geo-lines", type: "ne", properties: ["name"] },
-  { name: "landcover", type: "landcover", properties: [] },
+  { name: "landcover", type: "landcover", properties: [], includeTiles: false },
   { name: "labels", type: "custom", properties: [] },
 ];

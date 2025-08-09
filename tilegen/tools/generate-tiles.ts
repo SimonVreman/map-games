@@ -94,11 +94,9 @@ async function generateTiles() {
     .map(({ name: layer }) => `-L ${layer}:output/${layer}.geojson`)
     .join(" ");
 
-  const maxZoom = 6;
-
   await $`tippecanoe \
-    -o output/world.mbtiles \
-    -Z0 -z${maxZoom} --force \
+    -o ${mapConfig.tileDir}/base.mbtiles \
+    -Z0 -z${mapConfig.maxZoom} --force \
     --drop-densest-as-needed \
     --coalesce-smallest-as-needed \
     --simplify-only-low-zooms \
@@ -106,7 +104,7 @@ async function generateTiles() {
 }
 
 async function extractTiles() {
-  await $`tile-join -f -e output/tiles output/world.mbtiles`;
+  await $`tile-join -f -e ${mapConfig.tileDir}/base ${mapConfig.tileDir}/base.mbtiles`;
 }
 
 async function main() {

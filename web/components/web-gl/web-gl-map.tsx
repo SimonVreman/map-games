@@ -60,7 +60,18 @@ export function WebGLMap({
           sources: {
             [map.sources.tiles]: {
               type: "vector",
-              tiles: [process.env.NEXT_PUBLIC_TILES_URL!],
+              tiles: [
+                process.env.NEXT_PUBLIC_TILES_URL!.replace("{set}", "base"),
+              ],
+            },
+            chevdev: {
+              type: "vector",
+              tiles: [
+                process.env.NEXT_PUBLIC_TILES_URL!.replace(
+                  "{set}",
+                  "european-chevrons"
+                ),
+              ],
             },
           },
           sprite:

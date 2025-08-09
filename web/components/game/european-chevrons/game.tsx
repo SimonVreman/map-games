@@ -1,11 +1,11 @@
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
 import { QuizControls } from "../quiz/controls";
 import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
-import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
 import { use } from "react";
 import { PatternPreview } from "@/components/web-gl/pattern-preview";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { PatternLayer } from "@/components/web-gl/layers/pattern-layer-new";
 
 const bounds = {
   north: 71,
@@ -45,8 +45,8 @@ export default function EuropeanChevronsGame() {
       >
         <PatternLayer
           store="europeanChevrons"
-          targets={targets}
-          {...europeanChevrons}
+          // targets={targets}
+          // {...europeanChevrons}
         />
         <TargetLayer
           store="europeanChevrons"
