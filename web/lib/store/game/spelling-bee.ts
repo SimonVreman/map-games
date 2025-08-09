@@ -31,7 +31,7 @@ export type SpellingBeeSlice = {
 };
 
 const minAvailableWords = 10;
-const maxAvailableWords = 200;
+const maxAvailableWords = 80;
 const minWordLength = 4;
 const maxWordLength = 25;
 
