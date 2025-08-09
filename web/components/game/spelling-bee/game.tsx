@@ -45,7 +45,7 @@ export default function SpellingBeeGame() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  });
+  }, [remove, handleSubmit]);
 
   return (
     <div className="size-full overflow-hidden">
