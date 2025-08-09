@@ -115,6 +115,9 @@ function findOptions({ wordlist }: { wordlist: string[] }) {
 
     let matches: string[] = [];
 
+    // // At least one pangram
+    if (!maskToWords.has(setMask)) continue;
+
     for (const sm of subMasks(setMask)) {
       if (sm & mandatoryMask) {
         const words = maskToWords.get(sm);
