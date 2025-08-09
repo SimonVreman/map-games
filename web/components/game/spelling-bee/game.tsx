@@ -32,16 +32,16 @@ export default function SpellingBeeGame() {
   );
 
   return (
-    <div className="size-full relative overflow-hidden">
-      <div className="flex flex-col size-full items-center p-6">
+    <div className="size-full overflow-hidden">
+      <div className="flex flex-col size-full items-center p-6 pb-12">
         <SpellingBeeMenu wordlist={wordlist} />
 
         <SpellingBeeScoring />
 
-        <div className="h-12 w-full flex items-center justify-center max-w-full mb-6">
+        <div className="h-12 w-full flex items-center justify-center max-w-full mb-4">
           <p
             className={cn(
-              "text-3xl uppercase font-bold break-words text-center max-w-full transition-all",
+              "text-3xl uppercase font-bold break-words text-center max-w-full",
               {
                 "text-2xl": selection != null && selection?.length > 10,
                 "text-xl": selection != null && selection?.length > 20,
@@ -50,14 +50,13 @@ export default function SpellingBeeGame() {
           >
             {selection}
           </p>
-          {options == null && (
-            <p className="font-medium">Reset (rechtsboven) om te beginnen!</p>
-          )}
         </div>
 
-        <Beehive letters={options ?? ""} onLetterClick={select} />
+        <div className="shrink">
+          <Beehive letters={options ?? ""} onLetterClick={select} />
+        </div>
 
-        <div className="grid grid-cols-5 gap-2 mt-8 items-center">
+        <div className="grid grid-cols-5 gap-2 mt-6 items-center">
           <Button
             variant="outline"
             size="lg"
@@ -83,7 +82,7 @@ export default function SpellingBeeGame() {
           </Button>
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 text-sm text-muted-foreground pr-1">
+      <div className="absolute bottom-0 right-0 text-muted-foreground pr-1 max-sm:text-center max-sm:w-full text-xs">
         <a
           href="https://github.com/OpenTaal/opentaal-wordlist"
           className="underline"

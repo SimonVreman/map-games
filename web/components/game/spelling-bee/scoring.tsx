@@ -19,6 +19,8 @@ export function SpellingBeeScoring() {
   ]);
 
   const progress = score ? score / (maxScore ?? 1) : 0;
+  const wordScores =
+    words?.map((w) => wordScore({ word: w, options: options ?? "" })) ?? [];
 
   return (
     <>
@@ -26,7 +28,7 @@ export function SpellingBeeScoring() {
         <div className="absolute flex items-center size-full">
           <div className="h-0.5 w-full bg-neutral-200 dark:bg-neutral-800 rounded-full" />
         </div>
-        <div className="absolute size-full flex justify-between items-center">
+        <div className="absolute size-full flex justify-between items-center top-0">
           {ranks.map((r, i) => {
             const isActive = progress >= r && progress < (ranks[i + 1] ?? 1);
             return (
@@ -54,7 +56,11 @@ export function SpellingBeeScoring() {
         </div>
       </div>
       <div className="w-full max-w-lg h-14 relative">
-        <Accordion type="single" collapsible className="w-full absolute">
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full absolute backdrop-blur-md bg-background/50"
+        >
           <AccordionItem value="score">
             <AccordionTrigger
               className={cn("items-center text-base min-w-0", {
@@ -63,17 +69,34 @@ export function SpellingBeeScoring() {
             >
               <span className="min-w-0 truncate shrink">
                 {!!words?.length
-                  ? words
-                      ?.toReversed()
-                      .map(([f, ...w]) => f.toUpperCase() + w.join(""))
-                      .join(", ")
+                  ? [...new Array(Math.min(words.length, 25))].map((_, i) => {
+                      const wordIndex = words.length - i - 1;
+                      const word = words[wordIndex];
+                      const score = wordScores[wordIndex];
+
+                      return (
+                        <span key={i}>
+                          <span
+                            className={cn({ "font-bold": score > word.length })}
+                          >
+                            {word[0].toUpperCase()}
+                            {word.slice(1)}
+                          </span>
+                          {i < words.length - 1 ? ", " : " "}
+                        </span>
+                      );
+                    })
                   : "Begin met spel(l)en!"}
               </span>
             </AccordionTrigger>
-            <AccordionContent className="w-full p-4 grid gap-2 text-base grid-cols-2 backdrop-blur-md bg-background/50 border-b max-h-[400px] overflow-y-scroll">
-              {words?.map((w) => (
+            <AccordionContent className="w-full p-4 grid gap-2 text-base grid-cols-2 border-b max-h-[400px] overflow-y-scroll">
+              {words?.map((w, i) => (
                 <div key={w} className="">
-                  <span className="font-medium mr-2">
+                  <span
+                    className={cn("mr-2", {
+                      "font-bold": wordScores[i] > w.length,
+                    })}
+                  >
                     {w[0].toUpperCase() + w.slice(1)}
                   </span>
                   <span className="text-muted-foreground">

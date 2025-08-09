@@ -77,6 +77,7 @@ export function Beehive({
           onPointerDown={() => setClicking(letter)}
           onPointerLeave={() => setClicking("")}
           onClick={() => onClick(letter)}
+          role="button"
         >
           {hexagons[index]}
           <text
