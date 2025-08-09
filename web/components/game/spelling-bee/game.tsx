@@ -1,5 +1,5 @@
 import { useAppStore } from "@/lib/store/provider";
-import { cache, use } from "react";
+import { cache, use, useCallback, useEffect } from "react";
 import { Beehive } from "./beehive";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,22 @@ export default function SpellingBeeGame() {
       s.spellingBee.shuffle,
     ]
   );
+
+  const handleSubmit = useCallback(() => {
+    const error = submit({ wordlist });
+    if (error != null) toast.error(error, { duration: 1500 });
+    else toast.success("Gevonden!", { duration: 1000 });
+  }, [submit, wordlist]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Backspace") remove();
+      if (event.key === "Enter") handleSubmit();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
 
   return (
     <div className="size-full overflow-hidden">
@@ -72,11 +88,7 @@ export default function SpellingBeeGame() {
             variant="outline"
             size="lg"
             className="col-span-2"
-            onClick={() => {
-              const error = submit({ wordlist });
-              if (error != null) toast.error(error, { duration: 1500 });
-              else toast.success("Gevonden!", { duration: 1000 });
-            }}
+            onClick={handleSubmit}
           >
             Probeer
           </Button>

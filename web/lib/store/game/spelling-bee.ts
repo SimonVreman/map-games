@@ -15,7 +15,6 @@ export type SpellingBeeSlice = {
         words?: null;
         score?: null;
         selection?: null;
-        maxWords?: null;
         maxScore?: null;
         options?: null;
       }
@@ -23,7 +22,6 @@ export type SpellingBeeSlice = {
         words: string[];
         score: number;
         selection: string;
-        maxWords: number;
         maxScore: number;
         options: string;
       }
@@ -42,19 +40,18 @@ export function wordScore({
   word: string;
   options: string;
 }) {
-  if (
-    !word.includes(options[0]) ||
-    word.length < minWordLength ||
-    !word.split("").every((l) => options.includes(l))
-  )
-    return -1;
+  if (word.length < minWordLength || word.length > maxWordLength) return -1;
+  if (!word.includes(options[0])) return -1;
+
+  const wordArr = word.split("");
+  if (!wordArr.every((l) => options.includes(l))) return -1;
 
   if (word.length === minWordLength) return 1;
 
-  return (
-    word.length +
-    (options.split("").every((l) => word.includes(l)) ? options.length : 0)
-  );
+  let score = word.length;
+  const optionsArr = options.split("");
+  if (optionsArr.every((l) => word.includes(l))) score += optionsArr.length;
+  return score;
 }
 
 function totalScore({ words, options }: { words: string[]; options: string }) {
@@ -64,46 +61,78 @@ function totalScore({ words, options }: { words: string[]; options: string }) {
   }, 0);
 }
 
-function usesAllLetters({ word, options }: { word: string; options: string }) {
-  const lowercase = word.toLowerCase();
-  return options.split("").every((l) => lowercase.includes(l));
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+function letterMask(word: string): number {
+  let mask = 0;
+  for (const ch of word) {
+    const pos = ch.charCodeAt(0) - "a".charCodeAt(0);
+    if (pos >= 0 && pos < 26) {
+      mask |= 1 << pos;
+    }
+  }
+  return mask;
+}
+
+function subMasks(mask: number): number[] {
+  const result: number[] = [];
+  let sub = mask;
+  while (sub) {
+    result.push(sub);
+    sub = (sub - 1) & mask;
+  }
+  result.push(0); // include empty mask if needed
+  return result;
+}
+
+function randomSample<T>(arr: T[], k: number): T[] {
+  const copy = arr.slice();
+  const res: T[] = [];
+  for (let i = 0; i < k; i++) {
+    const idx = Math.floor(Math.random() * copy.length);
+    res.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+  return res;
 }
 
 function findOptions({ wordlist }: { wordlist: string[] }) {
-  // Generate a string of 7 distinct random letters from the alphabet
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  let maxWords = 0;
-  let maxScore = 0;
-  let options = "";
-  let allUsed = false;
-
-  // There must be at least 10 valid words with these letters, not more than 200
-  while (
-    maxWords < minAvailableWords ||
-    maxWords > maxAvailableWords ||
-    !allUsed
-  ) {
-    maxWords = 0;
-    maxScore = 0;
-    options = "";
-    allUsed = false;
-
-    while (options.length < 7) {
-      const letter = alphabet[Math.floor(Math.random() * alphabet.length)];
-      if (!options.includes(letter)) options += letter;
-    }
-
-    for (const word of wordlist) {
-      const score = wordScore({ word, options });
-      if (score < 0) continue;
-      if (usesAllLetters({ word, options })) allUsed = true;
-      maxWords++;
-      maxScore += score;
-      if (maxWords > maxAvailableWords) break;
-    }
+  const maskToWords = new Map<number, string[]>();
+  for (const w of wordlist) {
+    const m = letterMask(w);
+    if (!maskToWords.has(m)) maskToWords.set(m, []);
+    maskToWords.get(m)!.push(w);
   }
 
-  return { maxWords, maxScore, options };
+  let options = "";
+  let maxScore = 0;
+
+  while (true) {
+    options = randomSample(alphabet.split(""), 7).join("");
+    const setMask = letterMask(options);
+    const mandatory = options[0];
+    const mandatoryMask = letterMask(mandatory);
+
+    let matches: string[] = [];
+
+    for (const sm of subMasks(setMask)) {
+      if (sm & mandatoryMask) {
+        const words = maskToWords.get(sm);
+        if (words) matches = matches.concat(words);
+      }
+    }
+
+    if (
+      matches.length < minAvailableWords ||
+      matches.length > maxAvailableWords
+    )
+      continue;
+
+    maxScore = totalScore({ words: matches, options });
+    break;
+  }
+
+  return { maxScore, options };
 }
 
 export const createSpellingBeeSlice: ImmerStateCreator<SpellingBeeSlice> = (
@@ -113,15 +142,13 @@ export const createSpellingBeeSlice: ImmerStateCreator<SpellingBeeSlice> = (
     // State
     words: null,
     selection: null,
-    maxWords: null,
     options: null,
 
     // Actions
     start: ({ wordlist }) => {
       set(({ spellingBee: s }) => {
-        const { maxWords, options, maxScore } = findOptions({ wordlist });
+        const { options, maxScore } = findOptions({ wordlist });
 
-        s.maxWords = maxWords;
         s.maxScore = maxScore;
         s.options = options;
         s.words = [];
@@ -131,7 +158,6 @@ export const createSpellingBeeSlice: ImmerStateCreator<SpellingBeeSlice> = (
     },
     reset: () => {
       set(({ spellingBee: s }) => {
-        s.maxWords = null;
         s.maxScore = null;
         s.options = null;
         s.words = null;

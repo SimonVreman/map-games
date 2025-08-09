@@ -35,7 +35,7 @@ export function SpellingBeeScoring() {
               <div
                 key={r}
                 className={cn(
-                  "size-2 bg-neutral-200 dark:bg-neutral-800 rounded-full flex items-center justify-center transition-all duration-300",
+                  "relative size-2 bg-neutral-200 dark:bg-neutral-800 rounded-full flex items-center justify-center transition-all duration-300",
                   {
                     "bg-yellow-300 dark:bg-purple-900": progress >= r,
                     "size-8": isActive,
@@ -49,6 +49,15 @@ export function SpellingBeeScoring() {
                   )}
                 >
                   {score ?? 0}
+                </span>
+
+                <span
+                  className={cn(
+                    "absolute size-full flex justify-center items-center bottom-4 text-xs text-muted-foreground transition-opacity",
+                    isActive ? "opacity-0" : "opacity-100"
+                  )}
+                >
+                  {Math.round(r * (maxScore ?? 0))}
                 </span>
               </div>
             );

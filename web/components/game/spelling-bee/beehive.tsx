@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const letterPositions = [
   // Center
@@ -59,6 +59,16 @@ export function Beehive({
     onLetterClick?.(letter);
     setClicking("");
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const letter = event.key.toLowerCase();
+      if (letters.includes(letter)) onClick(letter);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
 
   return (
     <svg

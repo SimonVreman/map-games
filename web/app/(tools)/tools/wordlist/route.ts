@@ -7,7 +7,7 @@ export async function GET() {
   const words = content.split(/\r?\n/).filter((line) => line.trim() !== "");
 
   const filtered = words
-    .filter((word) => !/[ \-\d]/.test(word))
+    .filter((word) => !/[ \.\-\d]/.test(word))
     .filter((word) => word.length > 3)
     .filter((word) => word[0] !== word[0].toUpperCase());
 
