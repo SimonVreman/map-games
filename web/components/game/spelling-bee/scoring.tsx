@@ -8,7 +8,7 @@ import { wordScore } from "@/lib/store/game/spelling-bee";
 import { useAppStore } from "@/lib/store/provider";
 import { cn } from "@/lib/utils";
 
-const ranks = [0, 0.05, 0.1, 0.2, 0.3, 0.45, 0.6, 0.8];
+const ranks = [0, 0.05, 0.075, 0.15, 0.25, 0.4, 0.5, 0.7];
 
 export function SpellingBeeScoring() {
   const [words, score, maxScore, options] = useAppStore((s) => [
