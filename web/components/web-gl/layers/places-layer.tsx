@@ -10,9 +10,9 @@ const config: LayerSpecification = {
   "source-layer": "places",
   minzoom: 3,
   paint: {
-    "text-color": "#222",
-    "text-halo-color": "#ffffffee",
-    "text-halo-width": 1,
+    "text-color": map.colors.text.primary,
+    "text-halo-color": map.colors.text.halo,
+    "text-halo-width": 0.5,
   },
   layout: {
     "symbol-sort-key": ["+", ["get", "scalerank"], 100],

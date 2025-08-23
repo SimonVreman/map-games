@@ -6,7 +6,7 @@ const config: LayerSpecification = {
   type: "line",
   source: map.sources.tiles,
   "source-layer": "country-boundaries",
-  paint: { "line-color": "#222", "line-width": 0.8 },
+  paint: { "line-color": map.colors.boundary.country, "line-width": 0.8 },
 };
 
 export function CountryBoundariesLayer() {

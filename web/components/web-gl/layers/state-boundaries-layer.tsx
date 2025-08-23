@@ -6,7 +6,7 @@ const config: LayerSpecification = {
   type: "line",
   source: map.sources.tiles,
   "source-layer": "state-boundaries",
-  paint: { "line-color": "#999", "line-dasharray": [2, 2] },
+  paint: { "line-color": map.colors.boundary.state, "line-dasharray": [2, 2] },
 };
 
 export function StateBoundariesLayer() {
