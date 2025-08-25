@@ -6,8 +6,6 @@ import { map } from "./constants";
 import { LatLngBounds } from "../canvas/types";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
-import { LandLayer } from "./layers/land-layer";
-import { RiverLakeLayer } from "./layers/river-lake-layer";
 import { RoadRailLayer } from "./layers/road-rail-layer";
 import { StateBoundariesLayer } from "./layers/state-boundaries-layer";
 import { CountryBoundariesLayer } from "./layers/country-boundaries-layer";
@@ -15,7 +13,10 @@ import { GeoLinesLayer } from "./layers/geo-lines-layer";
 import { PlacesLayer } from "./layers/places-layer";
 import { LabelsLayer } from "./layers/labels-layer";
 import { MapTheme } from "./map-theme";
-import { MapGridLayer } from "./layers/map-grid-layer";
+import { LandCoverLayer } from "./layers/land-cover-layer";
+import { LandLayer } from "./layers/land-layer";
+import { RiverLakeLayer } from "./layers/river-lake-layer";
+import { OceanLayer } from "./layers/ocean-layer";
 
 const minzoom = 2;
 const maxzoom = 6;
@@ -64,6 +65,15 @@ export function WebGLMap({
                 process.env.NEXT_PUBLIC_TILES_URL!.replace("{set}", "base"),
               ],
             },
+            [map.sources.landcover]: {
+              type: "vector",
+              tiles: [
+                process.env.NEXT_PUBLIC_TILES_URL!.replace(
+                  "{set}",
+                  "landcover"
+                ),
+              ],
+            },
             chevdev: {
               type: "vector",
               tiles: [
@@ -83,10 +93,9 @@ export function WebGLMap({
       >
         <MapTheme />
 
-        <MapGridLayer />
-
-        {/* <OceanLayer /> */}
+        <OceanLayer />
         <LandLayer />
+        <LandCoverLayer />
         <RiverLakeLayer />
         <RoadRailLayer />
 

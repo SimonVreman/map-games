@@ -6,7 +6,7 @@ const config: LayerSpecification = {
   type: "fill",
   source: map.sources.tiles,
   "source-layer": "land",
-  paint: { "fill-color": map.colors.land },
+  paint: { "fill-color": map.colors.land.herbaceous },
 };
 
 export function LandLayer() {
