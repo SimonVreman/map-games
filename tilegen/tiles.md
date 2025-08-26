@@ -1,7 +1,7 @@
 generate
 
 ```
-bun run tool:generate-tiles
+bun run tool:generate-base-tiles
 ```
 
 upload

@@ -1,5 +1,6 @@
 import clipping from "polygon-clipping";
 import type { QuizRegistry, VectorQuizSubject } from "./types";
+import { stringifyGeoJSON } from "../geojson";
 
 // This code was migrated from a WebGL-based implementation, adding some utilities back here
 // https://github.com/maplibre/maplibre-gl-js/blob/main/src/geo/mercator_coordinate.ts
@@ -54,9 +55,11 @@ function mapGeometry(g: GeoJSON.Geometry) {
 export async function clippedPatternLayer({
   output,
   registry: { targets, size },
+  options,
 }: {
   output: string;
   registry: QuizRegistry;
+  options: { precision: number };
 }) {
   const { features: countries } = (await Bun.file(
     "output/countries.geojson"
@@ -129,15 +132,18 @@ export async function clippedPatternLayer({
           type: "Feature",
           geometry: { type: "MultiPolygon", coordinates: unprojected },
           properties: {
-            id: `${id}-${subject}-${i}`,
+            id: `${id}-${subject.id}-${i}`,
             subject: subject.id,
             target: id,
-            fill: "svg" in subject ? subject.svg.fill : undefined,
+            fill: "svg" in subject ? subject.svg[i].fill : undefined,
           },
         });
       }
     }
   }
 
-  await Bun.write(output, JSON.stringify(collection));
+  await Bun.write(
+    output,
+    stringifyGeoJSON({ geojson: collection, precision: options.precision })
+  );
 }

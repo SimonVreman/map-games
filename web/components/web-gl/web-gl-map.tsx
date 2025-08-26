@@ -74,15 +74,6 @@ export function WebGLMap({
                 ),
               ],
             },
-            chevdev: {
-              type: "vector",
-              tiles: [
-                process.env.NEXT_PUBLIC_TILES_URL!.replace(
-                  "{set}",
-                  "european-chevrons"
-                ),
-              ],
-            },
           },
           sprite:
             (typeof window !== "undefined" ? window.location.origin : "") +

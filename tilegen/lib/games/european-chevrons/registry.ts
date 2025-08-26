@@ -23,7 +23,7 @@ const createPattern = ({
 <path d="M221 79H99L179 200L99 321H221L301 200L221 79Z" fill="${colors[fg]}"/>
 </svg>`);
 
-const smap: Record<string, VectorQuizSubject> = {
+const smap = {
   blackOnWhite: {
     id: "blackOnWhite",
     svg: createPattern({ bg: "white", fg: "black" }),
@@ -60,7 +60,7 @@ const smap: Record<string, VectorQuizSubject> = {
     id: "yellowOnRed",
     svg: createPattern({ bg: "red", fg: "yellow" }),
   },
-};
+} satisfies Record<string, VectorQuizSubject>;
 
 const subjects: VectorQuizSubject[] = Object.values(smap);
 

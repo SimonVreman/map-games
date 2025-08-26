@@ -1,6 +1,7 @@
 import { Window } from "happy-dom";
 import type { Svg } from "./types";
 import { polyfillPathData } from "./polyfill";
+import { svgPathProperties } from "svg-path-properties";
 
 export function parseSvg(svg: string): Svg {
   const window = new Window();
@@ -14,7 +15,7 @@ export function parseSvg(svg: string): Svg {
   paths.forEach((p) => {
     p.getPathData = window.SVGPathElement.prototype.getPathData;
     const rawData = p.getPathData({ normalize: true });
-    const data = reducePathSegCurveComplexity(rawData, 5);
+    const data = reducePathSegCurveComplexity(rawData, 10);
 
     const coords = data.map((item) => {
       if (item.type === "Z")
@@ -46,7 +47,7 @@ function reducePathSegCurveComplexity(
 
   // Loop through segments, processing each
   pathSegList.forEach((seg) => {
-    let tmpPath, tmpPathLength, lengthStep, d, len, point;
+    let tmpPathLength, lengthStep, d, len, point;
 
     if (seg.type === "C") {
       /**
@@ -54,22 +55,24 @@ function reducePathSegCurveComplexity(
        * so we only need to divide the curve itself (not whole svg's path)
        * into lines
        */
-      tmpPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
       const lastSegCoords = lastSeg.values.slice(-2).join(",");
-      tmpPath.setAttribute("d", `M ${lastSegCoords}C${seg.values.join(",")}`);
+      const pathProperties = new svgPathProperties(
+        `M ${lastSegCoords}C${seg.values.join(",")}`
+      );
 
       /**
        * step along its length at the provided sample rate, finding
        * the x,y at each point, creating an L command for each.
        */
-      tmpPathLength = Math.ceil(tmpPath.getTotalLength());
-      lengthStep = Math.ceil(tmpPathLength / complexity);
+
+      tmpPathLength = pathProperties.getTotalLength();
+      lengthStep = tmpPathLength / complexity;
 
       // Can't do anything with zero-length curves
       if (!tmpPathLength || !lengthStep) return;
 
       for (d = lengthStep, len = tmpPathLength; d <= len; d += lengthStep) {
-        point = tmpPath.getPointAtLength(d);
+        point = pathProperties.getPointAtLength(d);
         newSegs.push({ type: "L", values: [point.x, point.y] });
       }
 

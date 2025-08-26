@@ -20,6 +20,7 @@
     "@types/geojson": "^7946.0.16",
     "happy-dom": "^18.0.1",
     "path-data-polyfill": "^1.0.10",
-    "polygon-clipping": "^0.15.7"
+    "polygon-clipping": "^0.15.7",
+    "svg-path-properties": "^2.0.0"
   }
 }

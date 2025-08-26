@@ -6,24 +6,21 @@ import { use } from "react";
 import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { Source } from "react-map-gl/maplibre";
+import { europeMapBounds } from "@/lib/mapping/bounds";
 
-const bounds = {
-  north: 71,
-  west: -25,
-  south: 34,
-  east: 38,
-  padding: 2,
-};
-
+const key = "europeanPedestrians";
 const targetsPromise = fetchGeoAsset("european-countries");
+const patternsPromise = fetchGeoAsset("game/european-pedestrians-targets");
 
 export default function EuropeanPedestriansGame() {
   const targets = use(targetsPromise);
+  const patterns = use(patternsPromise);
 
   return (
     <div className="size-full relative">
       <QuizControls
-        store="europeanPedestrians"
+        store={key}
         label="Where is it seen?"
         subsets={europeanPedestrians.subsets}
         graphic={({ subject }) => (
@@ -32,7 +29,7 @@ export default function EuropeanPedestriansGame() {
       />
 
       <WebGLMap
-        bounds={bounds}
+        bounds={europeMapBounds}
         attribution={
           <>
             <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
@@ -43,16 +40,9 @@ export default function EuropeanPedestriansGame() {
           </>
         }
       >
-        <PatternLayer
-          store="europeanPedestrians"
-          targets={targets}
-          {...europeanPedestrians}
-        />
-        <TargetLayer
-          store="europeanPedestrians"
-          targets={targets}
-          {...europeanPedestrians}
-        />
+        <Source id={key} type="geojson" data={patterns} />
+        <PatternLayer store={key} />
+        <TargetLayer store={key} targets={targets} {...europeanPedestrians} />
       </WebGLMap>
     </div>
   );

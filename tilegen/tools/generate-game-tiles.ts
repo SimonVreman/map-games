@@ -27,21 +27,19 @@ async function generateVectorTiles({
   await $`rm ${tmpMbtiles}`;
 }
 
+const folder = "../web/public/assets/geo/game";
+
 async function main() {
   console.log("Generating vector tiles for game(s)...");
 
   for (const { id, layers } of games) {
     console.log(`Generating tiles for game: ${id}`);
-    const output = `${mapConfig.tileDir}/${id}`;
-    const targets = `output/games/${id}-targets.geojson`;
-    const labels = layers.labels
-      ? `output/games/${id}-labels.geojson`
-      : undefined;
+
+    const targets = `${folder}/${id}-targets.geojson`;
+    const labels = layers.labels ? `${folder}/${id}-labels.geojson` : undefined;
 
     await layers.targets(targets);
     if (layers.labels) await layers.labels(labels!);
-
-    await generateVectorTiles({ targets, labels, output });
   }
 }
 

@@ -4,26 +4,23 @@ import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
 import { PatternPreview } from "@/components/web-gl/pattern-preview";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
-import { PatternLayer } from "@/components/web-gl/layers/pattern-layer-new";
+import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
 import { use } from "react";
+import { Source } from "react-map-gl/maplibre";
+import { europeMapBounds } from "@/lib/mapping/bounds";
 
-const bounds = {
-  north: 71,
-  west: -25,
-  south: 34,
-  east: 38,
-  padding: 2,
-};
-
+const key = "europeanChevrons";
 const targetsPromise = fetchGeoAsset("european-countries");
+const patternsPromise = fetchGeoAsset("game/european-chevrons-targets");
 
 export default function EuropeanChevronsGame() {
   const targets = use(targetsPromise);
+  const patterns = use(patternsPromise);
 
   return (
     <div className="size-full relative">
       <QuizControls
-        store="europeanChevrons"
+        store={key}
         label="Where is it seen?"
         subsets={europeanChevrons.subsets}
         graphic={({ subject }) => (
@@ -32,7 +29,7 @@ export default function EuropeanChevronsGame() {
       />
 
       <WebGLMap
-        bounds={bounds}
+        bounds={europeMapBounds}
         attribution={
           <>
             <a href="https://geohints.com/meta/signs/chevrons">GeoHints</a>
@@ -43,12 +40,9 @@ export default function EuropeanChevronsGame() {
           </>
         }
       >
-        {/* <PatternLayer store="europeanChevrons" /> */}
-        <TargetLayer
-          store="europeanChevrons"
-          targets={targets}
-          {...europeanChevrons}
-        />
+        <Source id={key} type="geojson" data={patterns} />
+        <PatternLayer store={key} />
+        <TargetLayer store={key} targets={targets} {...europeanChevrons} />
       </WebGLMap>
     </div>
   );

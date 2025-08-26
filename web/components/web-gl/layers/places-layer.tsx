@@ -12,7 +12,7 @@ const config: LayerSpecification = {
   paint: {
     "text-color": map.colors.text.primary,
     "text-halo-color": map.colors.text.halo,
-    "text-halo-width": 0.5,
+    "text-halo-width": 1,
   },
   layout: {
     "symbol-sort-key": ["+", ["get", "scalerank"], 100],
