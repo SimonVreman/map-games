@@ -9,11 +9,11 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppForm } from "@/components/ui/tanstack-form";
-import { QuizSubset } from "@/lib/mapping/subsets";
 import { AppStore } from "@/lib/store";
 import { useAppStore } from "@/lib/store/provider";
 import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { cn } from "@/lib/utils";
+import { QuizSubset } from "@/types/registry";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 
@@ -46,7 +46,7 @@ export function QuizSettings<TName extends QuizSliceName<AppStore>>({
 const SettingsSchema = z.object({
   mode: z.enum(["quiz", "practice", "infinite"]),
   subsets: z
-    .array(z.object({ name: z.string(), enabled: z.boolean() }))
+    .array(z.object({ id: z.string(), enabled: z.boolean() }))
     .refine((arr) => arr.some((s) => s.enabled), {
       message: "At least one subset must be enabled",
     }),
@@ -73,14 +73,14 @@ function SettingsForm<TName extends QuizSliceName<AppStore>>({
     defaultValues: {
       mode: mode ?? ("quiz" as Mode),
       subsets: subsets.map((s) => ({
-        name: s.name,
-        enabled: subsetsEnabled.includes(s.name),
+        id: s.id,
+        enabled: subsetsEnabled.includes(s.id),
       })),
     },
     onSubmit: ({ value: { mode, subsets } }) => {
       start({
         mode,
-        subsetsEnabled: subsets.filter((s) => s.enabled).map((s) => s.name),
+        subsetsEnabled: subsets.filter((s) => s.enabled).map((s) => s.id),
       });
     },
   });
@@ -137,7 +137,7 @@ function SettingsForm<TName extends QuizSliceName<AppStore>>({
               <div className="divide-y">
                 {field.state.value.map((_, i) => {
                   const subset = subsets.find(
-                    (s) => s.name === field.state.value[i].name
+                    (s) => s.id === field.state.value[i].id
                   );
                   return (
                     <form.Field key={i} name={`subsets[${i}].enabled`}>

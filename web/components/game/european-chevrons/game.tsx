@@ -1,6 +1,5 @@
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
 import { QuizControls } from "../quiz/controls";
-import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
 import { PatternPreview } from "@/components/web-gl/pattern-preview";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
@@ -8,14 +7,15 @@ import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
 import { use } from "react";
 import { Source } from "react-map-gl/maplibre";
 import { europeMapBounds } from "@/lib/mapping/bounds";
+import { europeanChevrons } from "@/lib/games/meta/european-chevrons-meta";
 
 const key = "europeanChevrons";
-const targetsPromise = fetchGeoAsset("european-countries");
-const patternsPromise = fetchGeoAsset("game/european-chevrons-targets");
+const targetsPromise = fetchGeoAsset("european-countries-targets");
+const subjectsPromise = fetchGeoAsset("european-chevrons-subjects");
 
 export default function EuropeanChevronsGame() {
   const targets = use(targetsPromise);
-  const patterns = use(patternsPromise);
+  const subjects = use(subjectsPromise);
 
   return (
     <div className="size-full relative">
@@ -24,7 +24,7 @@ export default function EuropeanChevronsGame() {
         label="Where is it seen?"
         subsets={europeanChevrons.subsets}
         graphic={({ subject }) => (
-          <PatternPreview pattern={subject} {...europeanChevrons} />
+          <PatternPreview subject={subject} {...europeanChevrons} />
         )}
       />
 
@@ -40,9 +40,13 @@ export default function EuropeanChevronsGame() {
           </>
         }
       >
-        <Source id={key} type="geojson" data={patterns} />
+        <Source id={key} type="geojson" data={subjects} />
         <PatternLayer store={key} />
-        <TargetLayer store={key} targets={targets} {...europeanChevrons} />
+        <TargetLayer
+          store={key}
+          targets={targets}
+          enabled={europeanChevrons.targets}
+        />
       </WebGLMap>
     </div>
   );

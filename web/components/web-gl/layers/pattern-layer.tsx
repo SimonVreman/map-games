@@ -6,7 +6,7 @@ import { FillLayerSpecification, Layer, useMap } from "react-map-gl/maplibre";
 
 const config: Omit<FillLayerSpecification, "id" | "source"> = {
   type: "fill",
-  paint: { "fill-color": ["get", "fill"] },
+  paint: { "fill-color": ["get", "fill"], "fill-outline-color": "#00000000" },
   filter: [
     "any",
     ["==", ["global-state", "pattern-layer-hints"], true],

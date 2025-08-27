@@ -1,4 +1,3 @@
-import { parseSvg } from "../../svg-geojson/parse";
 import type { QuizTarget, VectorQuizSubject } from "../types";
 
 const colors = {
@@ -11,54 +10,54 @@ const colors = {
 
 const size = { width: 400, height: 400 };
 
-const createPattern = ({
+const createSvg = ({
   bg,
   fg,
 }: {
   bg: keyof typeof colors;
   fg: keyof typeof colors;
 }) =>
-  parseSvg(`<svg viewBox="0 0 400 400">
+  `<svg viewBox="0 0 400 400">
 <path d="M0 0H400V400H0V0Z" fill="${colors[bg]}"/>
 <path d="M221 79H99L179 200L99 321H221L301 200L221 79Z" fill="${colors[fg]}"/>
-</svg>`);
+</svg>`;
 
 const smap = {
   blackOnWhite: {
     id: "blackOnWhite",
-    svg: createPattern({ bg: "white", fg: "black" }),
+    svg: createSvg({ bg: "white", fg: "black" }),
   },
   redOnWhite: {
     id: "redOnWhite",
-    svg: createPattern({ bg: "white", fg: "red" }),
+    svg: createSvg({ bg: "white", fg: "red" }),
   },
   redOnYellow: {
     id: "redOnYellow",
-    svg: createPattern({ bg: "yellow", fg: "red" }),
+    svg: createSvg({ bg: "yellow", fg: "red" }),
   },
   whiteOnRed: {
     id: "whiteOnRed",
-    svg: createPattern({ bg: "red", fg: "white" }),
+    svg: createSvg({ bg: "red", fg: "white" }),
   },
   whiteOnBlack: {
     id: "whiteOnBlack",
-    svg: createPattern({ bg: "black", fg: "white" }),
+    svg: createSvg({ bg: "black", fg: "white" }),
   },
   whiteOnBlue: {
     id: "whiteOnBlue",
-    svg: createPattern({ bg: "blue", fg: "white" }),
+    svg: createSvg({ bg: "blue", fg: "white" }),
   },
   yellowOnBlack: {
     id: "yellowOnBlack",
-    svg: createPattern({ bg: "black", fg: "yellow" }),
+    svg: createSvg({ bg: "black", fg: "yellow" }),
   },
   yellowOnBlue: {
     id: "yellowOnBlue",
-    svg: createPattern({ bg: "blue", fg: "yellow" }),
+    svg: createSvg({ bg: "blue", fg: "yellow" }),
   },
   yellowOnRed: {
     id: "yellowOnRed",
-    svg: createPattern({ bg: "red", fg: "yellow" }),
+    svg: createSvg({ bg: "red", fg: "yellow" }),
   },
 } satisfies Record<string, VectorQuizSubject>;
 
@@ -75,7 +74,7 @@ const targets: QuizTarget[] = [
     id: "Andorra",
     label: "Andorra",
     subjects: [smap.whiteOnBlue],
-    // ...createTapTarget(andorraMeta),
+    transform: { scale: 3 },
   },
   {
     id: "Austria",
@@ -188,7 +187,7 @@ const targets: QuizTarget[] = [
     id: "Liechtenstein",
     label: "Liechtenstein",
     subjects: [smap.whiteOnBlack],
-    // ...createTapTarget(liechtensteinMeta),
+    transform: { scale: 3 },
   },
   {
     id: "Lithuania",
@@ -205,13 +204,13 @@ const targets: QuizTarget[] = [
     id: "Malta",
     label: "Malta",
     subjects: [smap.whiteOnBlack],
-    // ...createTapTarget(maltaMeta),
+    transform: { scale: 3 },
   },
   {
     id: "Monaco",
     label: "Monaco",
     subjects: [smap.redOnWhite],
-    // ...createTapTarget(monacoMeta),
+    transform: { scale: 3 },
   },
   {
     id: "Montenegro",
@@ -256,7 +255,7 @@ const targets: QuizTarget[] = [
     id: "San Marino",
     label: "San Marino",
     subjects: [smap.redOnYellow],
-    // ...createTapTarget(sanMarinoMeta),
+    transform: { scale: 3 },
   },
   {
     id: "Serbia",
@@ -322,4 +321,9 @@ const targets: QuizTarget[] = [
   },
 ];
 
-export const europeanChevrons = { subjects, targets, size };
+export const europeanChevrons = {
+  name: "europeanChevrons",
+  subjects,
+  targets,
+  size,
+};

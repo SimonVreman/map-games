@@ -1,4 +1,4 @@
-import { QuizSubset } from "@/lib/mapping/subsets";
+import { QuizSubset, QuizTarget } from "@/types/registry";
 import { AppStore } from "..";
 import { ImmerStateCreator } from "../types";
 import { WritableDraft } from "immer";
@@ -51,15 +51,15 @@ const practiceRetryRange = {
 
 export const createQuizSlice = <
   T extends string,
-  TTarget extends { name: string; subjects: readonly string[] },
+  TTarget extends QuizTarget,
   TSlice = { [Key in T]: QuizSlice }
 >({
   name,
-  subjectSubsets,
+  subsets,
   targets,
 }: {
   name: T;
-  subjectSubsets: QuizSubset[];
+  subsets: QuizSubset[];
   targets: readonly TTarget[];
 }): ImmerStateCreator<TSlice> => {
   const defaultState = {
@@ -77,7 +77,7 @@ export const createQuizSlice = <
     },
     highlight: { positive: [], negative: [] },
     hintsEnabled: false,
-    subsetsEnabled: subjectSubsets?.map((s) => s.name),
+    subsetsEnabled: subsets?.map((s) => s.id),
   };
 
   const randomSubject = ({
@@ -85,15 +85,15 @@ export const createQuizSlice = <
     nextSubjects,
   }: Pick<QuizSlice, "subsetsEnabled" | "nextSubjects">) => {
     const subject = nextSubjects[0];
-    const enabled = subjectSubsets
-      .flatMap((s) => (subsetsEnabled.includes(s.name) ? s.subjects : []))
+    const enabled = subsets
+      .flatMap((s) => (subsetsEnabled.includes(s.id) ? s.subjects : []))
       .filter((s) => subject == null || s !== subject);
     return enabled[Math.floor(Math.random() * enabled.length)];
   };
 
   const shuffledSubjects = (subsetsEnabled: QuizSlice["subsetsEnabled"]) =>
-    subjectSubsets
-      .flatMap((s) => (subsetsEnabled.includes(s.name) ? s.subjects : []))
+    subsets
+      .flatMap((s) => (subsetsEnabled.includes(s.id) ? s.subjects : []))
       .sort(() => Math.random() - 0.5);
 
   const getTargetCount = (nextSubjects: QuizSlice["nextSubjects"]) =>
@@ -126,7 +126,7 @@ export const createQuizSlice = <
               return;
 
             isCorrect = !!targets
-              .find((t) => t.name === target)
+              .find((t) => t.id === target)
               ?.subjects.includes(subject);
 
             // Update highlight, first reset if it is a new round
@@ -140,12 +140,12 @@ export const createQuizSlice = <
             // If the round is not finished, stop here.
             const correct = targets.filter((t) => t.subjects.includes(subject));
             remaining = correct
-              .map((t) => t.name)
+              .map((t) => t.id)
               .filter((t) => !s.guessed.includes(t));
             if (isCorrect && remaining.length > 0) return;
 
             // Highlight all missed targets
-            if (!isCorrect) s.highlight.positive = correct.map((t) => t.name);
+            if (!isCorrect) s.highlight.positive = correct.map((t) => t.id);
 
             // Update stats and clear guessed
             s.guessed = [];
@@ -155,9 +155,9 @@ export const createQuizSlice = <
             s.stats[isCorrect ? "correct" : "incorrect"] += 1;
 
             // Update next subjects
-            s.nextSubjects.shift();
             if (s.mode === "infinite") s.nextSubjects = [randomSubject(s)];
             else if (s.mode === "practice" && !isCorrect) {
+              s.nextSubjects.shift();
               const next = s.nextSubjects;
               // Random position that is not the next one, but also not further than X ahead.
               const after = practiceRetryRange.min;
@@ -166,6 +166,8 @@ export const createQuizSlice = <
               const head = next.slice(0, idx);
               const tail = next.slice(idx);
               s.nextSubjects = [...head, subject, ...tail];
+            } else {
+              s.nextSubjects.shift();
             }
             store[name].targetCount = getTargetCount(store[name].nextSubjects);
             // Quiz just runs out.

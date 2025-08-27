@@ -8,7 +8,7 @@
     "tool:filter-geojson": "bun run tools/filter-geojson.ts",
     "tool:generate-landcover-tiles": "bun run tools/generate-landcover-tiles.ts",
     "tool:generate-base-tiles": "bun run tools/generate-base-tiles.ts",
-    "tool:generate-game-tiles": "bun run tools/generate-game-tiles.ts"
+    "tool:generate-games": "bun run tools/generate-games.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

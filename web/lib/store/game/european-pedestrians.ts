@@ -1,4 +1,4 @@
-import { europeanPedestrians } from "@/lib/mapping/registry/european-pedestrians";
+import { europeanPedestrians } from "@/lib/games/meta/european-pedestrians-meta";
 import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanPedestriansSlice = {
@@ -7,6 +7,5 @@ export type EuropeanPedestriansSlice = {
 
 export const createEuropeanPedestriansSlice = createQuizSlice({
   name: "europeanPedestrians",
-  targets: europeanPedestrians.entries,
-  subjectSubsets: europeanPedestrians.subsets,
+  ...europeanPedestrians,
 });

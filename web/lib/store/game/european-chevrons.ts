@@ -1,4 +1,4 @@
-import { europeanChevrons } from "@/lib/mapping/registry/european-chevrons";
+import { europeanChevrons } from "@/lib/games/meta/european-chevrons-meta";
 import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanChevronsSlice = {
@@ -7,6 +7,5 @@ export type EuropeanChevronsSlice = {
 
 export const createEuropeanChevronsSlice = createQuizSlice({
   name: "europeanChevrons",
-  targets: europeanChevrons.entries,
-  subjectSubsets: europeanChevrons.subsets,
+  ...europeanChevrons,
 });

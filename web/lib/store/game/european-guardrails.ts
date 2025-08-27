@@ -1,4 +1,4 @@
-import { europeanGuardrails } from "@/lib/mapping/registry/european-guardrails";
+import { europeanGuardrails } from "@/lib/games/meta/european-guardrails-meta";
 import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanGuardrailsSlice = {
@@ -7,6 +7,5 @@ export type EuropeanGuardrailsSlice = {
 
 export const createEuropeanGuardrailsSlice = createQuizSlice({
   name: "europeanGuardrails",
-  targets: europeanGuardrails.entries,
-  subjectSubsets: europeanGuardrails.subsets,
+  ...europeanGuardrails,
 });

@@ -3,7 +3,7 @@
 import Map from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { map } from "./constants";
-import { LatLngBounds } from "../canvas/types";
+import { LatLngBounds } from "./types";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { RoadRailLayer } from "./layers/road-rail-layer";
@@ -24,10 +24,12 @@ const maxzoom = 6;
 export function WebGLMap({
   bounds,
   attribution,
+  inset,
   children,
 }: {
   bounds: LatLngBounds;
   attribution?: React.ReactNode;
+  inset?: boolean;
   children?: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
@@ -53,6 +55,9 @@ export function WebGLMap({
         onDragEnd={(e) => (e.target.getCanvas().style.cursor = "default")}
         onLoad={() => setLoaded(true)}
         maxPitch={0}
+        // dragRotate={!inset}
+        // pitchWithRotate={!inset}
+        // dragPan={!inset}
         attributionControl={false}
         style={{ width: "100%", height: "100%" }}
         canvasContextAttributes={{ antialias: true }}
@@ -107,7 +112,7 @@ export function WebGLMap({
       {!loaded && (
         <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-800 p-4 flex items-center justify-center flex-col gap-2">
           <Loader2Icon className="animate-spin" />
-          <span>Initializing map... </span>
+          {!inset && <span>Initializing map... </span>}
         </div>
       )}
     </div>

@@ -1,31 +1,35 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
+import { europeanGuardrails } from "@/lib/games/meta/european-guardrails-meta";
 import { QuizControls } from "../quiz/controls";
-import { PatternPreview } from "@/components/canvas/game/pattern-preview";
-import { europeanGuardrails } from "@/lib/mapping/registry/european-guardrails";
-import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
+import { PatternPreview } from "@/components/web-gl/pattern-preview";
+import { europeMapBounds } from "@/lib/mapping/bounds";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { Source } from "react-map-gl/maplibre";
+import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { use } from "react";
 
-const bounds = {
-  north: 71,
-  west: -25,
-  south: 34,
-  east: 38,
-  padding: 2,
-};
+const key = "europeanGuardrails";
+const targetsPromise = fetchGeoAsset("european-countries-targets");
+const subjectsPromise = fetchGeoAsset("european-guardrails-subjects");
 
 export default function EuropeanGuardrailsGame() {
+  const targets = use(targetsPromise);
+  const subjects = use(subjectsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
-        store="europeanGuardrails"
+        store={key}
         label="Where is it seen?"
         subsets={europeanGuardrails.subsets}
         graphic={({ subject }) => (
-          <PatternPreview {...europeanGuardrails} pattern={subject} />
+          <PatternPreview {...europeanGuardrails} subject={subject} />
         )}
       />
 
-      <CanvasMap
-        bounds={bounds}
+      <WebGLMap
+        bounds={europeMapBounds}
         attribution={
           <>
             <span>Keaton</span>
@@ -36,8 +40,14 @@ export default function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <PatternedTargets store="europeanGuardrails" {...europeanGuardrails} />
-      </CanvasMap>
+        <Source id={key} type="geojson" data={subjects} />
+        <PatternLayer store={key} />
+        <TargetLayer
+          store={key}
+          targets={targets}
+          enabled={europeanGuardrails.targets}
+        />
+      </WebGLMap>
     </div>
   );
 }

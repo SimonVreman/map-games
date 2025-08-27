@@ -1,5 +1,3 @@
-import type { Svg } from "../svg-geojson/types";
-
 type QuizSubjectBase = {
   id: string;
 };
@@ -9,7 +7,7 @@ export type LabelQuizSubject = QuizSubjectBase & {
 };
 
 export type VectorQuizSubject = QuizSubjectBase & {
-  svg: Svg;
+  svg: string;
 };
 
 export type RasterQuizSubject = QuizSubjectBase & {
@@ -32,8 +30,16 @@ export type QuizTarget = {
   };
 };
 
+export type QuizSubset = {
+  id: string;
+  label: string;
+  subjects: string[];
+};
+
 export type QuizRegistry = {
+  name: string;
   size: { width: number; height: number };
   subjects: QuizSubject[];
   targets: QuizTarget[];
+  subsets?: QuizSubset[];
 };

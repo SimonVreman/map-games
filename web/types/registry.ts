@@ -40,6 +40,21 @@ export type Pattern = {
   svg?: string;
 };
 
+export type QuizSubject = {
+  svg: string;
+};
+
+export type QuizTarget = {
+  id: string;
+  subjects: string[];
+};
+
+export type QuizSubset = {
+  id: string;
+  label: string;
+  subjects: string[];
+};
+
 export type Sprites = Record<
   string,
   { objectUrl: string; bitmap: ImageBitmap }

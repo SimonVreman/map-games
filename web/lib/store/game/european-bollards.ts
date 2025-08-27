@@ -1,4 +1,4 @@
-import { europeanBollards } from "@/lib/mapping/registry/european-bollards";
+import { europeanBollards } from "@/lib/games/meta/european-bollards-meta";
 import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
 
 export type EuropeanBollardsSlice = {
@@ -7,6 +7,5 @@ export type EuropeanBollardsSlice = {
 
 export const createEuropeanBollardsSlice = createQuizSlice({
   name: "europeanBollards",
-  targets: europeanBollards.entries,
-  subjectSubsets: europeanBollards.subsets,
+  ...europeanBollards,
 });

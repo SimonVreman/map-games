@@ -6,8 +6,8 @@ import { AppStore } from "@/lib/store";
 import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { QuizSettings } from "./settings";
 import { QuizResults } from "./results/results";
-import { QuizSubset } from "@/lib/mapping/subsets";
 import { cn } from "@/lib/utils";
+import { QuizSubset } from "@/types/registry";
 
 export function QuizControls<TName extends QuizSliceName<AppStore>>({
   label,

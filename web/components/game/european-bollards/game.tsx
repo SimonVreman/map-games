@@ -1,31 +1,35 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
 import { QuizControls } from "../quiz/controls";
-import { PatternPreview } from "@/components/canvas/game/pattern-preview";
-import { europeanBollards } from "@/lib/mapping/registry/european-bollards";
-import { PatternedTargets } from "@/components/canvas/game/patterned-targets";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { europeMapBounds } from "@/lib/mapping/bounds";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { Source } from "react-map-gl/maplibre";
+import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { use } from "react";
+import { PatternPreview } from "@/components/web-gl/pattern-preview";
+import { europeanBollards } from "@/lib/games/meta/european-bollards-meta";
 
-const bounds = {
-  north: 71,
-  west: -25,
-  south: 34,
-  east: 38,
-  padding: 2,
-};
+const key = "europeanBollards";
+const targetsPromise = fetchGeoAsset("european-countries-targets");
+const subjectsPromise = fetchGeoAsset("european-bollards-subjects");
 
 export default function EuropeanBollardsGame() {
+  const targets = use(targetsPromise);
+  const subjects = use(subjectsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
-        store="europeanBollards"
+        store={key}
         label="Where is it seen?"
         subsets={europeanBollards.subsets}
         graphic={({ subject }) => (
-          <PatternPreview pattern={subject} {...europeanBollards} />
+          <PatternPreview subject={subject} {...europeanBollards} />
         )}
       />
 
-      <CanvasMap
-        bounds={bounds}
+      <WebGLMap
+        bounds={europeMapBounds}
         attribution={
           <>
             <a href="https://geohints.com/meta/bollards">GeoHints</a>
@@ -36,8 +40,14 @@ export default function EuropeanBollardsGame() {
           </>
         }
       >
-        <PatternedTargets store="europeanBollards" {...europeanBollards} />
-      </CanvasMap>
+        <Source id={key} type="geojson" data={subjects} />
+        <PatternLayer store={key} />
+        <TargetLayer
+          store={key}
+          targets={targets}
+          enabled={europeanBollards.targets}
+        />
+      </WebGLMap>
     </div>
   );
 }

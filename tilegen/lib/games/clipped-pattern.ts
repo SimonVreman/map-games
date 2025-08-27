@@ -1,27 +1,13 @@
+// @ts-expect-error
+process.env.POLYGON_CLIPPING_MAX_QUEUE_SIZE = 1e10;
+process.env.POLYGON_CLIPPING_MAX_SWEEPLINE_SEGMENTS;
 import clipping from "polygon-clipping";
-import type { QuizRegistry, VectorQuizSubject } from "./types";
+import type { QuizRegistry } from "./types";
 import { stringifyGeoJSON } from "../geojson";
-
-// This code was migrated from a WebGL-based implementation, adding some utilities back here
-// https://github.com/maplibre/maplibre-gl-js/blob/main/src/geo/mercator_coordinate.ts
-const mercatorXfromLng = (lng: number) => (180 + lng) / 360;
-const mercatorYfromLat = (lat: number) =>
-  (180 -
-    (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360))) /
-  360;
-const lngFromMercatorX = (x: number) => x * 360 - 180;
-const latFromMercatorY = (y: number) =>
-  (360 / Math.PI) * Math.atan(Math.exp(((180 - y * 360) * Math.PI) / 180)) - 90;
-
-const projectToMercator = (lng: number, lat: number) => [
-  mercatorXfromLng(lng),
-  mercatorYfromLat(lat),
-];
-
-const unprojectFromMercator = (x: number, y: number) => [
-  lngFromMercatorX(x),
-  latFromMercatorY(y),
-];
+import { projectToMercator, unprojectFromMercator } from "./projection";
+import { createTapAreaGeometries, hasTapArea } from "./tap-area";
+import type { Svg } from "../svg-geojson/types";
+import { parseSvg } from "../svg-geojson/parse";
 
 function mapGeometry(g: GeoJSON.Geometry) {
   if (g.type !== "Polygon" && g.type !== "MultiPolygon")
@@ -61,16 +47,22 @@ export async function clippedPatternLayer({
   registry: QuizRegistry;
   options: { precision: number };
 }) {
-  const { features: countries } = (await Bun.file(
+  const { features: rawCountries } = (await Bun.file(
     "output/countries.geojson"
   ).json()) as GeoJSON.FeatureCollection;
+  const countries = createTapAreaGeometries({ countries: rawCountries });
 
   const collection: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
     features: [],
   };
 
-  for (const { id, subjects, ...target } of targets) {
+  // Sort by countries to retain tap areas on top
+  const sortedTargets = targets.toSorted((a, b) =>
+    hasTapArea(a.id) === hasTapArea(b.id) ? 0 : hasTapArea(a.id) ? 1 : -1
+  );
+
+  for (const { id, subjects, ...target } of sortedTargets) {
     const country = countries.find((c) => c.properties?.name === id);
     if (!country) continue;
 
@@ -94,14 +86,18 @@ export async function clippedPatternLayer({
     const maxX = bottomRight[0] - topLeft[0];
     const maxY = bottomRight[1] - topLeft[1];
 
+    const subjectSvgs = new Map<string, Svg>();
+    subjects.forEach((s) =>
+      "svg" in s ? subjectSvgs.set(s.id, parseSvg(s.svg)) : null
+    );
+
     let i = 0;
 
     for (let y = transform.oy * offsetY; y < maxY; y += offsetY) {
       const subject = subjects[i];
-      if (!("svg" in subject))
-        throw new Error(`Subject pattern for ${subject} not found`);
+      const svg = subjectSvgs.get(subject.id);
+      if (!svg) throw new Error(`Subject pattern for ${subject} not found`);
 
-      const svg = subject.svg;
       multiPolygons[subject.id] ??= [];
 
       for (let x = transform.ox * offsetX; x < maxX; x += offsetX)
@@ -135,7 +131,7 @@ export async function clippedPatternLayer({
             id: `${id}-${subject.id}-${i}`,
             subject: subject.id,
             target: id,
-            fill: "svg" in subject ? subject.svg[i].fill : undefined,
+            fill: subjectSvgs.get(subject.id)?.[i]?.fill ?? undefined,
           },
         });
       }

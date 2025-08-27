@@ -1,4 +1,3 @@
-import { europeanPedestrians } from "@/lib/mapping/registry/european-pedestrians";
 import { QuizControls } from "../quiz/controls";
 import { PatternPreview } from "@/components/web-gl/pattern-preview";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
@@ -8,14 +7,15 @@ import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
 import { Source } from "react-map-gl/maplibre";
 import { europeMapBounds } from "@/lib/mapping/bounds";
+import { europeanPedestrians } from "@/lib/games/meta/european-pedestrians-meta";
 
 const key = "europeanPedestrians";
-const targetsPromise = fetchGeoAsset("european-countries");
-const patternsPromise = fetchGeoAsset("game/european-pedestrians-targets");
+const targetsPromise = fetchGeoAsset("european-countries-targets");
+const subjectsPromise = fetchGeoAsset("european-pedestrians-subjects");
 
 export default function EuropeanPedestriansGame() {
   const targets = use(targetsPromise);
-  const patterns = use(patternsPromise);
+  const subjects = use(subjectsPromise);
 
   return (
     <div className="size-full relative">
@@ -24,7 +24,7 @@ export default function EuropeanPedestriansGame() {
         label="Where is it seen?"
         subsets={europeanPedestrians.subsets}
         graphic={({ subject }) => (
-          <PatternPreview {...europeanPedestrians} pattern={subject} />
+          <PatternPreview {...europeanPedestrians} subject={subject} />
         )}
       />
 
@@ -40,9 +40,13 @@ export default function EuropeanPedestriansGame() {
           </>
         }
       >
-        <Source id={key} type="geojson" data={patterns} />
+        <Source id={key} type="geojson" data={subjects} />
         <PatternLayer store={key} />
-        <TargetLayer store={key} targets={targets} {...europeanPedestrians} />
+        <TargetLayer
+          store={key}
+          targets={targets}
+          enabled={europeanPedestrians.targets}
+        />
       </WebGLMap>
     </div>
   );
