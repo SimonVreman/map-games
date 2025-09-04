@@ -15,6 +15,7 @@ import { map } from "../constants";
 import { QuizSubset, QuizTarget } from "@/types/registry";
 import { MapGeoJSONFeature } from "maplibre-gl";
 import { isFeatureHinted } from "../hint-handler";
+import { expressions } from "../expressions";
 
 const source: Omit<GeoJSONSourceSpecification, "data"> & { id: string } = {
   id: "targets",
@@ -30,7 +31,7 @@ const fillLayer: LayerSpecification = {
       "case",
       ["all", ["has", "color"], isFeatureHinted("id")],
       ["get", "color"],
-      "#fff",
+      expressions.theme("#fff", "#333"),
     ],
     "fill-opacity": [
       "case",
@@ -62,7 +63,7 @@ const strokeLayer: LayerSpecification = {
         "case",
         ["all", ["has", "color"], isFeatureHinted("id")],
         ["get", "color"],
-        "#fff",
+        expressions.theme("#fff", "#333"),
       ],
     ],
     "line-opacity": [

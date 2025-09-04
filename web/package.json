@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sprites:map-icons": "svgo -f ./assets/map-icons && spreet ./assets/map-icons ./public/img/sprites/map-icons --minify-index-file && spreet --retina ./assets/map-icons ./public/img/sprites/map-icons@2x --minify-index-file"
+    "sprites:map-icons": "svgo -f ./assets/map-icons && spreet ./assets/map-icons ./public/img/sprites/map-icons --minify-index-file && spreet --retina ./assets/map-icons ./public/img/sprites/map-icons@2x --minify-index-file",
+    "screenshots": "bun run tools/screenshots.ts"
   },
   "dependencies": {
     "@mapbox/vector-tile": "^2.0.4",
@@ -67,6 +68,7 @@
     "eslint": "^9.34.0",
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.8",
+    "playwright": "^1.55.0",
     "svgo": "^4.0.0",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2"

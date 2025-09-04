@@ -10,8 +10,8 @@ import { use } from "react";
 const bounds = {
   north: 9,
   south: -34,
-  east: -35,
-  west: -74,
+  east: -30,
+  west: -79,
   padding: 2,
 };
 
