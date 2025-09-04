@@ -8,7 +8,7 @@
     "tool:filter-geojson": "bun run tools/filter-geojson.ts",
     "tool:generate-landcover-tiles": "bun run tools/generate-landcover-tiles.ts",
     "tool:generate-base-tiles": "bun run tools/generate-base-tiles.ts",
-    "tool:generate-games": "bun run tools/generate-games.ts"
+    "tool:generate-games": "POLYGON_CLIPPING_MAX_QUEUE_SIZE=1000000000 POLYGON_CLIPPING_MAX_SWEEPLINE_SEGMENTS=1000000000 bun run tools/generate-games.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

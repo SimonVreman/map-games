@@ -2,16 +2,19 @@ import {
   GeoJSONSourceSpecification,
   Layer,
   LayerSpecification,
+  MapMouseEvent,
   Source,
   useMap,
 } from "react-map-gl/maplibre";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { AppStore } from "@/lib/store";
 import { useHandleQuizGuess } from "@/components/game/quiz/guess";
 import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { useAppStore } from "@/lib/store/provider";
 import { map } from "../constants";
-import { QuizTarget } from "@/types/registry";
+import { QuizSubset, QuizTarget } from "@/types/registry";
+import { MapGeoJSONFeature } from "maplibre-gl";
+import { isFeatureHinted } from "../hint-handler";
 
 const source: Omit<GeoJSONSourceSpecification, "data"> & { id: string } = {
   id: "targets",
@@ -23,9 +26,16 @@ const fillLayer: LayerSpecification = {
   type: "fill",
   source: source.id,
   paint: {
-    "fill-color": "#fff",
+    "fill-color": [
+      "case",
+      ["all", ["has", "color"], isFeatureHinted("id")],
+      ["get", "color"],
+      "#fff",
+    ],
     "fill-opacity": [
       "case",
+      ["all", ["has", "color"], isFeatureHinted("id")],
+      0.8,
       ["boolean", ["feature-state", "hover"], false],
       0.4,
       0,
@@ -41,15 +51,22 @@ const strokeLayer: LayerSpecification = {
     "line-color": [
       "case",
       [
-        "any",
-        ["==", ["feature-state", "hover"], true],
-        ["==", ["get", "tiny"], false],
+        "all",
+        ["==", ["feature-state", "hover"], false],
+        ["==", ["get", "tiny"], true],
       ],
-      "#ffffff",
       map.colors.boundary.country,
+      [
+        "case",
+        ["all", ["has", "color"], isFeatureHinted("id")],
+        ["get", "color"],
+        "#fff",
+      ],
     ],
     "line-opacity": [
       "case",
+      ["all", ["has", "color"], isFeatureHinted("id")],
+      1,
       ["boolean", ["feature-state", "hover"], false],
       0.8,
       ["case", ["==", ["get", "tiny"], true], 1, 0],
@@ -59,59 +76,87 @@ const strokeLayer: LayerSpecification = {
 
 export function TargetLayer<TName extends QuizSliceName<AppStore>>({
   store,
+  targetFeatures,
   targets,
-  enabled,
+  subsets,
 }: {
   store: TName;
-  targets: GeoJSON.FeatureCollection;
-  enabled: QuizTarget[];
+  targetFeatures: GeoJSON.FeatureCollection;
+  targets: QuizTarget[];
+  subsets: QuizSubset[];
 }) {
   const hovered = useRef<string | number | null>(null);
   const map = useMap().current?.getMap();
   const { handleGuess } = useHandleQuizGuess({ store });
-  const [hintsEnabled] = useAppStore((s) => [s[store].hintsEnabled]);
 
-  const enabledTargets = useMemo(() => {
-    const { features, ...t } = targets;
+  const [hintsEnabled, subsetsEnabled] = useAppStore((s) => [
+    s[store].hintsEnabled,
+    s[store].subsetsEnabled,
+  ]);
+
+  const enabledTargetFeatures = useMemo(() => {
+    const { features, ...t } = targetFeatures;
+
+    const enabledSubjects = subsets.flatMap((s) =>
+      subsetsEnabled.includes(s.id) ? s.subjects : []
+    );
+    const enabledTargets = targets.filter((t) =>
+      t.subjects.some((s) => enabledSubjects.includes(s))
+    );
+
     return {
       ...t,
       features: features.filter((f) =>
-        enabled.find((e) => e.id === f.properties?.name)
+        enabledTargets.find((e) => e.id === f.properties?.id)
       ),
     };
-  }, [targets, enabled]);
+  }, [targetFeatures, targets, subsets, subsetsEnabled]);
 
-  useEffect(() => {
-    if (!map) return;
+  const handleMove = useCallback(
+    (
+      e?: MapMouseEvent & {
+        features?: MapGeoJSONFeature[];
+      }
+    ) => {
+      if (!map) return;
 
-    const click = map.on("click", fillLayer.id, (e) => {
-      const name = e.features?.[0].properties.name;
-      if (!name) return;
-      handleGuess(name);
-    });
-
-    const move = map.on("mousemove", fillLayer.id, (e) => {
-      if (!e.features || e.features.length === 0 || hintsEnabled) return;
-
-      if (hovered.current)
+      if (hovered.current != null)
         map.setFeatureState(
           { source: source.id, id: hovered.current },
           { hover: false }
         );
 
+      if (!e?.features || e.features.length === 0 || hintsEnabled) {
+        map.getCanvas().style.cursor = "default";
+        return;
+      }
+
       hovered.current = e.features[0].id ?? null;
 
-      if (hovered.current)
+      if (hovered.current != null)
         map.setFeatureState(
           { source: source.id, id: hovered.current },
           { hover: true }
         );
 
-      map.getCanvas().style.cursor = hovered.current ? "pointer" : "default";
+      map.getCanvas().style.cursor =
+        hovered.current != null ? "pointer" : "default";
+    },
+    [map, hintsEnabled]
+  );
+
+  useEffect(() => {
+    if (!map) return;
+
+    const click = map.on("click", fillLayer.id, (e) => {
+      const id = e.features?.[0].properties?.id;
+      if (id != null) handleGuess(id);
     });
 
+    const move = map.on("mousemove", fillLayer.id, handleMove);
+
     const leave = map.on("mouseleave", fillLayer.id, () => {
-      if (hovered.current)
+      if (hovered.current != null)
         map.setFeatureState(
           { source: source.id, id: hovered.current },
           { hover: false }
@@ -126,11 +171,15 @@ export function TargetLayer<TName extends QuizSliceName<AppStore>>({
       move.unsubscribe();
       leave.unsubscribe();
     };
-  }, [map, hintsEnabled, handleGuess]);
+  }, [map, handleGuess, handleMove]);
+
+  useEffect(() => {
+    handleMove();
+  }, [handleMove]);
 
   return (
     <>
-      <Source {...source} data={enabledTargets} />
+      <Source {...source} data={enabledTargetFeatures} />
       <Layer {...fillLayer} />
       <Layer {...strokeLayer} />
     </>

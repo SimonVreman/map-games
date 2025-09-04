@@ -40,9 +40,13 @@ export type Pattern = {
   svg?: string;
 };
 
-export type QuizSubject = {
-  svg: string;
-};
+export type QuizSubject =
+  | {
+      svg: string;
+    }
+  | {
+      label: string;
+    };
 
 export type QuizTarget = {
   id: string;

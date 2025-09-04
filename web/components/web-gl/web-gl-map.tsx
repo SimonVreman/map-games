@@ -1,10 +1,10 @@
 "use client";
 
-import Map from "react-map-gl/maplibre";
+import Map, { Layer, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { map } from "./constants";
 import { LatLngBounds } from "./types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { RoadRailLayer } from "./layers/road-rail-layer";
 import { StateBoundariesLayer } from "./layers/state-boundaries-layer";
@@ -20,6 +20,40 @@ import { OceanLayer } from "./layers/ocean-layer";
 
 const minzoom = 2;
 const maxzoom = 6;
+
+const mapLayerGroups = {
+  bottom: "layer-group-bottom",
+  top: "layer-group-top",
+} as const;
+
+type LayerGroup = keyof typeof mapLayerGroups;
+
+export function useLayerGroups() {
+  const map = useMap().current?.getMap();
+  const [layers, setLayers] = useState<
+    Partial<Record<LayerGroup, (typeof mapLayerGroups)[LayerGroup]>>
+  >({});
+
+  useEffect(() => {
+    if (!map) return;
+
+    const load = map.on("load", () => {
+      setLayers(
+        Object.keys(mapLayerGroups).reduce((acc, key) => {
+          const id = mapLayerGroups[key as LayerGroup];
+          if (map.getLayer(id)) acc[key as LayerGroup] = id;
+          return acc;
+        }, {} as typeof layers)
+      );
+    });
+
+    return () => {
+      load.unsubscribe();
+    };
+  }, [map]);
+
+  return { layerGroups: layers };
+}
 
 export function WebGLMap({
   bounds,
@@ -42,7 +76,7 @@ export function WebGLMap({
   ] as [number, number, number, number];
 
   return (
-    <div className="size-full relative">
+    <div className="size-full relative pointer-events-auto">
       <Map
         initialViewState={{
           bounds: [bounds.west, bounds.south, bounds.east, bounds.north],
@@ -89,6 +123,12 @@ export function WebGLMap({
       >
         <MapTheme />
 
+        <Layer
+          id={mapLayerGroups.bottom}
+          type="background"
+          layout={{ visibility: "none" }}
+        />
+
         <OceanLayer />
         <LandLayer />
         <LandCoverLayer />
@@ -102,6 +142,12 @@ export function WebGLMap({
         <GeoLinesLayer />
         <PlacesLayer />
         <LabelsLayer />
+
+        <Layer
+          id={mapLayerGroups.top}
+          type="background"
+          layout={{ visibility: "none" }}
+        />
       </Map>
       {attribution && (
         <div className="bg-neutral-50/70 dark:bg-neutral-700/70 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">

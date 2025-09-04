@@ -15,13 +15,18 @@ import {
   europeanPedestriansMeta,
 } from "./european-pedestrians";
 import { europeanCountriesLayer } from "./shared/european-countries";
+import {
+  spainDialingCodesMeta,
+  spainDialingCodesSubjectsLayer,
+  spainDialingCodesTargetsLayer,
+} from "./spain-dialing-codes";
 
 type FileFn = (output: string) => Promise<void>;
 
 export const games: {
   id: string;
-  meta?: FileFn;
-  layers: { labels?: FileFn; subjects: FileFn };
+  meta: FileFn;
+  layers: { targets?: FileFn; subjects: FileFn };
 }[] = [
   {
     id: "european-chevrons",
@@ -42,6 +47,14 @@ export const games: {
     id: "european-guardrails",
     meta: europeanGuardrailsMeta,
     layers: { subjects: europeanGuardrailsLayer },
+  },
+  {
+    id: "spain-dialing-codes",
+    meta: spainDialingCodesMeta,
+    layers: {
+      subjects: spainDialingCodesSubjectsLayer,
+      targets: spainDialingCodesTargetsLayer,
+    },
   },
 ];
 

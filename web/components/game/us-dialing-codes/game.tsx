@@ -1,18 +1,42 @@
-import { CanvasMap } from "../../canvas/canvas-map";
 import { QuizControls } from "../quiz/controls";
-import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
-import { usDialingCodes } from "@/lib/mapping/paths/united-states/dialing-codes";
-import { usPaths } from "@/lib/mapping/paths/united-states/country";
-import { usStatesPaths } from "@/lib/mapping/paths/united-states/state-boundaries";
-import { usDivider } from "@/lib/mapping/paths/united-states/divider";
 import { usDialingCodeSubsets } from "@/lib/mapping/registry/us-dialing-codes";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { InsetMap } from "@/components/web-gl/inset-map";
 
 const bounds = {
   north: 53,
   south: 10,
-  east: -67,
-  west: -127,
+  east: -65,
+  west: -134,
   padding: 2,
+};
+
+const alaskaBounds = {
+  north: 72,
+  west: -170,
+  south: 51,
+  east: -130,
+};
+
+const hawaiiBounds = {
+  north: 23,
+  west: -161,
+  south: 18,
+  east: -154,
+};
+
+const guamNmiBounds = {
+  north: 16.5,
+  west: 144,
+  south: 13,
+  east: 147,
+};
+
+const amSamoaBounds = {
+  north: -11,
+  west: -173,
+  south: -15,
+  east: -169,
 };
 
 export default function USDialingCodesGame() {
@@ -24,7 +48,7 @@ export default function USDialingCodesGame() {
         subsets={usDialingCodeSubsets}
       />
 
-      <CanvasMap
+      <WebGLMap
         bounds={bounds}
         attribution={
           <>
@@ -39,15 +63,25 @@ export default function USDialingCodesGame() {
           </>
         }
       >
-        <LabeledTargets
-          store="usDialingCodes"
-          targets={usDialingCodes}
-          country={usPaths}
-          firstSubdivision={usStatesPaths}
-          divider={usDivider}
-          subsets={usDialingCodeSubsets}
-        />
-      </CanvasMap>
+        <div className="absolute bottom-0 left-0 w-full p-8 flex gap-8 items-baseline pointer-events-none">
+          <InsetMap
+            bounds={alaskaBounds}
+            className="aspect-square max-w-64 pointer-events-auto"
+          ></InsetMap>
+          <InsetMap
+            bounds={hawaiiBounds}
+            className="aspect-[6/4] max-w-64 pointer-events-auto"
+          ></InsetMap>
+          <InsetMap
+            bounds={guamNmiBounds}
+            className="aspect-[2/3] max-w-48 pointer-events-auto"
+          ></InsetMap>
+          <InsetMap
+            bounds={amSamoaBounds}
+            className="aspect-[3/2] max-w-48 pointer-events-auto"
+          ></InsetMap>
+        </div>
+      </WebGLMap>
     </div>
   );
 }

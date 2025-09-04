@@ -47,6 +47,8 @@ export async function clippedPatternLayer({
   registry: QuizRegistry;
   options: { precision: number };
 }) {
+  if (!size) throw new Error("pattern size required to clip");
+
   const { features: rawCountries } = (await Bun.file(
     "output/countries.geojson"
   ).json()) as GeoJSON.FeatureCollection;

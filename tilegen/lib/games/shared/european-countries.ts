@@ -65,7 +65,7 @@ export async function europeanCountriesLayer(output: string) {
   countries.forEach(({ geometry, properties, type }, i) => {
     if (!countryList.includes(properties?.name)) return;
 
-    const newProperties: Record<string, any> = { name: properties?.name };
+    const newProperties: Record<string, any> = { id: properties?.name };
     if (hasTapArea(properties?.name)) newProperties.tiny = true;
 
     collection.features.push({

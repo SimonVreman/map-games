@@ -1,8 +1,8 @@
-import { QuizSubset } from "../subsets";
+import { QuizSubset } from "@/types/registry";
 
 export const usDialingCodeSubsets: QuizSubset[] = [
   {
-    name: "northeast",
+    id: "northeast",
     label: "North East",
     subjects: [
       "207",
@@ -58,7 +58,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "centraleast",
+    id: "centraleast",
     label: "Central East",
     subjects: [
       "272",
@@ -121,7 +121,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "southeast",
+    id: "southeast",
     label: "South East",
     subjects: [
       "731",
@@ -196,7 +196,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "centralnorth",
+    id: "centralnorth",
     label: "Central North",
     subjects: [
       "218",
@@ -270,7 +270,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "centralsouth",
+    id: "centralsouth",
     label: "Central South",
     subjects: [
       "985",
@@ -335,7 +335,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "west",
+    id: "west",
     label: "West",
     subjects: [
       "701",
@@ -406,7 +406,7 @@ export const usDialingCodeSubsets: QuizSubset[] = [
     ],
   },
   {
-    name: "noncontiguous",
+    id: "noncontiguous",
     label: "Non-Contiguous",
     subjects: ["907", "670", "671", "808", "787", "939", "340"],
   },

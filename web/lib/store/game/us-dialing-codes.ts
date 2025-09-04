@@ -11,5 +11,5 @@ export const createUSDialingCodesSlice: ImmerStateCreator<USDialingCodesSlice> =
   createQuizSlice({
     name: "usDialingCodes",
     targets: usDialingCodes,
-    subjectSubsets: usDialingCodeSubsets,
+    subsets: usDialingCodeSubsets,
   });

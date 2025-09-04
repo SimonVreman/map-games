@@ -28,7 +28,13 @@ ${subjects
   .map(
     (s) =>
       `  ${s.id}: {
-    ${"svg" in s ? `svg: ${JSON.stringify(s.svg)}` : ""}
+    ${
+      "svg" in s
+        ? `svg: ${JSON.stringify(s.svg)}`
+        : "label" in s
+        ? `label: ${JSON.stringify(s.label)}`
+        : ""
+    }
   }`
   )
   .join(",\n")}

@@ -3,19 +3,19 @@ import { QuizControls } from "../quiz/controls";
 import { PatternPreview } from "@/components/web-gl/pattern-preview";
 import { europeMapBounds } from "@/lib/mapping/bounds";
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
-import { Source } from "react-map-gl/maplibre";
-import { PatternLayer } from "@/components/web-gl/layers/pattern-layer";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
 import { use } from "react";
+import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
+import { HintHandler } from "@/components/web-gl/hint-handler";
 
 const key = "europeanGuardrails";
 const targetsPromise = fetchGeoAsset("european-countries-targets");
 const subjectsPromise = fetchGeoAsset("european-guardrails-subjects");
 
 export default function EuropeanGuardrailsGame() {
-  const targets = use(targetsPromise);
-  const subjects = use(subjectsPromise);
+  const targetFeatures = use(targetsPromise);
+  const subjectFeatures = use(subjectsPromise);
 
   return (
     <div className="size-full relative">
@@ -40,12 +40,16 @@ export default function EuropeanGuardrailsGame() {
           </>
         }
       >
-        <Source id={key} type="geojson" data={subjects} />
-        <PatternLayer store={key} />
+        <HintHandler store={key} />
+        <SubjectLayer
+          store={key}
+          subjectFeatures={subjectFeatures}
+          {...europeanGuardrails}
+        />
         <TargetLayer
           store={key}
-          targets={targets}
-          enabled={europeanGuardrails.targets}
+          targetFeatures={targetFeatures}
+          {...europeanGuardrails}
         />
       </WebGLMap>
     </div>

@@ -1,30 +1,47 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
-import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
-import { spainDialingCodes } from "@/lib/mapping/paths/spain/dialing-codes";
-import { spainPaths } from "@/lib/mapping/paths/spain/country";
-import { spainProvincesPaths } from "@/lib/mapping/paths/spain/provinces";
-import { spainDivider } from "@/lib/mapping/paths/spain/divider";
-import { spainDialingCodeSubsets } from "@/lib/mapping/registry/spain-dialing-codes";
 import { QuizControls } from "../quiz/controls";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { InsetMap } from "@/components/web-gl/inset-map";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { spainDialingCodes } from "@/lib/games/meta/spain-dialing-codes-meta";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { use } from "react";
+import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
+import { HintHandler } from "@/components/web-gl/hint-handler";
+import { FeatureCollection } from "geojson";
 
 const bounds = {
-  north: 44,
-  west: -11,
-  south: 35,
-  east: 4,
+  north: 46,
+  west: -13,
+  south: 34,
+  east: 6,
   padding: 2,
 };
 
+const canariesBounds = {
+  north: 30,
+  west: -19,
+  south: 27,
+  east: -12,
+  padding: 0,
+};
+
+const key = "spainDialingCodes";
+const targetsPromise = fetchGeoAsset("spain-dialing-codes-targets");
+const subjectsPromise = fetchGeoAsset("spain-dialing-codes-subjects");
+
 export default function SpainDialingCodesGame() {
+  const targetFeatures = use(targetsPromise);
+  const subjectFeatures = use(subjectsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
-        store="spainDialingCodes"
+        store={key}
         label="Area code:"
-        subsets={spainDialingCodeSubsets}
+        subsets={spainDialingCodes.subsets}
       />
 
-      <CanvasMap
+      <WebGLMap
         bounds={bounds}
         attribution={
           <a
@@ -35,15 +52,44 @@ export default function SpainDialingCodesGame() {
           </a>
         }
       >
-        <LabeledTargets
-          store="spainDialingCodes"
-          targets={spainDialingCodes}
-          country={spainPaths}
-          firstSubdivision={spainProvincesPaths}
-          divider={spainDivider}
-          subsets={spainDialingCodeSubsets}
+        <MapChildren
+          targetFeatures={targetFeatures}
+          subjectFeatures={subjectFeatures}
         />
-      </CanvasMap>
+
+        <div className="absolute bottom-0 left-0 w-full max-w-lg aspect-[2/1] p-8 pointer-events-none">
+          <InsetMap bounds={canariesBounds}>
+            <MapChildren
+              targetFeatures={targetFeatures}
+              subjectFeatures={subjectFeatures}
+            />
+          </InsetMap>
+        </div>
+      </WebGLMap>
     </div>
+  );
+}
+
+function MapChildren({
+  targetFeatures,
+  subjectFeatures,
+}: {
+  targetFeatures: FeatureCollection;
+  subjectFeatures: FeatureCollection;
+}) {
+  return (
+    <>
+      <HintHandler store={key} />
+      <SubjectLayer
+        store={key}
+        subjectFeatures={subjectFeatures}
+        {...spainDialingCodes}
+      />
+      <TargetLayer
+        store={key}
+        targetFeatures={targetFeatures}
+        {...spainDialingCodes}
+      />
+    </>
   );
 }

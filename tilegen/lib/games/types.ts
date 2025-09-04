@@ -38,7 +38,7 @@ export type QuizSubset = {
 
 export type QuizRegistry = {
   name: string;
-  size: { width: number; height: number };
+  size?: { width: number; height: number };
   subjects: QuizSubject[];
   targets: QuizTarget[];
   subsets?: QuizSubset[];
