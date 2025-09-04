@@ -1,6 +1,7 @@
 import { GameGrid } from "@/components/browse/game-grid";
 import { regularGames } from "@/lib/games/regular-registry";
 import { geoguessrGames } from "@/lib/games/geoguessr-registry";
+import { miscGames } from "@/lib/games/misc-registry";
 
 # Simple & fun map games
 
@@ -17,3 +18,9 @@ Because I have failed lost too many duels by failing to know these maps by heart
 Fun map-based trivia games, where you can test your knowledge of the world.
 
 <GameGrid games={regularGames} />
+
+## Miscellaneous
+
+These are games that don't fit in the other categories, but are still fun to play.
+
+<GameGrid games={miscGames} />

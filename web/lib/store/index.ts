@@ -32,6 +32,7 @@ import {
   createUSDialingCodesSlice,
   USDialingCodesSlice,
 } from "./game/us-dialing-codes";
+import { createSpellingBeeSlice, SpellingBeeSlice } from "./game/spelling-bee";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -41,7 +42,8 @@ export type AppStore = CityCoverSlice &
   EuropeanGuardrailsSlice &
   EuropeanPedestriansSlice &
   EuropeanBollardsSlice &
-  USDialingCodesSlice;
+  USDialingCodesSlice &
+  SpellingBeeSlice;
 
 export const createAppStore = () =>
   create<AppStore>()(
@@ -56,6 +58,7 @@ export const createAppStore = () =>
         ...createEuropeanPedestriansSlice(...a),
         ...createEuropeanBollardsSlice(...a),
         ...createUSDialingCodesSlice(...a),
+        ...createSpellingBeeSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),
