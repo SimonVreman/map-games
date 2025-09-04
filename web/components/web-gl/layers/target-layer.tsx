@@ -35,10 +35,12 @@ const fillLayer: LayerSpecification = {
     "fill-opacity": [
       "case",
       ["all", ["has", "color"], isFeatureHinted("id")],
-      0.8,
-      ["boolean", ["feature-state", "hover"], false],
-      0.4,
+      0.7,
+      isFeatureHinted("id"),
       0,
+      ["boolean", ["feature-state", "hover"], false],
+      0.6,
+      0.4,
     ],
   },
 };
@@ -47,7 +49,7 @@ const strokeLayer: LayerSpecification = {
   type: "line",
   source: source.id,
   paint: {
-    "line-width": 0.8,
+    "line-width": 1.6,
     "line-color": [
       "case",
       [
@@ -67,9 +69,13 @@ const strokeLayer: LayerSpecification = {
       "case",
       ["all", ["has", "color"], isFeatureHinted("id")],
       1,
+      ["==", ["get", "tiny"], true],
+      1,
+      isFeatureHinted("id"),
+      0,
       ["boolean", ["feature-state", "hover"], false],
       0.8,
-      ["case", ["==", ["get", "tiny"], true], 1, 0],
+      0.6,
     ],
   },
 };

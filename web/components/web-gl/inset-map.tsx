@@ -3,6 +3,7 @@ import { LatLngBounds } from "./types";
 import { WebGLMap } from "./web-gl-map";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 export function InsetMap({
   bounds,
@@ -40,29 +41,39 @@ export function InsetMapContainer({
 
     matcher.addEventListener("change", handler);
     setIsPopover(matcher.matches);
+    setIsOpen(!matcher.matches);
 
     return () => matcher.removeEventListener("change", handler);
   }, []);
 
   return (
-    <div className="absolute bottom-4 md:bottom-0 left-0 w-full md:w-sm p-2 sm:p-6 pointer-events-none max-md:flex justify-center">
+    <div className="absolute bottom-4 md:bottom-0 left-0 w-full md:w-sm pointer-events-none max-md:flex justify-center">
       <Container
-        data-state={isOpen || !isPopover ? "open" : "closed"}
+        data-state={isOpen ? "open" : "closed"}
         className={cn(
-          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:hidden",
+          "data-[state=open]:opacity-100 data-[state=closed]:opacity-0 transition-opacity",
           className,
           { "absolute w-full max-w-sm bottom-16": isPopover }
         )}
       >
         {children}
       </Container>
-      {isPopover && (
+      {isPopover ? (
         <Button
           variant="outline"
           className="w-full max-w-sm pointer-events-auto"
           onClick={() => setIsOpen((o) => !o)}
         >
           {isOpen ? "Hide" : "Show"} overseas
+        </Button>
+      ) : (
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute bottom-2 left-2 pointer-events-auto"
+          onClick={() => setIsOpen((o) => !o)}
+        >
+          {isOpen ? <ChevronDownIcon /> : <ChevronUpIcon />}
         </Button>
       )}
     </div>
@@ -79,7 +90,7 @@ function Container({
   return (
     <div
       className={cn(
-        "grid grid-cols-3 border bg-neutral-100 dark:bg-neutral-600 border-neutral-100 dark:border-neutral-600 gap-[1px] shadow-xl rounded-lg overflow-hidden",
+        "grid grid-cols-3 max-md:border border-t border-r bg-neutral-100 dark:bg-neutral-600 border-neutral-100 dark:border-neutral-600 gap-[1px] shadow-xl max-md:rounded-lg rounded-tr-lg overflow-hidden",
         className
       )}
       {...props}

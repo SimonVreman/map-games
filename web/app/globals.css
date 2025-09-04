@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
-@source not "./web/lib/mapping/paths/**";
 
 @theme inline {
   --color-background: var(--background);
