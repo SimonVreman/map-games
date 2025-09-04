@@ -1,3 +1,5 @@
+export type MapColorSet = { light: string; dark: string }[];
+
 export const mapColors = {
   pastelClay: [
     { light: "#ffb38e", dark: "#00b38e" },
@@ -20,4 +22,4 @@ export const mapColors = {
     { light: "hsl(0, 0%, 85%)", dark: "hsl(0, 0%, 15%)" },
     { light: "hsl(0, 0%, 80%)", dark: "hsl(0, 0%, 20%)" },
   ],
-} as const satisfies Record<string, { light: string; dark: string }[]>;
+} as const satisfies Record<string, MapColorSet>;

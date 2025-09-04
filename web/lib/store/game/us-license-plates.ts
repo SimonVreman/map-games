@@ -8,5 +8,5 @@ export type USLicensePlatesSlice = {
 export const createUSLicensePlatesSlice = createQuizSlice({
   name: "usLicensePlates",
   targets: usLicensePlates.entries,
-  subjectSubsets: usLicensePlates.subsets,
+  subsets: [],
 });

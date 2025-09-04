@@ -31,7 +31,7 @@ export function HintHandler<TName extends QuizSliceName<AppStore>>({
   ]);
 
   const updateVisibility = useCallback(() => {
-    if (!map) return;
+    if (!map?.isStyleLoaded()) return;
 
     map.setGlobalStateProperty(hintedTargetsKey, [
       ...highlight.positive,

@@ -1,7 +1,6 @@
 import { ImmerStateCreator } from "../types";
 import { createQuizSlice, QuizSlice } from "../slice/quiz-slice";
-import { usDialingCodes } from "@/lib/mapping/paths/united-states/dialing-codes";
-import { usDialingCodeSubsets } from "@/lib/mapping/registry/us-dialing-codes";
+import { usDialingCodes } from "@/lib/games/meta/us-dialing-codes-meta";
 
 export type USDialingCodesSlice = {
   usDialingCodes: QuizSlice;
@@ -10,6 +9,5 @@ export type USDialingCodesSlice = {
 export const createUSDialingCodesSlice: ImmerStateCreator<USDialingCodesSlice> =
   createQuizSlice({
     name: "usDialingCodes",
-    targets: usDialingCodes,
-    subsets: usDialingCodeSubsets,
+    ...usDialingCodes,
   });

@@ -5,7 +5,29 @@ import type {
   QuizTarget,
 } from "./types";
 
+function validateSubsetSubjects({
+  subsets,
+  subjects,
+}: {
+  subsets: QuizSubset[];
+  subjects: QuizSubject[];
+}) {
+  const invalidSubjects = subsets.flatMap((s) =>
+    s.subjects.filter((sub) => !subjects.find((su) => su.id === sub))
+  );
+
+  if (invalidSubjects.length > 0)
+    throw new Error(
+      "Subsets contain unknown subjects: " + invalidSubjects.join(", ")
+    );
+}
+
 export function generateQuizMeta({ registry }: { registry: QuizRegistry }) {
+  validateSubsetSubjects({
+    subsets: registry.subsets ?? [],
+    subjects: registry.subjects,
+  });
+
   return `import { QuizSubject, QuizSubset, QuizTarget } from "@/types/registry";
 
 ${generateSubjects(registry.subjects)}

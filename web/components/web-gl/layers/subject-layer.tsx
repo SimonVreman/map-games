@@ -66,7 +66,7 @@ export function SubjectLayer<TName extends QuizSliceName<AppStore>>({
     return {
       ...t,
       features: features.filter((f) =>
-        enabledSubjects.some((e) => e === f.properties?.subject)
+        enabledSubjects.some((e) => f.properties?.subjects?.includes(e))
       ),
     };
   }, [subjectFeatures, subsets, subsetsEnabled, subjects]);

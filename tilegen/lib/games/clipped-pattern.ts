@@ -131,7 +131,7 @@ export async function clippedPatternLayer({
           geometry: { type: "MultiPolygon", coordinates: unprojected },
           properties: {
             id: `${id}-${subject.id}-${i}`,
-            subject: subject.id,
+            subjects: [subject.id],
             target: id,
             fill: subjectSvgs.get(subject.id)?.[i]?.fill ?? undefined,
           },

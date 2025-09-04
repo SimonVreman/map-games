@@ -1,7 +1,13 @@
 import { QuizControls } from "../quiz/controls";
-import { usDialingCodeSubsets } from "@/lib/mapping/registry/us-dialing-codes";
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
-import { InsetMap } from "@/components/web-gl/inset-map";
+import { InsetMap, InsetMapContainer } from "@/components/web-gl/inset-map";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { FeatureCollection } from "geojson";
+import { HintHandler } from "@/components/web-gl/hint-handler";
+import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { usDialingCodes } from "@/lib/games/meta/us-dialing-codes-meta";
+import { use } from "react";
 
 const bounds = {
   north: 53,
@@ -33,19 +39,26 @@ const guamNmiBounds = {
 };
 
 const amSamoaBounds = {
-  north: -11,
-  west: -173,
+  north: -13,
+  west: -171.5,
   south: -15,
   east: -169,
 };
 
+const key = "usDialingCodes";
+const targetsPromise = fetchGeoAsset("us-dialing-codes-targets");
+const subjectsPromise = fetchGeoAsset("us-dialing-codes-subjects");
+
 export default function USDialingCodesGame() {
+  const targetFeatures = use(targetsPromise);
+  const subjectFeatures = use(subjectsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
-        store="usDialingCodes"
+        store={key}
         label="Area code:"
-        subsets={usDialingCodeSubsets}
+        subsets={usDialingCodes.subsets}
       />
 
       <WebGLMap
@@ -63,25 +76,61 @@ export default function USDialingCodesGame() {
           </>
         }
       >
-        <div className="absolute bottom-0 left-0 w-full p-8 flex gap-8 items-baseline pointer-events-none">
-          <InsetMap
-            bounds={alaskaBounds}
-            className="aspect-square max-w-64 pointer-events-auto"
-          ></InsetMap>
-          <InsetMap
-            bounds={hawaiiBounds}
-            className="aspect-[6/4] max-w-64 pointer-events-auto"
-          ></InsetMap>
-          <InsetMap
-            bounds={guamNmiBounds}
-            className="aspect-[2/3] max-w-48 pointer-events-auto"
-          ></InsetMap>
-          <InsetMap
-            bounds={amSamoaBounds}
-            className="aspect-[3/2] max-w-48 pointer-events-auto"
-          ></InsetMap>
-        </div>
+        <MapChildren
+          targetFeatures={targetFeatures}
+          subjectFeatures={subjectFeatures}
+        />
+        <InsetMapContainer>
+          <InsetMap bounds={alaskaBounds} className="aspect-square col-span-2">
+            <MapChildren
+              targetFeatures={targetFeatures}
+              subjectFeatures={subjectFeatures}
+            />
+          </InsetMap>
+          <InsetMap bounds={guamNmiBounds}>
+            <MapChildren
+              targetFeatures={targetFeatures}
+              subjectFeatures={subjectFeatures}
+            />
+          </InsetMap>
+          <InsetMap bounds={hawaiiBounds} className="aspect-[3/2] col-span-2">
+            <MapChildren
+              targetFeatures={targetFeatures}
+              subjectFeatures={subjectFeatures}
+            />
+          </InsetMap>
+          <InsetMap bounds={amSamoaBounds}>
+            <MapChildren
+              targetFeatures={targetFeatures}
+              subjectFeatures={subjectFeatures}
+            />
+          </InsetMap>
+        </InsetMapContainer>
       </WebGLMap>
     </div>
+  );
+}
+
+function MapChildren({
+  targetFeatures,
+  subjectFeatures,
+}: {
+  targetFeatures: FeatureCollection;
+  subjectFeatures: FeatureCollection;
+}) {
+  return (
+    <>
+      <HintHandler store={key} />
+      <SubjectLayer
+        store={key}
+        subjectFeatures={subjectFeatures}
+        {...usDialingCodes}
+      />
+      <TargetLayer
+        store={key}
+        targetFeatures={targetFeatures}
+        {...usDialingCodes}
+      />
+    </>
   );
 }

@@ -8,6 +8,15 @@ export function MapTheme() {
 
   useEffect(() => {
     if (!map) return;
+
+    if (!map.isStyleLoaded()) {
+      const subscription = map.on("styledata", () => {
+        map.setGlobalStateProperty("theme", theme);
+        subscription.unsubscribe();
+      });
+      return;
+    }
+
     map.setGlobalStateProperty("theme", theme);
   }, [theme, map]);
 

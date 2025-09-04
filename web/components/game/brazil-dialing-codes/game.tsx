@@ -1,10 +1,11 @@
-import { CanvasMap } from "@/components/canvas/canvas-map";
+import { brazilDialingCodes } from "@/lib/games/meta/brazil-dialing-codes-meta";
 import { QuizControls } from "../quiz/controls";
-import { LabeledTargets } from "@/components/canvas/game/labeled-targets";
-import { brazilDialingCodes } from "@/lib/mapping/paths/brazil/dialing-codes";
-import { brazilPaths } from "@/lib/mapping/paths/brazil/country";
-import { brazilStatesPaths } from "@/lib/mapping/paths/brazil/states";
-import { brazilDialingCodeSubsets } from "@/lib/mapping/registry/brazil-dialing-codes";
+import { WebGLMap } from "@/components/web-gl/web-gl-map";
+import { HintHandler } from "@/components/web-gl/hint-handler";
+import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
+import { TargetLayer } from "@/components/web-gl/layers/target-layer";
+import { fetchGeoAsset } from "@/lib/games/geo-asset";
+import { use } from "react";
 
 const bounds = {
   north: 9,
@@ -14,16 +15,23 @@ const bounds = {
   padding: 2,
 };
 
+const key = "brazilDialingCodes";
+const targetsPromise = fetchGeoAsset("brazil-dialing-codes-targets");
+const subjectsPromise = fetchGeoAsset("brazil-dialing-codes-subjects");
+
 export default function BrazilDialingCodesGame() {
+  const targetFeatures = use(targetsPromise);
+  const subjectFeatures = use(subjectsPromise);
+
   return (
     <div className="size-full relative">
       <QuizControls
-        store="brazilDialingCodes"
+        store={key}
         label="Area code:"
-        subsets={brazilDialingCodeSubsets}
+        subsets={brazilDialingCodes.subsets}
       />
 
-      <CanvasMap
+      <WebGLMap
         bounds={bounds}
         attribution={
           <a href="https://data.humdata.org/dataset/cod-ab-bra" target="_blank">
@@ -31,14 +39,18 @@ export default function BrazilDialingCodesGame() {
           </a>
         }
       >
-        <LabeledTargets
-          store="brazilDialingCodes"
-          targets={brazilDialingCodes}
-          country={brazilPaths}
-          firstSubdivision={brazilStatesPaths}
-          subsets={brazilDialingCodeSubsets}
+        <HintHandler store={key} />
+        <SubjectLayer
+          store={key}
+          subjectFeatures={subjectFeatures}
+          {...brazilDialingCodes}
         />
-      </CanvasMap>
+        <TargetLayer
+          store={key}
+          targetFeatures={targetFeatures}
+          {...brazilDialingCodes}
+        />
+      </WebGLMap>
     </div>
   );
 }

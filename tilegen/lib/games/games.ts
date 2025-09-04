@@ -1,4 +1,9 @@
 import {
+  brazilDialingCodesMeta,
+  brazilDialingCodesSubjectsLayer,
+  brazilDialingCodesTargetsLayer,
+} from "./brazil-dialing-codes";
+import {
   europeanBollardsLayer,
   europeanBollardsMeta,
 } from "./european-bollards";
@@ -20,6 +25,11 @@ import {
   spainDialingCodesSubjectsLayer,
   spainDialingCodesTargetsLayer,
 } from "./spain-dialing-codes";
+import {
+  usDialingCodesMeta,
+  usDialingCodesSubjectsLayer,
+  usDialingCodesTargetsLayer,
+} from "./us-dialing-codes";
 
 type FileFn = (output: string) => Promise<void>;
 
@@ -54,6 +64,22 @@ export const games: {
     layers: {
       subjects: spainDialingCodesSubjectsLayer,
       targets: spainDialingCodesTargetsLayer,
+    },
+  },
+  {
+    id: "us-dialing-codes",
+    meta: usDialingCodesMeta,
+    layers: {
+      subjects: usDialingCodesSubjectsLayer,
+      targets: usDialingCodesTargetsLayer,
+    },
+  },
+  {
+    id: "brazil-dialing-codes",
+    meta: brazilDialingCodesMeta,
+    layers: {
+      subjects: brazilDialingCodesSubjectsLayer,
+      targets: brazilDialingCodesTargetsLayer,
     },
   },
 ];

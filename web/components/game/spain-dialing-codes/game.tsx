@@ -1,6 +1,6 @@
 import { QuizControls } from "../quiz/controls";
 import { WebGLMap } from "@/components/web-gl/web-gl-map";
-import { InsetMap } from "@/components/web-gl/inset-map";
+import { InsetMap, InsetMapContainer } from "@/components/web-gl/inset-map";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { spainDialingCodes } from "@/lib/games/meta/spain-dialing-codes-meta";
 import { fetchGeoAsset } from "@/lib/games/geo-asset";
@@ -57,14 +57,17 @@ export default function SpainDialingCodesGame() {
           subjectFeatures={subjectFeatures}
         />
 
-        <div className="absolute bottom-0 left-0 w-full max-w-lg aspect-[2/1] p-8 pointer-events-none">
-          <InsetMap bounds={canariesBounds}>
+        <InsetMapContainer>
+          <InsetMap
+            bounds={canariesBounds}
+            className="col-span-full aspect-[2/1]"
+          >
             <MapChildren
               targetFeatures={targetFeatures}
               subjectFeatures={subjectFeatures}
             />
           </InsetMap>
-        </div>
+        </InsetMapContainer>
       </WebGLMap>
     </div>
   );
