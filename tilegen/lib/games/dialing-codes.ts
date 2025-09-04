@@ -7,12 +7,14 @@ export function dialingCodeRegistryBase({
 }: {
   collection: GeoJSON.FeatureCollection;
 }) {
-  const subjects: LabelQuizSubject[] = collection.features.flatMap((f) =>
-    f.properties!.id.split("/").map((s: string) => ({
-      id: s,
-      label: s,
-    }))
-  );
+  const subjects: LabelQuizSubject[] = collection.features
+    .flatMap((f) =>
+      f.properties!.id.split("/").map((s: string) => ({
+        id: s,
+        label: s,
+      }))
+    )
+    .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
 
   const targets: QuizTarget[] = collection.features.map((f) => ({
     id: f.properties!.id as string,
@@ -24,10 +26,7 @@ export function dialingCodeRegistryBase({
       ),
   }));
 
-  return {
-    subjects,
-    targets,
-  };
+  return { subjects, targets };
 }
 
 export async function dialingCodesTargetsLayer({
