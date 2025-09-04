@@ -337,9 +337,6 @@ const subjects: Record<string, QuizSubject> = {
   321: {
     label: "321"
   },
-  321: {
-    label: "321"
-  },
   407: {
     label: "407"
   },
@@ -415,9 +412,6 @@ const subjects: Record<string, QuizSubject> = {
   718: {
     label: "718"
   },
-  917: {
-    label: "917"
-  },
   929: {
     label: "929"
   },
@@ -444,9 +438,6 @@ const subjects: Record<string, QuizSubject> = {
   },
   360: {
     label: "360"
-  },
-  564: {
-    label: "564"
   },
   361: {
     label: "361"
@@ -607,17 +598,8 @@ const subjects: Record<string, QuizSubject> = {
   708: {
     label: "708"
   },
-  470: {
-    label: "470"
-  },
-  678: {
-    label: "678"
-  },
   770: {
     label: "770"
-  },
-  943: {
-    label: "943"
   },
   471: {
     label: "471"
@@ -880,9 +862,6 @@ const subjects: Record<string, QuizSubject> = {
   671: {
     label: "671"
   },
-  679: {
-    label: "679"
-  },
   734: {
     label: "734"
   },
@@ -931,9 +910,6 @@ const subjects: Record<string, QuizSubject> = {
   724: {
     label: "724"
   },
-  878: {
-    label: "878"
-  },
   727: {
     label: "727"
   },
@@ -981,9 +957,6 @@ const subjects: Record<string, QuizSubject> = {
   },
   773: {
     label: "773"
-  },
-  872: {
-    label: "872"
   },
   775: {
     label: "775"

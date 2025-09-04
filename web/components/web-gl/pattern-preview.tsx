@@ -11,7 +11,7 @@ export function PatternPreview<TMap extends Record<string, QuizSubject>>({
 
   if (!pattern) return null;
 
-  if (pattern.svg)
+  if ("svg" in pattern)
     return (
       <div
         className="w-32 bg-secondary"

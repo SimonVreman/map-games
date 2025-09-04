@@ -39,9 +39,4 @@ export const geoguessrGames: GameDefinition[] = [
     description: "How well do you know the United States dialing codes?",
     slug: "us-dialing-codes",
   },
-  {
-    name: "US License Plates",
-    description: "Can you recognize the US license plates when blurred?",
-    slug: "us-license-plates",
-  },
 ] as const;
