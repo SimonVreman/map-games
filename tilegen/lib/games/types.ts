@@ -43,3 +43,10 @@ export type QuizRegistry = {
   targets: QuizTarget[];
   subsets?: QuizSubset[];
 };
+
+export type QuizDefinition = {
+  slug: string;
+  meta: (output: string) => Promise<unknown>;
+  subjects: (output: string) => Promise<unknown>;
+  targets?: (output: string) => Promise<unknown>;
+};

@@ -2,7 +2,13 @@ import geopandas as gpd
 import pandas as pd
 import math
 import sys
+import os
 import shapely
+
+# I am a living code smell, ik...
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# pylint: disable=wrong-import-position disable=import-error
+from label_quiz_preprocess import preprocess
 
 output = sys.argv[1]
 
@@ -63,22 +69,5 @@ compiled.append(
     }
 )
 
-df = gpd.GeoDataFrame(compiled, crs=df.crs)
-df = df.dissolve(by=["id"])
 
-df["center"] = df.apply(
-    lambda r: r.geometry.representative_point(),
-    axis=1,
-)
-
-df["center_lng"] = df.apply(
-    lambda r: r["center"].x,
-    axis=1,
-)
-
-df["center_lat"] = df.apply(
-    lambda r: r["center"].y,
-    axis=1,
-)
-
-df[["geometry", "center_lng", "center_lat"]].to_file(output, driver="GeoJSON")
+preprocess(gpd.GeoDataFrame(compiled, crs=df.crs), output)

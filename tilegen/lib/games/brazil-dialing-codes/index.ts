@@ -1,32 +1,27 @@
 import { generateQuizMeta } from "../generate-meta";
-import { brazilDialingCodes } from "./registry";
 import { mapColors } from "../colors";
 import { brazilDialingCodesPreprocessed } from "./preprocess";
-import {
-  dialingCodesSubjectsLayer,
-  dialingCodesTargetsLayer,
-} from "../dialing-codes";
+import { labelQuizSubjectsLayer, labelQuizTargetsLayer } from "../label-quiz";
+import type { QuizDefinition } from "../types";
+import { brazilDialingCodesRegistry } from "./registry";
 
-const colors = mapColors.sweet;
-
-export async function brazilDialingCodesTargetsLayer(output: string) {
-  await dialingCodesTargetsLayer({
-    output,
-    registry: brazilDialingCodes,
-    collection: await brazilDialingCodesPreprocessed(),
-    options: { colors, precision: 3 },
-  });
-}
-
-export async function brazilDialingCodesSubjectsLayer(output: string) {
-  await dialingCodesSubjectsLayer({
-    output,
-    registry: brazilDialingCodes,
+export const brazilDialingCodesDefinition: QuizDefinition = {
+  slug: "brazil-dialing-codes",
+  meta: async (output: string) =>
+    await Bun.write(
+      output,
+      generateQuizMeta({
+        registry: await brazilDialingCodesRegistry(),
+      })
+    ),
+  subjects: labelQuizSubjectsLayer(async () => ({
+    registry: await brazilDialingCodesRegistry(),
     collection: await brazilDialingCodesPreprocessed(),
     options: { precision: 3 },
-  });
-}
-
-export async function brazilDialingCodesMeta(output: string) {
-  await Bun.write(output, generateQuizMeta({ registry: brazilDialingCodes }));
-}
+  })),
+  targets: labelQuizTargetsLayer(async () => ({
+    registry: await brazilDialingCodesRegistry(),
+    collection: await brazilDialingCodesPreprocessed(),
+    options: { colors: mapColors.sweet, precision: 3 },
+  })),
+};

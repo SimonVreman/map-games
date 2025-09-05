@@ -77,7 +77,7 @@ const subjects: Record<string, QuizSubject> = {
     label: "Cebu"
   },
   "PH-COM": {
-    label: "Davao de Oro"
+    label: "Compostela Valley"
   },
   "PH-DAO": {
     label: "Davao Oriental"
@@ -137,16 +137,16 @@ const subjects: Record<string, QuizSubject> = {
     label: "Masbate"
   },
   "PH-MDC": {
-    label: "Occidental Mindoro"
+    label: "Mindoro Occidental"
   },
   "PH-MDR": {
-    label: "Oriental Mindoro"
+    label: "Mindoro Oriental"
   },
   "PH-MNL": {
-    label: "Mandaluyong"
+    label: "Mandaluyong City"
   },
   "PH-MOU": {
-    label: "Mountain"
+    label: "Mountain Province"
   },
   "PH-MSC": {
     label: "Misamis Occidental"
@@ -215,7 +215,7 @@ const subjects: Record<string, QuizSubject> = {
     label: "Sultan Kudarat"
   },
   "PH-SUN": {
-    label: "Dinagat Islands"
+    label: "Surigao del Norte"
   },
   "PH-SUR": {
     label: "Surigao del Sur"

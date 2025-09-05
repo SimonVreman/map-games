@@ -8,24 +8,29 @@ async function main() {
   console.log("Generating assets for game(s)...");
   if (filtered.length) console.log("filtered", JSON.stringify(filtered));
 
-  for (const { id, layers, meta } of games) {
-    if (filtered.length && !filtered.includes(id)) continue;
-    console.log(`Generating assets for game: ${id}`);
+  for (const {
+    slug,
+    targets: targetsLayer,
+    subjects: subjectsLayer,
+    meta,
+  } of games) {
+    if (filtered.length && !filtered.includes(slug)) continue;
+    console.log(`Generating assets for game: ${slug}`);
 
-    const subjects = `${geoFolder}/${id}-subjects.geojson`;
-    const targets = layers.targets
-      ? `${geoFolder}/${id}-targets.geojson`
+    const subjects = `${geoFolder}/${slug}-subjects.geojson`;
+    const targets = targetsLayer
+      ? `${geoFolder}/${slug}-targets.geojson`
       : undefined;
 
-    await layers.subjects(subjects);
-    await meta(`${metaFolder}/${id}-meta.ts`);
-    if (layers.targets) await layers.targets(targets!);
+    await subjectsLayer(subjects);
+    await meta(`${metaFolder}/${slug}-meta.ts`);
+    if (targetsLayer) await targetsLayer(targets!);
   }
 
-  for (const { id, targets } of gameTargets) {
-    console.log(`Generating targets: ${id}`);
+  for (const { slug, targets } of gameTargets) {
+    console.log(`Generating targets: ${slug}`);
 
-    const output = `${geoFolder}/${id}-targets.geojson`;
+    const output = `${geoFolder}/${slug}-targets.geojson`;
     await targets(output);
   }
 }

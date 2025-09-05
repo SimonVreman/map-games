@@ -1,7 +1,12 @@
 import geopandas as gpd
 import sys
+import os
 import unicodedata
 
+# I am a living code smell, ik...
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# pylint: disable=wrong-import-position disable=import-error
+from label_quiz_preprocess import preprocess
 
 # changed spelling where needed to correspond with map data, and added second categories when a city is in another state
 ddds = {
@@ -5966,22 +5971,4 @@ for key, ddd in ddds.items():
     compiled.append({"id": str(key), "geometry": df_ddd.union_all()})
 
 
-df = gpd.GeoDataFrame(compiled, crs=df.crs)
-df = df.dissolve(by=["id"])
-
-df["center"] = df.apply(
-    lambda r: r.geometry.representative_point(),
-    axis=1,
-)
-
-df["center_lng"] = df.apply(
-    lambda r: r["center"].x,
-    axis=1,
-)
-
-df["center_lat"] = df.apply(
-    lambda r: r["center"].y,
-    axis=1,
-)
-
-df[["geometry", "center_lng", "center_lat"]].to_file(output, driver="GeoJSON")
+preprocess(gpd.GeoDataFrame(compiled, crs=df.crs), output)

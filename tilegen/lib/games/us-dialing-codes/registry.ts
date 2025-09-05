@@ -1,5 +1,6 @@
-import { dialingCodeRegistryBase } from "../dialing-codes";
-import type { QuizSubset } from "../types";
+import { labelQuizRegistryBase } from "../label-quiz";
+import { memoize } from "../memoize";
+import type { QuizRegistry, QuizSubset } from "../types";
 import { usDialingCodesPreprocessed } from "./preprocess";
 
 const subsets: QuizSubset[] = [
@@ -413,10 +414,12 @@ const subsets: QuizSubset[] = [
   },
 ];
 
-export const usDialingCodes = {
-  name: "usDialingCodes",
-  subsets,
-  ...dialingCodeRegistryBase({
-    collection: await usDialingCodesPreprocessed(),
-  }),
-};
+export const usDialingCodesRegistry = memoize(
+  async (): Promise<QuizRegistry> => ({
+    name: "usDialingCodes",
+    subsets,
+    ...labelQuizRegistryBase({
+      collection: await usDialingCodesPreprocessed(),
+    }),
+  })
+);

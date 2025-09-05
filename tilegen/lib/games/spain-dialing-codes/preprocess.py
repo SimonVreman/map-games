@@ -1,5 +1,11 @@
 import geopandas as gpd
 import sys
+import os
+
+# I am a living code smell, ik...
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# pylint: disable=wrong-import-position disable=import-error
+from label_quiz_preprocess import preprocess
 
 codes = {
     "95": {"adm2": ["Seville", "Malaga"]},
@@ -61,21 +67,5 @@ df["id"] = df.apply(
     axis=1,
 )
 
-df = df.dissolve(by=["id"])
 
-df["center"] = df.apply(
-    lambda r: r.geometry.representative_point(),
-    axis=1,
-)
-
-df["center_lng"] = df.apply(
-    lambda r: r["center"].x,
-    axis=1,
-)
-
-df["center_lat"] = df.apply(
-    lambda r: r["center"].y,
-    axis=1,
-)
-
-df[["geometry", "center_lng", "center_lat"]].to_file(output, driver="GeoJSON")
+preprocess(df, output)
