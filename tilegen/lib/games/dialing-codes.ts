@@ -8,17 +8,22 @@ export function dialingCodeRegistryBase({
   collection: GeoJSON.FeatureCollection;
 }) {
   const subjects: LabelQuizSubject[] = collection.features
-    .flatMap((f) =>
-      f.properties!.id.split("/").map((s: string) => ({
+    .flatMap((f) => {
+      const ids = f.properties!.id.split("/") as string[];
+      const labels = (f.properties!.label ?? f.properties!.id).split(
+        "/"
+      ) as string[];
+
+      return ids.map((s, i) => ({
         id: s,
-        label: s,
-      }))
-    )
+        label: labels[i],
+      }));
+    })
     .filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
 
   const targets: QuizTarget[] = collection.features.map((f) => ({
     id: f.properties!.id as string,
-    label: f.properties!.id as string,
+    label: (f.properties!.label ?? f.properties!.id) as string,
     subjects: f
       .properties!.id.split("/")
       .map(
@@ -47,17 +52,19 @@ export async function dialingCodesTargetsLayer({
       (c) => c.properties!.id === t.id
     )!;
 
+    const subsetIdx = registry.subsets!.findIndex((s) =>
+      s.subjects.includes(t.subjects[0].id)
+    );
+
+    if (subsetIdx === -1)
+      throw new Error("Target not in any subset:" + JSON.stringify(t));
+
     return {
       id: i,
       type: "Feature",
       properties: {
         id: t.id,
-        color:
-          options.colors[
-            registry.subsets!.findIndex((s) =>
-              s.subjects.includes(t.subjects[0].id)
-            ) % options.colors.length
-          ].light,
+        color: options.colors[subsetIdx % options.colors.length].light,
       },
       geometry: targetFeature.geometry,
     };

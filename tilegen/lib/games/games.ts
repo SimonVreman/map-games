@@ -19,6 +19,11 @@ import {
   europeanPedestriansLayer,
   europeanPedestriansMeta,
 } from "./european-pedestrians";
+import {
+  philippinesProvincesMeta,
+  philippinesProvincesSubjectsLayer,
+  philippinesProvincesTargetsLayer,
+} from "./philippines-provinces";
 import { europeanCountriesLayer } from "./shared/european-countries";
 import {
   spainDialingCodesMeta,
@@ -80,6 +85,14 @@ export const games: {
     layers: {
       subjects: brazilDialingCodesSubjectsLayer,
       targets: brazilDialingCodesTargetsLayer,
+    },
+  },
+  {
+    id: "philippines-provinces",
+    meta: philippinesProvincesMeta,
+    layers: {
+      subjects: philippinesProvincesSubjectsLayer,
+      targets: philippinesProvincesTargetsLayer,
     },
   },
 ];

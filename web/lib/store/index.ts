@@ -33,6 +33,10 @@ import {
   USDialingCodesSlice,
 } from "./game/us-dialing-codes";
 import { createSpellingBeeSlice, SpellingBeeSlice } from "./game/spelling-bee";
+import {
+  createPhilippinesProvincesSlice,
+  PhilippinesProvincesSlice,
+} from "./game/philippines-provinces";
 
 export type AppStore = CityCoverSlice &
   CityBlocksSlice &
@@ -43,6 +47,7 @@ export type AppStore = CityCoverSlice &
   EuropeanPedestriansSlice &
   EuropeanBollardsSlice &
   USDialingCodesSlice &
+  PhilippinesProvincesSlice &
   SpellingBeeSlice;
 
 export const createAppStore = () =>
@@ -58,11 +63,14 @@ export const createAppStore = () =>
         ...createEuropeanPedestriansSlice(...a),
         ...createEuropeanBollardsSlice(...a),
         ...createUSDialingCodesSlice(...a),
+        ...createPhilippinesProvincesSlice(...a),
         ...createSpellingBeeSlice(...a),
       })),
       {
         storage: createJSONStorage(() => localStorage),
         name: "app-store",
+        version: 1,
+        migrate: () => {},
         merge: (persisted, current) =>
           merge(
             current,

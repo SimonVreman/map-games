@@ -35,11 +35,7 @@ export default function SpainDialingCodesGame() {
 
   return (
     <div className="size-full relative">
-      <QuizControls
-        store={key}
-        label="Area code:"
-        subsets={spainDialingCodes.subsets}
-      />
+      <QuizControls store={key} label="Area code:" {...spainDialingCodes} />
 
       <WebGLMap
         bounds={bounds}

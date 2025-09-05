@@ -22,7 +22,7 @@ export default function EuropeanGuardrailsGame() {
       <QuizControls
         store={key}
         label="Where is it seen?"
-        subsets={europeanGuardrails.subsets}
+        {...europeanGuardrails}
         graphic={({ subject }) => (
           <PatternPreview {...europeanGuardrails} subject={subject} />
         )}

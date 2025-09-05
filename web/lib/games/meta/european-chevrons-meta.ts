@@ -1,31 +1,31 @@
 import { QuizSubject, QuizSubset, QuizTarget } from "@/types/registry";
 
 const subjects: Record<string, QuizSubject> = {
-  blackOnWhite: {
+  "blackOnWhite": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#fafafa\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#0a0a0a\"/>\n</svg>"
   },
-  redOnWhite: {
+  "redOnWhite": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#fafafa\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#dc2626\"/>\n</svg>"
   },
-  redOnYellow: {
+  "redOnYellow": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#facc15\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#dc2626\"/>\n</svg>"
   },
-  whiteOnRed: {
+  "whiteOnRed": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#dc2626\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#fafafa\"/>\n</svg>"
   },
-  whiteOnBlack: {
+  "whiteOnBlack": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#0a0a0a\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#fafafa\"/>\n</svg>"
   },
-  whiteOnBlue: {
+  "whiteOnBlue": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#3b82f6\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#fafafa\"/>\n</svg>"
   },
-  yellowOnBlack: {
+  "yellowOnBlack": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#0a0a0a\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#facc15\"/>\n</svg>"
   },
-  yellowOnBlue: {
+  "yellowOnBlue": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#3b82f6\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#facc15\"/>\n</svg>"
   },
-  yellowOnRed: {
+  "yellowOnRed": {
     svg: "<svg viewBox=\"0 0 400 400\">\n<path d=\"M0 0H400V400H0V0Z\" fill=\"#dc2626\"/>\n<path d=\"M221 79H99L179 200L99 321H221L301 200L221 79Z\" fill=\"#facc15\"/>\n</svg>"
   }
 };

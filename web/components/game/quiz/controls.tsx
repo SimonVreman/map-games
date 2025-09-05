@@ -7,16 +7,18 @@ import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { QuizSettings } from "./settings";
 import { QuizResults } from "./results/results";
 import { cn } from "@/lib/utils";
-import { QuizSubset } from "@/types/registry";
+import { QuizSubject, QuizSubset } from "@/types/registry";
 
 export function QuizControls<TName extends QuizSliceName<AppStore>>({
   label,
   store,
   graphic,
+  subjects,
   subsets,
 }: {
   label: string;
   store: TName;
+  subjects: Record<string, QuizSubject>;
   subsets: QuizSubset[];
   graphic?: (props: { subject: string }) => React.ReactNode;
 }) {
@@ -107,7 +109,9 @@ export function QuizControls<TName extends QuizSliceName<AppStore>>({
             {label}
             {!graphic && (
               <span className="font-semibold text-foreground ml-2">
-                {nextSubject}
+                {"label" in subjects[nextSubject]
+                  ? subjects[nextSubject].label
+                  : nextSubject}
               </span>
             )}
           </p>

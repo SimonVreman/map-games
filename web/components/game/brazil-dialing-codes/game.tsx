@@ -25,11 +25,7 @@ export default function BrazilDialingCodesGame() {
 
   return (
     <div className="size-full relative">
-      <QuizControls
-        store={key}
-        label="Area code:"
-        subsets={brazilDialingCodes.subsets}
-      />
+      <QuizControls store={key} label="Area code:" {...brazilDialingCodes} />
 
       <WebGLMap
         bounds={bounds}

@@ -49,7 +49,7 @@ function generateSubjects(subjects: QuizSubject[]) {
 ${subjects
   .map(
     (s) =>
-      `  ${s.id}: {
+      `  "${s.id}": {
     ${
       "svg" in s
         ? `svg: ${JSON.stringify(s.svg)}`

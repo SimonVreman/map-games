@@ -2,6 +2,7 @@ import { geoguessrGames } from "@/lib/games/geoguessr-registry";
 import { chromium } from "playwright";
 
 const screenshotPath = "public/img/games/";
+const filtered = process.argv.slice(2);
 const browser = await chromium.launch({ headless: false });
 const page = await browser.newPage({
   viewport: { width: 900, height: 600 },
@@ -19,6 +20,8 @@ await page
   .catch(() => {});
 
 for (const game of geoguessrGames) {
+  if (filtered.length > 0 && !filtered.includes(game.slug)) continue;
+
   await page.goto(`http://localhost:3000/${game.slug}/play`);
   await page.emulateMedia({ colorScheme: "light" });
 

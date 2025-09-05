@@ -39,4 +39,9 @@ export const geoguessrGames: GameDefinition[] = [
     description: "How well do you know the United States dialing codes?",
     slug: "us-dialing-codes",
   },
+  {
+    name: "Philippines Provinces",
+    description: "Can you locate all 82 provinces of the Philippines?",
+    slug: "philippines-provinces",
+  },
 ] as const;
