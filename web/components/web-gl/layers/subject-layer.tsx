@@ -32,7 +32,7 @@ const symbolLayer: Omit<SymbolLayerSpecification, "id" | "source"> = {
     "text-font": ["literal", [map.fonts.regular]],
     "text-size": ["literal", 14],
   },
-  filter: ["all", ["has", "label"], isFeatureHinted("label")],
+  filter: ["all", ["has", "label"], isFeatureHinted("target")],
 };
 
 export function SubjectLayer<TName extends QuizSliceName<AppStore>>({
