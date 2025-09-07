@@ -1,5 +1,6 @@
 import { findGeometryCenter } from "../geojson";
 import { projectToMercator, unprojectFromMercator } from "./projection";
+import polygon, { type Geom } from "polygon-clipping";
 
 const tapAreas: { name: string; tiny?: boolean }[] = [
   { name: "Malta" },
@@ -34,6 +35,35 @@ export function createTapAreaGeometries({
   }
 
   return [...result, ...resultTiny];
+}
+
+export function mergeWithTapArea({
+  geometry,
+  center,
+  tapAreaSize = 2,
+}: {
+  geometry: GeoJSON.Geometry;
+  center: number[];
+  tapAreaSize?: number;
+}): GeoJSON.Geometry {
+  const type = geometry.type;
+
+  const circle = createCircle(center, tapAreaSize);
+
+  if (type !== "Polygon" && type !== "MultiPolygon")
+    return { type: "Polygon", coordinates: [circle] };
+
+  return {
+    type: "MultiPolygon",
+    coordinates: polygon.union(
+      [circle] as Geom,
+      type === "Polygon"
+        ? ([geometry.coordinates] as Geom)
+        : type === "MultiPolygon"
+        ? (geometry.coordinates as Geom)
+        : ([] as Geom)
+    ),
+  };
 }
 
 function createCircle(center: number[], radius: number, points = 39) {

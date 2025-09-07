@@ -1,23 +1,19 @@
 "use client";
 
-import { useAppStore } from "@/lib/store/provider";
 import { PinControlsBase } from "../pin-controls-base";
-import { AppStore } from "@/lib/store";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { QuizSettings } from "./settings";
 import { QuizResults } from "./results/results";
 import { cn } from "@/lib/utils";
 import { QuizSubject, QuizSubset } from "@/types/registry";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 
-export function QuizControls<TName extends QuizSliceName<AppStore>>({
+export function QuizControls({
   label,
-  store,
   graphic,
   subjects,
   subsets,
 }: {
   label: string;
-  store: TName;
   subjects: Record<string, QuizSubject>;
   subsets: QuizSubset[];
   graphic?: (props: { subject: string }) => React.ReactNode;
@@ -31,15 +27,15 @@ export function QuizControls<TName extends QuizSliceName<AppStore>>({
     nextSubjects,
     guessedCount,
     targetCount,
-  ] = useAppStore((s) => [
-    s[store].stats,
-    s[store].mode,
-    s[store].reset,
-    s[store].hintsEnabled,
-    s[store].toggleHints,
-    s[store].nextSubjects,
-    s[store].guessed.length,
-    s[store].targetCount,
+  ] = useQuizStore((s) => [
+    s.stats,
+    s.mode,
+    s.reset,
+    s.hintsEnabled,
+    s.toggleHints,
+    s.nextSubjects,
+    s.guessed.length,
+    s.targetCount,
   ]);
 
   const nextSubject = (nextSubjects[0] ?? null) as string | null;
@@ -122,8 +118,8 @@ export function QuizControls<TName extends QuizSliceName<AppStore>>({
           )}
         </PinControlsBase>
       )}
-      <QuizSettings store={store} subsets={subsets} />
-      <QuizResults store={store} />
+      <QuizSettings subsets={subsets} />
+      <QuizResults />
     </>
   );
 }

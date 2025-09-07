@@ -1,5 +1,6 @@
 import { stringifyGeoJSON } from "../geojson";
 import type { MapColorSet } from "./colors";
+import { mergeWithTapArea } from "./tap-area";
 import type { LabelQuizSubject, QuizRegistry, QuizTarget } from "./types";
 
 export function labelQuizRegistryBase({
@@ -37,35 +38,46 @@ export const labelQuizTargetsLayer =
     args: () => Promise<{
       registry: QuizRegistry;
       collection: GeoJSON.FeatureCollection;
-      options: { colors: MapColorSet; precision: number };
+      options: { colors: MapColorSet; tapAreaSize?: number; precision: number };
     }>
   ) =>
   async (output: string) => {
     const { registry, collection, options } = await args();
     const targetFeatures = collection.features;
 
-    const features: GeoJSON.Feature[] = registry.targets.map((t, i) => {
-      const targetFeature = targetFeatures.find(
-        (c) => c.properties!.id === t.id
-      )!;
+    const features: GeoJSON.Feature[] = registry.targets
+      .sort((a) => (a.tapArea ? 1 : -1))
+      .map((t, i) => {
+        const targetFeature = targetFeatures.find(
+          (c) => c.properties!.id === t.id
+        )!;
 
-      const subsetIdx = registry.subsets!.findIndex((s) =>
-        s.subjects.includes(t.subjects[0].id)
-      );
+        const subsetIdx = registry.subsets!.findIndex((s) =>
+          s.subjects.includes(t.subjects[0].id)
+        );
 
-      if (subsetIdx === -1)
-        throw new Error("Target not in any subset:" + JSON.stringify(t));
+        if (subsetIdx === -1)
+          throw new Error("Target not in any subset:" + JSON.stringify(t));
 
-      return {
-        id: i,
-        type: "Feature",
-        properties: {
-          id: t.id,
-          color: options.colors[subsetIdx % options.colors.length].light,
-        },
-        geometry: targetFeature.geometry,
-      };
-    });
+        return {
+          id: i,
+          type: "Feature",
+          properties: {
+            id: t.id,
+            color: options.colors[subsetIdx % options.colors.length].light,
+          },
+          geometry: t.tapArea
+            ? mergeWithTapArea({
+                geometry: targetFeature.geometry,
+                center: [
+                  targetFeature.properties!.center_lng,
+                  targetFeature.properties!.center_lat,
+                ],
+                tapAreaSize: options.tapAreaSize,
+              })
+            : targetFeature.geometry,
+        };
+      });
 
     await Bun.write(
       output,

@@ -9,23 +9,15 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppForm } from "@/components/ui/tanstack-form";
-import { AppStore } from "@/lib/store";
-import { useAppStore } from "@/lib/store/provider";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 import { cn } from "@/lib/utils";
 import { QuizSubset } from "@/types/registry";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 
-export function QuizSettings<TName extends QuizSliceName<AppStore>>({
-  store,
-  subsets,
-}: {
-  store: TName;
-  subsets: QuizSubset[];
-}) {
-  const open = useAppStore(
-    (s) => s[store].nextSubjects.length === 0 && s[store].stats.total === 0
+export function QuizSettings({ subsets }: { subsets: QuizSubset[] }) {
+  const open = useQuizStore(
+    (s) => s.nextSubjects.length === 0 && s.stats.total === 0
   );
 
   return (
@@ -37,7 +29,7 @@ export function QuizSettings<TName extends QuizSliceName<AppStore>>({
             Do you want to practice, or go for a perfect score?
           </DialogDescription>
         </DialogHeader>
-        <SettingsForm store={store} subsets={subsets} />
+        <SettingsForm subsets={subsets} />
       </DialogContent>
     </Dialog>
   );
@@ -54,18 +46,12 @@ const SettingsSchema = z.object({
 
 type Mode = z.infer<typeof SettingsSchema>["mode"];
 
-function SettingsForm<TName extends QuizSliceName<AppStore>>({
-  store,
-  subsets,
-}: {
-  store: TName;
-  subsets: QuizSubset[];
-}) {
+function SettingsForm({ subsets }: { subsets: QuizSubset[] }) {
   const router = useRouter();
-  const [start, mode, subsetsEnabled] = useAppStore((s) => [
-    s[store].start,
-    s[store].mode,
-    s[store].subsetsEnabled,
+  const [start, mode, subsetsEnabled] = useQuizStore((s) => [
+    s.start,
+    s.mode,
+    s.subsetsEnabled,
   ]);
 
   const form = useAppForm({

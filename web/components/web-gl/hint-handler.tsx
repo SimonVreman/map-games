@@ -1,6 +1,4 @@
-import { AppStore } from "@/lib/store";
-import { useAppStore } from "@/lib/store/provider";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 import { ExpressionFilterSpecification } from "maplibre-gl";
 import { useCallback, useEffect } from "react";
 import { useMap } from "react-map-gl/maplibre";
@@ -18,27 +16,31 @@ export function isFeatureHinted(
   ];
 }
 
-export function HintHandler<TName extends QuizSliceName<AppStore>>({
-  store,
-}: {
-  store: TName;
-}) {
+export function HintHandler() {
   const map = useMap().current?.getMap();
-
-  const [highlight, hints] = useAppStore((s) => [
-    s[store].highlight,
-    s[store].hintsEnabled,
-  ]);
+  const [highlight, hints] = useQuizStore((s) => [s.highlight, s.hintsEnabled]);
 
   const updateVisibility = useCallback(() => {
-    if (!map?.isStyleLoaded()) return;
+    if (!map) return;
 
-    map.setGlobalStateProperty(hintedTargetsKey, [
-      ...highlight.positive,
-      ...highlight.negative,
-    ]);
+    const update = () => {
+      map.setGlobalStateProperty(hintedTargetsKey, [
+        ...highlight.positive,
+        ...highlight.negative,
+      ]);
 
-    map.setGlobalStateProperty(hintedAllKey, hints);
+      map.setGlobalStateProperty(hintedAllKey, hints);
+    };
+
+    if (!map.isStyleLoaded()) {
+      const subscription = map.on("styledata", () => {
+        update();
+        subscription.unsubscribe();
+      });
+      return;
+    }
+
+    update();
   }, [map, hints, highlight]);
 
   useEffect(() => {

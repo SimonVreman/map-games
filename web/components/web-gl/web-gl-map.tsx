@@ -11,12 +11,13 @@ import { StateBoundariesLayer } from "./layers/state-boundaries-layer";
 import { CountryBoundariesLayer } from "./layers/country-boundaries-layer";
 import { GeoLinesLayer } from "./layers/geo-lines-layer";
 import { PlacesLayer } from "./layers/places-layer";
-import { LabelsLayer } from "./layers/labels-layer";
 import { MapTheme } from "./map-theme";
 import { LandCoverLayer } from "./layers/land-cover-layer";
 import { LandLayer } from "./layers/land-layer";
 import { RiverLakeLayer } from "./layers/river-lake-layer";
 import { OceanLayer } from "./layers/ocean-layer";
+import { StatesLayer } from "./layers/states-layer";
+import { CountriesLayer } from "./layers/countries-layer";
 
 const minzoom = 2;
 const maxzoom = 6;
@@ -27,6 +28,19 @@ const mapLayerGroups = {
 } as const;
 
 type LayerGroup = keyof typeof mapLayerGroups;
+
+type LayerKey =
+  | "ocean"
+  | "land"
+  | "landcover"
+  | "riverlake"
+  | "roadrail"
+  | "statelines"
+  | "countrylines"
+  | "geolines"
+  | "places"
+  | "states"
+  | "countries";
 
 export function useLayerGroups() {
   const map = useMap().current?.getMap();
@@ -59,11 +73,13 @@ export function WebGLMap({
   bounds,
   attribution,
   inset,
+  layers,
   children,
 }: {
   bounds: LatLngBounds;
   attribution?: React.ReactNode;
   inset?: boolean;
+  layers?: Partial<Record<LayerKey, boolean>>;
   children?: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
@@ -129,19 +145,20 @@ export function WebGLMap({
           layout={{ visibility: "none" }}
         />
 
-        <OceanLayer />
-        <LandLayer />
-        <LandCoverLayer />
-        <RiverLakeLayer />
-        <RoadRailLayer />
+        {layers?.ocean !== false && <OceanLayer />}
+        {layers?.land !== false && <LandLayer />}
+        {layers?.landcover !== false && <LandCoverLayer />}
+        {layers?.riverlake !== false && <RiverLakeLayer />}
+        {layers?.roadrail !== false && <RoadRailLayer />}
 
         {children}
 
-        <StateBoundariesLayer />
-        <CountryBoundariesLayer />
-        <GeoLinesLayer />
-        <PlacesLayer />
-        <LabelsLayer />
+        {layers?.statelines !== false && <StateBoundariesLayer />}
+        {layers?.countrylines !== false && <CountryBoundariesLayer />}
+        {layers?.geolines !== false && <GeoLinesLayer />}
+        {layers?.places !== false && <PlacesLayer />}
+        {layers?.states !== false && <StatesLayer />}
+        {layers?.countries !== false && <CountriesLayer />}
 
         <Layer
           id={mapLayerGroups.top}

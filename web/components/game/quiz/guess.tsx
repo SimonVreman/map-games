@@ -1,9 +1,19 @@
-import { AppStore } from "@/lib/store";
-import { useAppStore } from "@/lib/store/provider";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
+import { useQuizStore } from "@/lib/store/quiz-provider";
+import { QuizSubject } from "@/types/registry";
 import { toast } from "sonner";
 
-function stringifyMissed(missed: string[]) {
+function stringifyMissed({
+  missed: missedRaw,
+  subjects,
+}: {
+  missed: string[];
+  subjects: Record<string, QuizSubject>;
+}) {
+  const missed = missedRaw.map((m) => {
+    const subject = subjects[m];
+    return "label" in subject ? subject.label : m;
+  });
+
   if (missed.length === 0) return "";
   if (missed.length === 1) return missed[0];
   if (missed.length <= 4)
@@ -11,12 +21,12 @@ function stringifyMissed(missed: string[]) {
   return `${missed.slice(0, 4).join(", ")} and ${missed.length - 4} others`;
 }
 
-export function useHandleQuizGuess<TName extends QuizSliceName<AppStore>>({
-  store,
+export function useHandleQuizGuess({
+  subjects,
 }: {
-  store: TName;
+  subjects: Record<string, QuizSubject>;
 }) {
-  const guess = useAppStore((s) => s[store].guess);
+  const guess = useQuizStore((s) => s.guess);
 
   return {
     handleGuess: (target: string) => {
@@ -33,7 +43,10 @@ export function useHandleQuizGuess<TName extends QuizSliceName<AppStore>>({
 
       toast.error("Incorrect", {
         duration: 6000,
-        description: `You missed ${stringifyMissed(remaining)}`,
+        description: `You missed ${stringifyMissed({
+          missed: remaining,
+          subjects,
+        })}`,
       });
     },
   };

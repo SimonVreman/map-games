@@ -7,15 +7,13 @@ import {
   useMap,
 } from "react-map-gl/maplibre";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { AppStore } from "@/lib/store";
 import { useHandleQuizGuess } from "@/components/game/quiz/guess";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
-import { useAppStore } from "@/lib/store/provider";
 import { map } from "../constants";
-import { QuizSubset, QuizTarget } from "@/types/registry";
+import { QuizSubject, QuizSubset, QuizTarget } from "@/types/registry";
 import { MapGeoJSONFeature } from "maplibre-gl";
 import { isFeatureHinted } from "../hint-handler";
 import { expressions } from "../expressions";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 
 const source: Omit<GeoJSONSourceSpecification, "data"> & { id: string } = {
   id: "targets",
@@ -81,24 +79,24 @@ const strokeLayer: LayerSpecification = {
   },
 };
 
-export function TargetLayer<TName extends QuizSliceName<AppStore>>({
-  store,
+export function TargetLayer({
   targetFeatures,
   targets,
+  subjects,
   subsets,
 }: {
-  store: TName;
   targetFeatures: GeoJSON.FeatureCollection;
   targets: QuizTarget[];
+  subjects: Record<string, QuizSubject>;
   subsets: QuizSubset[];
 }) {
   const hovered = useRef<string | number | null>(null);
   const map = useMap().current?.getMap();
-  const { handleGuess } = useHandleQuizGuess({ store });
+  const { handleGuess } = useHandleQuizGuess({ subjects });
 
-  const [hintsEnabled, subsetsEnabled] = useAppStore((s) => [
-    s[store].hintsEnabled,
-    s[store].subsetsEnabled,
+  const [hintsEnabled, subsetsEnabled] = useQuizStore((s) => [
+    s.hintsEnabled,
+    s.subsetsEnabled,
   ]);
 
   const enabledTargetFeatures = useMemo(() => {

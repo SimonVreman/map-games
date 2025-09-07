@@ -8,6 +8,8 @@ import { use } from "react";
 import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
 import { HintHandler } from "@/components/web-gl/hint-handler";
 import { FeatureCollection } from "geojson";
+import { QuizStoreProvider } from "@/lib/store/quiz-provider";
+import { createQuizStoreConstructor } from "@/lib/store/quiz-store";
 
 const bounds = {
   north: 46,
@@ -25,47 +27,52 @@ const canariesBounds = {
   padding: 0,
 };
 
-const key = "spainDialingCodes";
 const targetsPromise = fetchGeoAsset("spain-dialing-codes-targets");
 const subjectsPromise = fetchGeoAsset("spain-dialing-codes-subjects");
+
+const store = createQuizStoreConstructor(spainDialingCodes, {
+  name: "spain-dialing-codes",
+});
 
 export default function SpainDialingCodesGame() {
   const targetFeatures = use(targetsPromise);
   const subjectFeatures = use(subjectsPromise);
 
   return (
-    <div className="size-full relative">
-      <QuizControls store={key} label="Area code:" {...spainDialingCodes} />
+    <QuizStoreProvider create={store}>
+      <div className="size-full relative">
+        <QuizControls label="Area code:" {...spainDialingCodes} />
 
-      <WebGLMap
-        bounds={bounds}
-        attribution={
-          <a
-            href="https://data.humdata.org/dataset/whosonfirst-data-admin-esp"
-            target="_blank"
-          >
-            © OCHA
-          </a>
-        }
-      >
-        <MapChildren
-          targetFeatures={targetFeatures}
-          subjectFeatures={subjectFeatures}
-        />
+        <WebGLMap
+          bounds={bounds}
+          attribution={
+            <a
+              href="https://data.humdata.org/dataset/whosonfirst-data-admin-esp"
+              target="_blank"
+            >
+              © OCHA
+            </a>
+          }
+        >
+          <MapChildren
+            targetFeatures={targetFeatures}
+            subjectFeatures={subjectFeatures}
+          />
 
-        <InsetMapContainer>
-          <InsetMap
-            bounds={canariesBounds}
-            className="col-span-full aspect-[2/1]"
-          >
-            <MapChildren
-              targetFeatures={targetFeatures}
-              subjectFeatures={subjectFeatures}
-            />
-          </InsetMap>
-        </InsetMapContainer>
-      </WebGLMap>
-    </div>
+          <InsetMapContainer>
+            <InsetMap
+              bounds={canariesBounds}
+              className="col-span-full aspect-[2/1]"
+            >
+              <MapChildren
+                targetFeatures={targetFeatures}
+                subjectFeatures={subjectFeatures}
+              />
+            </InsetMap>
+          </InsetMapContainer>
+        </WebGLMap>
+      </div>
+    </QuizStoreProvider>
   );
 }
 
@@ -78,17 +85,9 @@ function MapChildren({
 }) {
   return (
     <>
-      <HintHandler store={key} />
-      <SubjectLayer
-        store={key}
-        subjectFeatures={subjectFeatures}
-        {...spainDialingCodes}
-      />
-      <TargetLayer
-        store={key}
-        targetFeatures={targetFeatures}
-        {...spainDialingCodes}
-      />
+      <HintHandler />
+      <SubjectLayer subjectFeatures={subjectFeatures} {...spainDialingCodes} />
+      <TargetLayer targetFeatures={targetFeatures} {...spainDialingCodes} />
     </>
   );
 }

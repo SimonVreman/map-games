@@ -1,8 +1,7 @@
-import { AppStore } from "@/lib/store";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { FeatureCollection } from "geojson";
 import {
   FillLayerSpecification,
+  GeoJSONSourceSpecification,
   Layer,
   Source,
   SymbolLayerSpecification,
@@ -12,16 +11,25 @@ import { isFeatureHinted } from "../hint-handler";
 import { useLayerGroups } from "../web-gl-map";
 import { useMemo } from "react";
 import { QuizSubject, QuizSubset } from "@/types/registry";
-import { useAppStore } from "@/lib/store/provider";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 
-const fillLayer: Omit<FillLayerSpecification, "id" | "source"> = {
+const source: Omit<GeoJSONSourceSpecification, "data"> & { id: string } = {
+  id: "subjects",
+  type: "geojson",
+};
+
+const fillLayer: FillLayerSpecification = {
+  id: "subjects-fill",
   type: "fill",
+  source: source.id,
   paint: { "fill-color": ["get", "fill"], "fill-outline-color": "#00000000" },
   filter: ["all", ["has", "fill"], isFeatureHinted("target")],
 };
 
-const symbolLayer: Omit<SymbolLayerSpecification, "id" | "source"> = {
+const symbolLayer: SymbolLayerSpecification = {
+  id: "subjects-symbol",
   type: "symbol",
+  source: source.id,
   paint: {
     "text-color": map.colors.text.primary,
     "text-halo-color": map.colors.text.halo,
@@ -35,19 +43,17 @@ const symbolLayer: Omit<SymbolLayerSpecification, "id" | "source"> = {
   filter: ["all", ["has", "label"], isFeatureHinted("target")],
 };
 
-export function SubjectLayer<TName extends QuizSliceName<AppStore>>({
-  store,
+export function SubjectLayer({
   subjectFeatures,
   subsets,
   subjects,
 }: {
-  store: TName;
   subjectFeatures: FeatureCollection;
   subsets: QuizSubset[];
   subjects: Record<string, QuizSubject>;
 }) {
   const { layerGroups } = useLayerGroups();
-  const [subsetsEnabled] = useAppStore((s) => [s[store].subsetsEnabled]);
+  const [subsetsEnabled] = useQuizStore((s) => [s.subsetsEnabled]);
 
   const enabledSubjectFeatures = useMemo(() => {
     const { features, ...t } = subjectFeatures;
@@ -73,15 +79,10 @@ export function SubjectLayer<TName extends QuizSliceName<AppStore>>({
 
   return (
     <>
-      <Source id={store} type="geojson" data={enabledSubjectFeatures} />
-      <Layer id={store + "-fill"} source={store} {...fillLayer} />
+      <Source {...source} data={enabledSubjectFeatures} />
+      <Layer {...fillLayer} />
 
-      <Layer
-        id={store + "-symbol"}
-        source={store}
-        beforeId={layerGroups.top}
-        {...symbolLayer}
-      />
+      <Layer beforeId={layerGroups.top} {...symbolLayer} />
     </>
   );
 }

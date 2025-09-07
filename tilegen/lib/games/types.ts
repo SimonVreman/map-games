@@ -23,6 +23,7 @@ export type QuizTarget = {
   id: string;
   label: string;
   subjects: QuizSubject[];
+  tapArea?: boolean;
   transform?: {
     scale?: number;
     ox?: number;

@@ -8,6 +8,8 @@ import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
 import { TargetLayer } from "@/components/web-gl/layers/target-layer";
 import { usDialingCodes } from "@/lib/games/meta/us-dialing-codes-meta";
 import { use } from "react";
+import { createQuizStoreConstructor } from "@/lib/store/quiz-store";
+import { QuizStoreProvider } from "@/lib/store/quiz-provider";
 
 const bounds = {
   north: 53,
@@ -45,65 +47,73 @@ const amSamoaBounds = {
   east: -169,
 };
 
-const key = "usDialingCodes";
 const targetsPromise = fetchGeoAsset("us-dialing-codes-targets");
 const subjectsPromise = fetchGeoAsset("us-dialing-codes-subjects");
+
+const store = createQuizStoreConstructor(usDialingCodes, {
+  name: "us-dialing-codes",
+});
 
 export default function USDialingCodesGame() {
   const targetFeatures = use(targetsPromise);
   const subjectFeatures = use(subjectsPromise);
 
   return (
-    <div className="size-full relative">
-      <QuizControls store={key} label="Area code:" {...usDialingCodes} />
+    <QuizStoreProvider create={store}>
+      <div className="size-full relative">
+        <QuizControls label="Area code:" {...usDialingCodes} />
 
-      <WebGLMap
-        bounds={bounds}
-        attribution={
-          <>
-            <a href="https://www.naturalearthdata.com/" target="_blank">
-              Made with Natural Earth
-            </a>
-            <span className="mx-1">-</span>
-            <span>
-              Sources: Esri; TomTom North America, Inc.; Pitney Bowes Software
-              Inc.; iconectiv
-            </span>
-          </>
-        }
-      >
-        <MapChildren
-          targetFeatures={targetFeatures}
-          subjectFeatures={subjectFeatures}
-        />
-        <InsetMapContainer>
-          <InsetMap bounds={alaskaBounds} className="aspect-square col-span-2">
-            <MapChildren
-              targetFeatures={targetFeatures}
-              subjectFeatures={subjectFeatures}
-            />
-          </InsetMap>
-          <InsetMap bounds={guamNmiBounds}>
-            <MapChildren
-              targetFeatures={targetFeatures}
-              subjectFeatures={subjectFeatures}
-            />
-          </InsetMap>
-          <InsetMap bounds={hawaiiBounds} className="aspect-[3/2] col-span-2">
-            <MapChildren
-              targetFeatures={targetFeatures}
-              subjectFeatures={subjectFeatures}
-            />
-          </InsetMap>
-          <InsetMap bounds={amSamoaBounds}>
-            <MapChildren
-              targetFeatures={targetFeatures}
-              subjectFeatures={subjectFeatures}
-            />
-          </InsetMap>
-        </InsetMapContainer>
-      </WebGLMap>
-    </div>
+        <WebGLMap
+          bounds={bounds}
+          attribution={
+            <>
+              <a href="https://www.naturalearthdata.com/" target="_blank">
+                Made with Natural Earth
+              </a>
+              <span className="mx-1">-</span>
+              <span>
+                Sources: Esri; TomTom North America, Inc.; Pitney Bowes Software
+                Inc.; iconectiv
+              </span>
+            </>
+          }
+        >
+          <MapChildren
+            targetFeatures={targetFeatures}
+            subjectFeatures={subjectFeatures}
+          />
+          <InsetMapContainer>
+            <InsetMap
+              bounds={alaskaBounds}
+              className="aspect-square col-span-2"
+            >
+              <MapChildren
+                targetFeatures={targetFeatures}
+                subjectFeatures={subjectFeatures}
+              />
+            </InsetMap>
+            <InsetMap bounds={guamNmiBounds}>
+              <MapChildren
+                targetFeatures={targetFeatures}
+                subjectFeatures={subjectFeatures}
+              />
+            </InsetMap>
+            <InsetMap bounds={hawaiiBounds} className="aspect-[3/2] col-span-2">
+              <MapChildren
+                targetFeatures={targetFeatures}
+                subjectFeatures={subjectFeatures}
+              />
+            </InsetMap>
+            <InsetMap bounds={amSamoaBounds}>
+              <MapChildren
+                targetFeatures={targetFeatures}
+                subjectFeatures={subjectFeatures}
+              />
+            </InsetMap>
+          </InsetMapContainer>
+        </WebGLMap>
+      </div>
+    </QuizStoreProvider>
   );
 }
 
@@ -116,17 +126,9 @@ function MapChildren({
 }) {
   return (
     <>
-      <HintHandler store={key} />
-      <SubjectLayer
-        store={key}
-        subjectFeatures={subjectFeatures}
-        {...usDialingCodes}
-      />
-      <TargetLayer
-        store={key}
-        targetFeatures={targetFeatures}
-        {...usDialingCodes}
-      />
+      <HintHandler />
+      <SubjectLayer subjectFeatures={subjectFeatures} {...usDialingCodes} />
+      <TargetLayer targetFeatures={targetFeatures} {...usDialingCodes} />
     </>
   );
 }

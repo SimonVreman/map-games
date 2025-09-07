@@ -6,9 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AppStore } from "@/lib/store";
-import { useAppStore } from "@/lib/store/provider";
-import { QuizSliceName } from "@/lib/store/slice/quiz-slice";
 import { ShareIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,17 +13,14 @@ import { z } from "zod";
 import { QuizStatistics } from "./statistics";
 import { SharedScore } from "./schema";
 import { toast } from "sonner";
+import { useQuizStore } from "@/lib/store/quiz-provider";
 
-export function QuizResults<TName extends QuizSliceName<AppStore>>({
-  store,
-}: {
-  store: TName;
-}) {
+export function QuizResults() {
   const router = useRouter();
-  const [open, reset, stats] = useAppStore((s) => [
-    s[store].nextSubjects.length === 0 && s[store].stats.total > 0,
-    s[store].reset,
-    s[store].stats,
+  const [open, reset, stats] = useQuizStore((s) => [
+    s.nextSubjects.length === 0 && s.stats.total > 0,
+    s.reset,
+    s.stats,
   ]);
 
   const statistics = {

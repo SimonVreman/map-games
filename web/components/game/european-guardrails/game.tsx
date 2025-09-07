@@ -8,50 +8,54 @@ import { fetchGeoAsset } from "@/lib/games/geo-asset";
 import { use } from "react";
 import { SubjectLayer } from "@/components/web-gl/layers/subject-layer";
 import { HintHandler } from "@/components/web-gl/hint-handler";
+import { createQuizStoreConstructor } from "@/lib/store/quiz-store";
+import { QuizStoreProvider } from "@/lib/store/quiz-provider";
 
-const key = "europeanGuardrails";
 const targetsPromise = fetchGeoAsset("european-countries-targets");
 const subjectsPromise = fetchGeoAsset("european-guardrails-subjects");
+
+const store = createQuizStoreConstructor(europeanGuardrails, {
+  name: "european-guardrails",
+});
 
 export default function EuropeanGuardrailsGame() {
   const targetFeatures = use(targetsPromise);
   const subjectFeatures = use(subjectsPromise);
 
   return (
-    <div className="size-full relative">
-      <QuizControls
-        store={key}
-        label="Where is it seen?"
-        {...europeanGuardrails}
-        graphic={({ subject }) => (
-          <PatternPreview {...europeanGuardrails} subject={subject} />
-        )}
-      />
+    <QuizStoreProvider create={store}>
+      <div className="size-full relative">
+        <QuizControls
+          label="Where is it seen?"
+          {...europeanGuardrails}
+          graphic={({ subject }) => (
+            <PatternPreview {...europeanGuardrails} subject={subject} />
+          )}
+        />
 
-      <WebGLMap
-        bounds={europeMapBounds}
-        attribution={
-          <>
-            <span>Keaton</span>
-            <span className="mx-1">-</span>
-            <a href="https://www.naturalearthdata.com/" target="_blank">
-              Made with Natural Earth.
-            </a>
-          </>
-        }
-      >
-        <HintHandler store={key} />
-        <SubjectLayer
-          store={key}
-          subjectFeatures={subjectFeatures}
-          {...europeanGuardrails}
-        />
-        <TargetLayer
-          store={key}
-          targetFeatures={targetFeatures}
-          {...europeanGuardrails}
-        />
-      </WebGLMap>
-    </div>
+        <WebGLMap
+          bounds={europeMapBounds}
+          attribution={
+            <>
+              <span>Keaton</span>
+              <span className="mx-1">-</span>
+              <a href="https://www.naturalearthdata.com/" target="_blank">
+                Made with Natural Earth.
+              </a>
+            </>
+          }
+        >
+          <HintHandler />
+          <SubjectLayer
+            subjectFeatures={subjectFeatures}
+            {...europeanGuardrails}
+          />
+          <TargetLayer
+            targetFeatures={targetFeatures}
+            {...europeanGuardrails}
+          />
+        </WebGLMap>
+      </div>
+    </QuizStoreProvider>
   );
 }
