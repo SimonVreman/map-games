@@ -49,4 +49,14 @@ export const geoguessrGames: GameDefinition[] = [
     description: "Can you locate all states and territories of India?",
     slug: "india-states",
   },
+  {
+    name: "Vietnam Provinces",
+    description: "Can you locate all 58 provinces of Vietnam?",
+    slug: "vietnam-provinces",
+  },
+  {
+    name: "Thailand Provinces",
+    description: "Can you locate all 76 provinces of Thailand?",
+    slug: "thailand-provinces",
+  },
 ] as const;

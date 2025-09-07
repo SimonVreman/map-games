@@ -9,9 +9,11 @@ const page = await browser.newPage({
   deviceScaleFactor: 3,
 });
 
+await page.goto(`http://localhost:3000/`);
+
 // Get rid of dev indicator if present
 await page
-  .locator("button#next-logo")
+  .locator("#next-logo")
   .click({ timeout: 1000 })
   .then(async () => {
     await page.locator("div[data-preferences=true]").click();

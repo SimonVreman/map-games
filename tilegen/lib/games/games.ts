@@ -9,6 +9,8 @@ import { europeanChevronsDefinition } from "./european-chevrons";
 import { europeanGuardrailsDefinition } from "./european-guardrails";
 import { europeanPedestriansDefinition } from "./european-pedestrians";
 import { indiaStatesDefinition } from "./india-states";
+import { vietnamProvincesDefinition } from "./vietnam-provinces";
+import { thailandProvincesDefinition } from "./thailand-provinces";
 
 export const games: QuizDefinition[] = [
   europeanBollardsDefinition,
@@ -20,6 +22,8 @@ export const games: QuizDefinition[] = [
   brazilDialingCodesDefinition,
   philippinesProvincesDefinition,
   indiaStatesDefinition,
+  vietnamProvincesDefinition,
+  thailandProvincesDefinition,
 ];
 
 export const gameTargets: {

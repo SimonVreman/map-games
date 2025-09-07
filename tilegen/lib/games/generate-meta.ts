@@ -20,6 +20,35 @@ function validateSubsetSubjects({
     throw new Error(
       "Subsets contain unknown subjects: " + invalidSubjects.join(", ")
     );
+
+  const duplicateSubjects = subsets
+    .flatMap((s) => s.subjects)
+    .reduce((acc: Record<string, number>, subject) => {
+      acc[subject] = (acc[subject] || 0) + 1;
+      return acc;
+    }, {});
+
+  const duplicates = Object.entries(duplicateSubjects).filter(
+    ([, count]) => count > 1
+  );
+
+  if (duplicates.length > 0)
+    throw new Error(
+      "Subsets contain duplicate subjects: " +
+        duplicates.map(([subj]) => subj).join(", ")
+    );
+
+  const missingSubjects = subjects
+    .map((s) => s.id)
+    .filter(
+      (subj) => !subsets.some((subset) => subset.subjects.includes(subj))
+    );
+
+  if (missingSubjects.length > 0)
+    console.warn(
+      "Some subjects are not included in any subset: " +
+        missingSubjects.join(", ")
+    );
 }
 
 export function generateQuizMeta({ registry }: { registry: QuizRegistry }) {
