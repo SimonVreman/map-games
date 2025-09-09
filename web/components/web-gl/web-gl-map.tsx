@@ -5,7 +5,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { map } from "./constants";
 import { LatLngBounds } from "./types";
 import { useEffect, useState } from "react";
-import { Loader2Icon } from "lucide-react";
+import { InfoIcon, Loader2Icon } from "lucide-react";
 import { RoadRailLayer } from "./layers/road-rail-layer";
 import { StateBoundariesLayer } from "./layers/state-boundaries-layer";
 import { CountryBoundariesLayer } from "./layers/country-boundaries-layer";
@@ -18,6 +18,7 @@ import { RiverLakeLayer } from "./layers/river-lake-layer";
 import { OceanLayer } from "./layers/ocean-layer";
 import { StatesLayer } from "./layers/states-layer";
 import { CountriesLayer } from "./layers/countries-layer";
+import { Button } from "../ui/button";
 
 const minzoom = 2;
 const maxzoom = 6;
@@ -167,15 +168,43 @@ export function WebGLMap({
         />
       </Map>
       {attribution && (
-        <div className="bg-neutral-50/70 dark:bg-neutral-700/70 absolute bottom-0 right-0 text-xs p-0.5 text-muted-foreground select-none line-clamp-1">
-          {attribution}
-          {/* https://doi.org/10.2909/602507b2-96c7-47bb-b79d-7ba25e97d0a9 copernicus */}
-        </div>
+        <Attribution
+          attribution={
+            <>
+              {attribution}
+              {attribution && <span className="mx-1">-</span>}
+              <a href="https://doi.org/10.2909/c6377c6e-76cc-4d03-8330-628a03693042">
+                EU Copernicus Land Monitoring
+              </a>
+            </>
+          }
+        />
       )}
       {!loaded && (
         <div className="absolute inset-0 bg-neutral-100 dark:bg-neutral-800 p-4 flex items-center justify-center flex-col gap-2">
           <Loader2Icon className="animate-spin" />
           {!inset && <span>Initializing map... </span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Attribution({ attribution }: { attribution: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="absolute bottom-1 right-1 max-w-lg pl-1">
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={() => setOpen((o) => !o)}
+        className="absolute bottom-0 right-0"
+      >
+        <InfoIcon />
+      </Button>
+      {open && (
+        <div className="abosolute bottom-0 right-16 bg-neutral-50/70 dark:bg-neutral-700/70 text-xs pl-2 pr-10 py-0.5 text-muted-foreground select-none rounded-md">
+          {attribution}
         </div>
       )}
     </div>
