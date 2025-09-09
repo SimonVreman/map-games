@@ -1,7 +1,6 @@
 import { GameGrid } from "@/components/browse/game-grid";
 import { regularGames } from "@/lib/games/regular-registry";
 import { geoguessrGames } from "@/lib/games/geoguessr-registry";
-import { miscGames } from "@/lib/games/misc-registry";
 
 # Simple & fun map games
 
@@ -11,7 +10,7 @@ A collection of map-based games, to which I add new ones when provided with a go
 
 Because I have failed lost too many duels by failing to know these maps by heart, I made simple games to help me memorize them. Taking suggestions for new ones!
 
-<GameGrid games={geoguessrGames} />
+<GameGrid games={geoguessrGames} filter />
 
 ## Quizzes
 
@@ -19,8 +18,6 @@ Fun map-based trivia games, where you can test your knowledge of the world.
 
 <GameGrid games={regularGames} />
 
-## Miscellaneous
+## Support
 
-These are games that don't fit in the other categories, but are still fun to play.
-
-<GameGrid games={miscGames} />
+I love building and maintaining these games, and I will keep doing so for free as long as I can. There are some recurring costs involved though, so if you want to support the project, consider [making a small donation](https://donate.stripe.com/8wM6oC3K36oP2Ig8ww).
